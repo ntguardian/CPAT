@@ -98,7 +98,7 @@ $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	Rscript exec/RemakePackage.R
 	Rscript exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 
-R/ChangePointTests.R : R/ChangePointTests.cpp
+R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
 
 inst/Makefile : Makefile
