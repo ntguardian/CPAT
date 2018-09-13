@@ -59,7 +59,6 @@ cl_args <- parse_args(OptionParser(
 library(fGarch)
 library(doParallel)
 library(doRNG)
-library(CPAT)
 
 sim_Vn_stat <- CPAT:::sim_Vn_stat
 sim_Zn_stat <- CPAT:::sim_Zn_stat
