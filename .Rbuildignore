@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LOGO\.txt$
+^STYLE\.md$
+^STYLE\.pdf$
+XOUT.*$
+^\.gitignore$

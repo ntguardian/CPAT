@@ -1,0 +1,26 @@
+Package: CPAT
+Title: Change Point Analysis Tests
+Version: 0.0.0.9000
+Authors@R: person("Curtis", "Miller", email = "cmiller@math.utah.edu", role = c("aut", "cre"))
+Description: CPAT brings the implementation of several statistical tests for structural change to R.
+Depends:
+    R (>= 3.4.2)
+Suggests:
+    cointReg (>= 0.2.0),
+    foreach (>= 1.4.3),
+    doParallel (>= 1.0.11),
+    ggplot2 (>= 2.2.1)
+Imports:
+    Rdpack (>= 0.9),
+    Rcpp (>= 0.12.18),
+    RcppArmadillo (>= 0.8.100.1.0),
+    purrr (>= 0.2.5)
+RdMacros:
+    Rdpack
+License: MIT
+Encoding: UTF-8
+LazyData: true
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
+RoxygenNote: 6.1.0
