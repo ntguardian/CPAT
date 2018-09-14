@@ -94,7 +94,7 @@ dist_conv_plot_tikz <- function(obj, dist, trim, size, title = "", width = 4,
     print(p)
     dev.off()
     
-    tools::texi2pdf(filename.tex)
+    tools::texi2pdf(, clean = TRUE, quiet = verbose, clean = TRUE, quiet = verbose)
   }
   if (verbose) {cat("Creating", filename.tex, "\n")}
   tikz(filename.tex, width = width, height = height)
@@ -213,7 +213,7 @@ power_plot_tikz_by_n <- function(data, d, t, c, N, statlines, title = "",
     print(p)
     dev.off()
 
-    tools::texi2pdf(filename.tex)
+    tools::texi2pdf(, clean = TRUE, quiet = verbose, clean = TRUE, quiet = verbose)
   }
   if (verbose) {cat("Creating", filename.tex, "\n")}
   tikz(filename.tex, width = width, height = height)
@@ -306,7 +306,7 @@ power_plot_tikz <- function(data, d, t, c, s, title = "", legend_pos = "none",
     print(p)
     dev.off()
     
-    tools::texi2pdf(filename.tex)
+    tools::texi2pdf(, clean = TRUE, quiet = verbose, clean = TRUE, quiet = verbose)
   }
   if (verbose) {cat("Creating", filename.tex, "\n")}
   tikz(filename.tex, width = width, height = height)
@@ -405,7 +405,7 @@ lrv_plot_tikz <- function(data, n, ker_name, true_lrv, phi = NULL,
     print(p)
     dev.off()
 
-    tools::texi2pdf(filename.tex)
+    tools::texi2pdf(filename.tex, clean = TRUE, quiet = verbose)
   }
   tikz(filename.tex, width = width, height = height)
   print(p)
