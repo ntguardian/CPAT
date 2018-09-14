@@ -30,7 +30,8 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
 
   get_expanding_window_pvals_reg <- CPAT:::get_expanding_window_pvals_reg
 
-  cl <- makeCluster(detectCores() - 1, outfile = "")
+  cl <- makeCluster(max(detectCores() - 1, min(2, detectCores())), outfile = "",
+                    type = "FORK")
   registerDoParallel(cl)
 
   portf <- xts::xts(as.data.frame(lapply(portf[1:24099, -1], as.numeric)),
