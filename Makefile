@@ -1,4 +1,5 @@
 SHELL=/bin/sh
+RSCRIPT=$(RSCRIPT)
 
 POWERPLOTPREFIX=inst/plots/power_plot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
@@ -36,8 +37,8 @@ $(POWERSIMPREFIX)_garch11_a0.1_b0.7_o0.5_*.Rda : \
                                exec/GARCHPowerSimulationParameters.R \
                                exec/PowerSimulations.R R/ProbabilityFunctions.R
 	make package
-	Rscript $< -f data/GARCHPowerSimulationParameters.Rda
-	Rscript exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
+	$(RSCRIPT) $< -f data/GARCHPowerSimulationParameters.Rda
+	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
 		-p $(POWERSIMPREFIX) -i data/GARCHPowerSimulationParameters.Rda \
 		-o $(POWERSIMTEMPFILEMETAPREFIX)GARCH.csv
 
@@ -45,16 +46,16 @@ $(POWERSIMPREFIX)_ar1_0.5_*.Rda : exec/AR1PowerSimulationParameters.R \
                                   exec/PowerSimulations.R \
                                   R/ProbabilityFunctions.R
 	make package
-	Rscript $< -f data/AR1PowerSimulationParameters.Rda
-	Rscript exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
+	$(RSCRIPT) $< -f data/AR1PowerSimulationParameters.Rda
+	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
 		-p $(POWERSIMPREFIX) -i data/AR1PowerSimulationParameters.Rda \
 		-o $(POWERSIMTEMPFILEMETAPREFIX)AR1.csv
 
 $(POWERSIMPREFIX)_norm_*.Rda : exec/NormPowerSimulationParameters.R \
                                exec/PowerSimulations.R R/ProbabilityFunctions.R
 	make package
-	Rscript $< -f data/NormPowerSimulationParameters.Rda
-	Rscript exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
+	$(RSCRIPT) $< -f data/NormPowerSimulationParameters.Rda
+	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
 		-p $(POWERSIMPREFIX) -i data/NormPowerSimulationParameters.Rda \
 		-o $(POWERSIMTEMPFILEMETAPREFIX)Norm.csv
 
@@ -65,38 +66,38 @@ $(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA) $(POWERSIMRDA)
 $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
               R/ProbabilityFunctions.R R/SimulationUtils.R \
               exec/PowerSimStatDataGenerator.R
-	Rscript exec/PowerSimStatDataGenerator.R -f $(POWERSIMFILEMETA) \
+	$(RSCRIPT) exec/PowerSimStatDataGenerator.R -f $(POWERSIMFILEMETA) \
 		-s $(POWERSIMSTATMETA) -o $@ -a 0.05
 
 $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	make package
-	Rscript exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
+	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 	make package
-	Rscript $< -N $(LRVREPLICATIONS) -s $(LRVSEED) -f $@
+	$(RSCRIPT) $< -N $(LRVREPLICATIONS) -s $(LRVSEED) -f $@
 
 $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	make package
-	Rscript exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
+	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
-	Rscript $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP)
+	$(RSCRIPT) $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP)
 
 $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package
-	Rscript exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
+	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
              R/SimulationUtils.R
 	make package
-	Rscript $< -f $(FFFIILE) -b $(BANKFILE) -o $@
+	$(RSCRIPT) $< -f $(FFFIILE) -b $(BANKFILE) -o $@
 
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
-	Rscript exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
+	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
@@ -107,7 +108,7 @@ inst/Makefile : Makefile
 .PHONY : package
 
 package : R/*.R
-	Rscript exec/RemakePackage.R
+	$(RSCRIPT) exec/RemakePackage.R
 	touch package
 
 .PHONY : clean
