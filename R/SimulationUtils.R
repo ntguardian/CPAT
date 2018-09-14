@@ -334,7 +334,15 @@ get_expanding_window_pvals_reg <- function(formula, data, min_n = 3, m = Inf,
                            "to use this function")}
   `%dopar%` <- foreach::`%dopar%`
   foreach <- foreach::foreach
-  test_p_vals <- foreach(n = min_n:nrow(data), .combine = rbind) %dopar% {
+
+  if (requireNamespace("cointReg", quietly = TRUE)) {
+    pkgs <- c("stats", "cointReg")
+  } else {
+    pkgs <- c("stats")
+  }
+
+  test_p_vals <- foreach(n = min_n:nrow(data), .combine = rbind,
+                         .packages = pkgs) %dopar% {
     if (verbose) {
       cat("Working on n = ", n, "out of ", nrow(data), "\n")
     }
