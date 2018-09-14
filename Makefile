@@ -74,6 +74,7 @@ $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 	make package
@@ -83,6 +84,7 @@ $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
@@ -92,6 +94,7 @@ $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
@@ -103,6 +106,7 @@ $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
