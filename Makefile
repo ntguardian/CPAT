@@ -6,8 +6,7 @@ POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
 POWERDAT=data/PowerSimStat95Data.csv
 POWERREPLICATIONS=5000
 POWERSEED=20180910
-POWERSIMPREFIX=data/XOUTPowerSimulations_
-POWERSIMRDA=$(wildcard $(POWERSIMPREFIX)_*.Rda)
+POWERSIMPREFIX=data/XOUTPowerSimulations
 POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
 POWERSIMTEMPFILEMETAPREFIX=data/PowerSimulationsMetadataDist
 POWERSIMTEMPFILEMETA=$(wildcard $(POWERSIMTEMPFILEMETAPREFIX)*.csv)
@@ -34,35 +33,20 @@ BANKFILE=data/Portfolios.csv
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
       inst/package
 
-$(POWERSIMPREFIX)_garch11_a0.1_b0.7_o0.5_*.Rda : \
-                               exec/GARCHPowerSimulationParameters.R \
-                               exec/PowerSimulations.R R/ProbabilityFunctions.R
-	make package
-	$(RSCRIPT) $< -f data/GARCHPowerSimulationParameters.Rda
-	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/GARCHPowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)GARCH.csv
-
-$(POWERSIMPREFIX)_ar1_0.5_*.Rda : exec/AR1PowerSimulationParameters.R \
-                                  exec/PowerSimulations.R \
-                                  R/ProbabilityFunctions.R
-	make package
-	$(RSCRIPT) $< -f data/AR1PowerSimulationParameters.Rda
-	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/AR1PowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)AR1.csv
-
-$(POWERSIMPREFIX)_norm_*.Rda : exec/NormPowerSimulationParameters.R \
-                               exec/PowerSimulations.R R/ProbabilityFunctions.R
+$(POWERSIMTEMPFILEMETAPREFIX)%.csv : exec/%PowerSimulationParameters.R \
+                                     exec/PowerSimulations.R \
+                                     exec/ProbabilityFunctions.R
 	make package
 	$(RSCRIPT) $< -f data/NormPowerSimulationParameters.Rda
 	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/NormPowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)Norm.csv
+		-p $(POWERSIMPREFIX) -i data/%PowerSimulationParameters.Rda \
+		-o $(POWERSIMTEMPFILEMETAPREFIX)%.csv
 
-$(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA) $(POWERSIMRDA)
+$(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA)
 	head -1 $< > $@
 	for filename in $(POWERSIMTEMPFILEMETA); do sed 1d $$filename >> $@; done
+
+$(POWERSIMSTATMETA) : ;
 
 $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
               R/ProbabilityFunctions.R R/SimulationUtils.R \
