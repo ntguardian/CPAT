@@ -26,7 +26,7 @@ ZNCONVPLOTPREFIX=inst/plots/DistConv
 ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)
 
 CAPMPLOT=inst/plots/BankCAPMChange.pdf
-CAPMDAT=BankCAPMPValues.Rda
+CAPMDAT=data/BankCAPMPValues.Rda
 FFFILE=data/FF_factors.csv
 BANKFILE=data/Portfolios.csv
 
