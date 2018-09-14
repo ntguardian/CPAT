@@ -94,7 +94,7 @@ $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
              R/SimulationUtils.R
 	make package
-	$(RSCRIPT) $< -f $(FFFIILE) -b $(BANKFILE) -o $@
+	$(RSCRIPT) $< -f $(FFFILE) -b $(BANKFILE) -o $@
 
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
