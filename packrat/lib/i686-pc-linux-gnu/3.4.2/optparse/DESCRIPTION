@@ -1,0 +1,44 @@
+Encoding: UTF-8
+Package: optparse
+Type: Package
+Title: Command Line Option Parser
+Version: 1.6.0
+Authors@R: c(person("Trevor L", "Davis", role = c("aut", "cre"), email="trevor.l.davis@gmail.com"),
+    person("Allen", "Day", role="ctb", comment="Some documentation and examples ported from the getopt package."),
+    person("Python Software Foundation", role="ctb", comment="Some documentation from the optparse Python module."),
+    person("Steve", "Lianoglou", role="ctb"),
+    person("Jim", "Nikelski", role="ctb"),
+    person("Kirill", "Müller", role="ctb"),
+    person("Peter", "Humburg", role="ctb"), 
+    person("Rich", "FitzJohn", role="ctb"),
+    person("Gyu Jin", "Choi", role="ctb"))
+Description: A command line parser inspired by Python's 'optparse' library to
+    be used with Rscript to write "#!" shebang scripts that accept short and
+    long flag/options.
+License: GPL (>= 2)
+Copyright: See file (inst/)COPYRIGHTS.
+URL: https://github.com/trevorld/optparse
+BugReports: https://github.com/trevorld/optparse/issues
+LazyLoad: yes
+Depends: R (>= 2.9.0)
+Imports: methods, getopt (>= 1.20.2)
+Suggests: knitr (>= 1.15.19), stringr, testthat
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2018-06-17 18:34:12 UTC; trevorld
+Author: Trevor L Davis [aut, cre],
+  Allen Day [ctb] (Some documentation and examples ported from the getopt
+    package.),
+  Python Software Foundation [ctb] (Some documentation from the optparse
+    Python module.),
+  Steve Lianoglou [ctb],
+  Jim Nikelski [ctb],
+  Kirill Müller [ctb],
+  Peter Humburg [ctb],
+  Rich FitzJohn [ctb],
+  Gyu Jin Choi [ctb]
+Maintainer: Trevor L Davis <trevor.l.davis@gmail.com>
+Repository: CRAN
+Date/Publication: 2018-06-17 19:07:56 UTC
+Built: R 3.4.2; ; 2018-09-14 20:05:39 UTC; unix
