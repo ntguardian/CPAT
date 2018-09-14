@@ -100,7 +100,7 @@ $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	Rscript exec/RemakePackage.R
 	Rscript exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
-	mv $(basename $@) $@
+	mv $(basename $@).pdf $@.pdf
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
