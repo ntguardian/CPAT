@@ -6,6 +6,7 @@ vcs.ignore.src: FALSE
 external.packages:
     CPAT
     nvimcom
+    devtools
 local.repos: 
 load.external.packages.on.startup: TRUE
 ignored.packages: 
