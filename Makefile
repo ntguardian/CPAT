@@ -35,10 +35,7 @@ all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile
 $(POWERSIMPREFIX)_garch11_a0.1_b0.7_o0.5_*.Rda : \
                                exec/GARCHPowerSimulationParameters.R \
                                exec/PowerSimulations.R R/ProbabilityFunctions.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript $< -f data/GARCHPowerSimulationParameters.Rda
 	Rscript exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
 		-p $(POWERSIMPREFIX) -i data/GARCHPowerSimulationParameters.Rda \
@@ -47,10 +44,7 @@ endif
 $(POWERSIMPREFIX)_ar1_0.5_*.Rda : exec/AR1PowerSimulationParameters.R \
                                   exec/PowerSimulations.R \
                                   R/ProbabilityFunctions.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript $< -f data/AR1PowerSimulationParameters.Rda
 	Rscript exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
 		-p $(POWERSIMPREFIX) -i data/AR1PowerSimulationParameters.Rda \
@@ -58,10 +52,7 @@ endif
 
 $(POWERSIMPREFIX)_norm_*.Rda : exec/NormPowerSimulationParameters.R \
                                exec/PowerSimulations.R R/ProbabilityFunctions.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript $< -f data/NormPowerSimulationParameters.Rda
 	Rscript exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
 		-p $(POWERSIMPREFIX) -i data/NormPowerSimulationParameters.Rda \
@@ -78,54 +69,33 @@ $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
 		-s $(POWERSIMSTATMETA) -o $@ -a 0.05
 
 $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript $< -N $(LRVREPLICATIONS) -s $(LRVSEED) -f $@
 
 $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP)
 
 $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
              R/SimulationUtils.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript $< -f $(FFFIILE) -b $(BANKFILE) -o $@
 
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
-ifndef $(PACKAGEMADE)
-	Rscript exec/RemakePackage.R
-PACKAGEMADE=yes
-endif
+	make package
 	Rscript exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
@@ -133,6 +103,12 @@ R/ChangePointTests.R : src/ChangePointTests.cpp
 
 inst/Makefile : Makefile
 	cp $< $@
+
+.PHONY : package
+
+package : R/*.R
+	Rscript exec/RemakePackage.R
+	touch package
 
 .PHONY : clean
 clean:
