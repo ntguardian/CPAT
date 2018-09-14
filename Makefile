@@ -1,5 +1,5 @@
 SHELL=/bin/sh
-RSCRIPT=$(RSCRIPT)
+RSCRIPT=Rscript
 
 POWERPLOTPREFIX=inst/plots/power_plot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
