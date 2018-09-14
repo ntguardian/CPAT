@@ -1,0 +1,42 @@
+Encoding: UTF-8
+Package: tikzDevice
+Type: Package
+Title: R Graphics Output in LaTeX Format
+Version: 0.12
+Authors@R: c( person("Charlie", "Sharpsteen", role = "aut"),
+        person("Cameron", "Bracken", role = "aut"), person("Kirill",
+        "Müller", role = c("ctb"), email =
+        "krlmlr+r@mailbox.org"), person("Yihui", "Xie", role = "ctb"),
+        person("Ralf", "Stubner", email = "ralf.stubner@daqana.com", 
+        role = "cre")) 
+URL: https://github.com/daqana/tikzDevice
+BugReports: https://github.com/daqana/tikzDevice/issues
+Description: Provides a graphics output device for R that records plots
+        in a LaTeX-friendly format. The device transforms plotting
+        commands issued by R functions into LaTeX code blocks. When
+        included in a LaTeX document, these blocks are interpreted with
+        the help of 'TikZ'---a graphics package for TeX and friends
+        written by Till Tantau. Using the 'tikzDevice', the text of R
+        plots can contain LaTeX commands such as mathematical formula.
+        The device also allows arbitrary LaTeX code to be inserted into
+        the output stream.
+License: GPL (>= 2)
+Depends: R (>= 2.14.0)
+Imports: filehash (>= 2.3), png
+Suggests: evaluate, formatR, ggplot2, knitr, lattice, maps, scales,
+        stringr, testthat (>= 0.8.1), withr
+SystemRequirements: pgf (>= 2.00)
+LazyLoad: yes
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1.9000
+NeedsCompilation: yes
+Packaged: 2018-06-28 10:37:59 UTC; ralf
+Author: Charlie Sharpsteen [aut],
+  Cameron Bracken [aut],
+  Kirill Müller [ctb],
+  Yihui Xie [ctb],
+  Ralf Stubner [cre]
+Maintainer: Ralf Stubner <ralf.stubner@daqana.com>
+Repository: CRAN
+Date/Publication: 2018-07-02 16:14:52
+Built: R 3.4.2; i686-pc-linux-gnu; 2018-09-14 20:02:37 UTC; unix
