@@ -33,6 +33,7 @@ main <- function(file, outfile = "BankCAPMChange", verbose = FALSE,
   library(tikzDevice)
   library(reshape2)
   library(magrittr)
+  library(tools)
 
   load(file)
 
