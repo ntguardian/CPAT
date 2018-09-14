@@ -102,7 +102,7 @@ $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
-	mv $(basename $@) $@
+	mv $(basename $@).pdf $@.pdf
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
