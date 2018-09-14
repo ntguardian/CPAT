@@ -31,7 +31,8 @@ FFFILE=data/FF_factors.csv
 BANKFILE=data/Portfolios.csv
 
 .PHONY : all
-all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile
+all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
+      inst/package
 
 $(POWERSIMPREFIX)_garch11_a0.1_b0.7_o0.5_*.Rda : \
                                exec/GARCHPowerSimulationParameters.R \
@@ -105,7 +106,8 @@ R/ChangePointTests.R : src/ChangePointTests.cpp
 inst/Makefile : Makefile
 	cp $< $@
 
-.PHONY : package
+inst/package : package
+	cp $< $@
 
 package : R/*.R
 	$(RSCRIPT) exec/RemakePackage.R
