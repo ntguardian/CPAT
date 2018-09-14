@@ -1,0 +1,19 @@
+checkDoptions           Check list D.options.
+checkObject             Variable check for single objects.
+checkVars               Multiple variable checks for certain values.
+cointReg                Estimation and Inference for cointegrating
+                        regressions
+cointReg-package        The cointReg package
+cointRegD               Dynamic OLS
+cointRegFM              Fully Modified OLS
+cointRegIM              Integrated Modified OLS
+getBandwidth            Automatic Bandwidth Selection
+getLeadLag              Leads and Lags
+getLongRunVar           Long-Run Variance
+getLongRunWeights       Weights for Long-Run Variance
+getModD                 Get D OLS model.
+makeLeadLagMatrix       Leads-and-Lags Matrix
+plot.cointReg           Plot Method for Cointegration Models (Modified
+                        OLS).
+print.cointReg          Print Method for Cointegration Models (Modified
+                        OLS).
