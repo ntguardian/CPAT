@@ -1,7 +1,7 @@
 SHELL=/bin/sh
 RSCRIPT=Rscript
 
-POWERPLOTPREFIX=inst/plots/power_plot
+POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
 POWERDAT=data/PowerSimStat95Data.csv
 POWERREPLICATIONS=5000
@@ -118,7 +118,7 @@ package : R/*.R
 	touch package
 
 .PHONY : clean
-clean:
+clean :
 	rm $(POWERPLOT)
 	rm $(POWERSIMPREFIX)*
 	rm $(POWERSIMFILEMETA)
@@ -131,8 +131,15 @@ clean:
 	rm $(CAPMPLOT)
 
 .PHONY : mostlyclean
-mostlyclean:
+mostlyclean :
 	rm $(POWERPLOT)
 	rm $(LRVPLOT)
 	rm $(ZNCONVPLOT)
 	rm $(CAPMPLOT)
+
+.PHONY : init
+init :
+	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50.pdf
+	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
+	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
+
