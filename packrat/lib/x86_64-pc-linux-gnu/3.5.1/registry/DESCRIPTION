@@ -1,0 +1,15 @@
+Package: registry
+Type: Package
+Title: Infrastructure for R Package Registries
+Version: 0.5
+Author: David Meyer
+Maintainer: David Meyer <David.Meyer@R-project.org>
+Description: Provides a generic infrastructure for creating and using registries.
+Depends: R (>= 2.6.0)
+Imports: utils
+License: GPL-2
+NeedsCompilation: no
+Packaged: 2017-12-02 16:29:01 UTC; meyer
+Repository: CRAN
+Date/Publication: 2017-12-03 09:35:10 UTC
+Built: R 3.5.1; ; 2018-09-15 07:06:35 UTC; unix

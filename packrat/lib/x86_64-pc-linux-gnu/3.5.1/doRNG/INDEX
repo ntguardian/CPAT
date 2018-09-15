@@ -1,0 +1,6 @@
+%dorng%                 Reproducible Parallel Foreach Backend
+doRNG-package           Generic Reproducible Parallel Backend for
+                        foreach Loops
+doRNGversion            Back Compatibility Option for doRNG
+registerDoRNG           Registering doRNG for Persistent Reproducible
+                        Parallel Foreach Loops
