@@ -37,7 +37,7 @@ all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
       inst/package
 
 $(POWERSIMTEMPFILEMETA) : $(POWERSIMTEMPFILEMETAPREFIX)%.csv : \
-  exec/%$(POWERSIMPARAMSUFF) exec/PowerSimulations.R exec/ProbabilityFunctions.R
+  exec/%$(POWERSIMPARAMSUFF) exec/PowerSimulations.R R/ProbabilityFunctions.R
 	make package
 	$(RSCRIPT) $< -f data/NormPowerSimulationParameters.Rda
 	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
