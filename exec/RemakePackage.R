@@ -34,7 +34,7 @@ main <- function(help = FALSE) {
                                            "directory of the package" %s% 
                                            pack_name)
   devtools::document()
-  devtools::build()
+  # devtools::build()
   devtools::install()
 }
 
