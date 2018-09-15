@@ -36,9 +36,8 @@ BANKFILE=data/Portfolios.csv
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
       inst/package
 
-$(POWERSIMTEMPFILEMETAPREFIX)%.csv : exec/%PowerSimulationParameters.R \
-                                     exec/PowerSimulations.R \
-                                     exec/ProbabilityFunctions.R
+$(POWERSIMTEMPFILEMETA) : $(POWERSIMTEMPFILEMETAPREFIX)%.csv : \
+  exec/%$(POWERSIMPARAMSUFF) exec/PowerSimulations.R exec/ProbabilityFunctions.R
 	make package
 	$(RSCRIPT) $< -f data/NormPowerSimulationParameters.Rda
 	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
