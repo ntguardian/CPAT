@@ -38,7 +38,7 @@ cl_args <- parse_args(OptionParser(
                   help = "Number of replications per point"),
       make_option(c("--seed", "-s"), type = "integer", default = 20180904,
                   help = "The seed of the simulations"),
-      make_option(c("--seedless", "-R"), action = "store_true",
+      make_option(c("--seedless", "-R"), action = "store_true", default = FALSE,
                   help = "Don't set a seed (causes --seed to be ignored)"),
       make_option(c("--prefix", "-p"), type = "character", default = "",
                   help = "Prefix to attach to save names (useful for saving" %s%
