@@ -1,0 +1,63 @@
+2001-08-29 - Version 1.0-1
+--------------------------
+
+-Cleaned up the help files a bit
+
+
+2002-01-15 - Version 1.1-1
+--------------------------
+
+** Changes suggested by B D Ripley **
+
+-changed to Lapack SGESDD routine and calculate optimal workspace to increase speed
+-better error checking within the C code
+-more transparent C code
+-FastICA function replaced by fastICA and takes standard (nxp) data matrix as argument
+  
+
+2002-09-23 - Version 1.1-2
+--------------------------
+
+-all svd calls now done using La.svd() using method "dgesdd"
+-configure.win script added to package
+
+
+2003-03-12 - Version 1.1-3
+--------------------------
+
+-fixed memory leak in function calc_K_JM in file ica.c
+
+
+2003-04-04 - Version 1.1-4
+--------------------------
+
+-made code R 1.7.0 compatible
+
+
+2004-06-08 - Version 1.1-5
+--------------------------
+
+-changed detection of blas & lapack, to be MacOS X compatible (no lsame in BLAS).
+
+2004-12-23 - Version 1.1-6
+--------------------------
+
+- implemented Brian's changes 
+
+2006-05-12 - Version 1.1-7
+--------------------------
+
+- implemented change to fastICA function scaling 
+
+2006-05-16 - Version 1.1-8
+--------------------------
+
+- Brian made changes to separate out slamc.f and ensure it is compiled
+without optimization
+
+2007-10-10 - Version 1.1-9
+--------------------------
+
+- Changes need to avoid looping on 2.6.0 under Windows.
+- Add NAMESPACE
+- BDR takes over as maintainer.

@@ -1,0 +1,18 @@
+Package: fastICA
+Version: 1.2-1
+Date: 2017-06-12
+Title: FastICA Algorithms to Perform ICA and Projection Pursuit
+Author: J L Marchini <marchini@stats.ox.ac.uk>, C Heaton
+        <chrisheaton99@yahoo.com> and B D Ripley
+        <ripley@stats.ox.ac.uk>
+Maintainer: Brian Ripley <ripley@stats.ox.ac.uk>
+Depends: R (>= 3.0.0)
+Suggests: MASS
+Description: Implementation of FastICA algorithm to perform Independent
+        Component Analysis (ICA) and Projection Pursuit.
+License: GPL-2 | GPL-3
+Packaged: 2017-06-12 07:49:50 UTC; ripley
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2017-06-12 10:10:37 UTC
+Built: R 3.5.1; x86_64-pc-linux-gnu; 2018-09-15 06:54:34 UTC; unix

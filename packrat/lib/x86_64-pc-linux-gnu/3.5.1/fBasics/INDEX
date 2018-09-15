@@ -1,0 +1,99 @@
+DistributionFits        Parameter Fit of a Distribution
+Heaviside               Haviside and Related Functions
+Ids                     Set and Retrieve Column/Row Names
+NormalityTests          Normality Tests
+acfPlot                 Autocorrelation Function Plots
+akimaInterp             Bivariate Spline Interpolation
+baseMethods             Generic Functions Extensions
+basicStats              Basic Time Series Statistics
+boxPlot                 Time Series Box Plots
+characterTable          Table of Characters
+colVec                  Column and Row Vectors
+colorLocator            Color Selection
+colorPalette            Color Palettes
+colorTable              Table of Colors
+correlationTest         Correlation Tests
+decor                   Decor Functions
+dght                    Generalized Hyperbolic Student-t
+distCheck               Distribution Check
+fBasics-deprecated      Deprecated Functions in Package fBasics
+fBasics-package         Portfolio Modelling, Optimization and
+                        Backtesting
+fBasicsData             fBsiscs Data Sets
+fHTEST                  Tests Class Representation and Utilities
+getS4                   General S4 Class Extractor Functions
+gh                      Generalized Hyperbolic Distribution
+ghFit                   GH Distribution Fit
+ghMode                  Generalized Hyperbolic Mode
+ghMoments               Generalized Hyperbolic Distribution Moments
+ghRobMoments            Robust Moments for the GH
+ghSlider                Generalized Hyperbolic Distribution Slider
+ghtFit                  GHT Distribution Fit
+ghtMode                 Generalized Hyperbolic Student-t Mode
+ghtMoments              Generalized Hyperbolic Student-t Moments
+ghtRobMoments           Robust Moments for the GHT
+gld                     Generalized Lambda Distribution
+gldFit                  GH Distribution Fit
+gldMode                 Generalized Lambda Distribution Mode
+gldRobMoments           Robust Moments for the GLD
+gridVector              Grid Vector Coordinates
+hilbert                 Hilbert Matrix
+histPlot                Histogram and Density Plots
+hyp                     Hyperbolic Distribution
+hypFit                  Fit of a Hyperbolic Distribution
+hypMode                 Hyperbolic Mode
+hypMoments              Hyperbolic Distribution Moments
+hypRobMoments           Robust Moments for the HYP
+hypSlider               Hyperbolic Distribution Slider
+interactivePlot         Interactive Plot Utility
+inv                     The Inverse of a Matrix
+krigeInterp             Bivariate Krige Interpolation
+kron                    Kronecker Product
+ks2Test                 Two Sample Kolmogorov-Smirnov Test
+lcg                     Generator for Portable Random Innovations
+linearInterp            Bivariate Linear Interpolation
+listDescription         Description File Listing
+listFunctions           Functions Listing
+listIndex               Index File Listing
+locationTest            Two Sample Location Tests
+maxdd                   Drawdown Statistics
+nig                     Normal Inverse Gaussian Distribution
+nigFit                  Fit of a Normal Inverse Gaussian Distribution
+nigMode                 Normal Inverse Gaussian Mode
+nigMoments              Moments for the Normal Inverse Gaussian
+nigRobMoments           Robust Moments for the NIG
+nigShapeTriangle        NIG Shape Triangle
+nigSlider               nigerbolic Distribution Slider
+norm2                   Matrix Norm
+normRobMoments          Robust Moments for the NORM
+pascal                  Pascal Matrix
+pdl                     Polynomial Distributed Lags
+positiveDefinite        Positive Definite Matrixes
+print                   Print Control
+qqnormPlot              Quantile-Quantile Plots
+returnSeriesGUI         Return Series Plots
+rk                      The Rank of a Matrix
+rowStats                Row Statistics
+sampleLMoments          Sample L-Moments
+sampleRobMoments        Robust Moments for the GLD
+scaleTest               Two Sample Scale Tests
+scalinglawPlot          Scaling Law Bahaviour
+seriesPlot              Financial Time Series Plots
+sgh                     Standardized Generalized Hyperbolic
+                        Distribution
+sghFit                  Standardized GH Distribution Fit
+sght                    Standardized generalized hyperbolic Student-t
+                        Distribution
+snig                    Standardized Normal Inverse Gaussian
+                        Distribution
+snigFit                 Fit of a Stndardized NIG Distribution
+ssd                     Spline Smoothed Distribution
+ssdFit                  Fit Density Using Smoothing Splines
+stableSlider            Slider GUI for Stable Distribution
+symbolTable             Table of Symbols
+tr                      Trace of a Matrix
+triang                  Upper and Lower Triangular Matrixes
+tsHessian               Two sided approximated Hessian
+tslag                   Lagged or Leading Vector/Matrix
+varianceTest            Two Sample Variance Tests
+vec                     Stacking Vectors and Matrixes

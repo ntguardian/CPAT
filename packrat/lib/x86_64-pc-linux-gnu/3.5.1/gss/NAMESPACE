@@ -1,0 +1,55 @@
+useDynLib(gss)
+# export user functions
+importFrom(stats, as.formula, dnorm, fitted, model.frame,
+           model.matrix, model.offset, model.response, model.weights,
+           na.omit, nlm, pnorm, predict, qlogis, quantile, residuals,
+           terms, terms.formula, var, runif)
+export(cdsscden, cpsscden, cqsscden, cdssden, cpssden, cqssden,
+       dsscden, dssden, gauss.quad, gssanova, gssanova0,
+       gssanova1, hzdcurve.sshzd, hzdrate.sshzd, nlm0, para.arma,
+       predict1, project, psscden, pssden, qsscden, qssden,
+       smolyak.quad, smolyak.size, ssanova, ssanova0, ssanova9,
+       sscden, sscden1, sscox, ssden, ssden1, sshzd, sshzd1, ssllrm,
+       survexp.sshzd)
+# export internal functions used in examples
+export(mkterm, mkphi.cubic, mkphi.tp, mkran, mkran1, mkrk.cubic, mkrk.tp)
+# export internal functions for use in gsscopu
+export(sspdsty, mspdsty, msphzd, msphzd1)
+export(ngreg.proj)
+# register S3 methods
+S3method(fitted, gssanova)
+S3method(fitted, ssanova)
+S3method(predict, ssanova)
+S3method(predict, ssanova0)
+S3method(predict, sscox)
+S3method(predict, ssllrm)
+S3method(predict1, ssanova)
+S3method(print, gssanova)
+S3method(print, ssanova)
+S3method(print, ssanova0)
+S3method(print, sscden)
+S3method(print, sscox)
+S3method(print, ssden)
+S3method(print, sshzd)
+S3method(print, ssllrm)
+S3method(print, summary.gssanova)
+S3method(print, summary.gssanova0)
+S3method(print, summary.ssanova)
+S3method(project, gssanova)
+S3method(project, ssanova)
+S3method(project, ssanova9)
+S3method(project, sscden)
+S3method(project, sscden1)
+S3method(project, sscox)
+S3method(project, ssden)
+S3method(project, ssden1)
+S3method(project, sshzd)
+S3method(project, sshzd1)
+S3method(project, ssllrm)
+S3method(summary, gssanova)
+S3method(summary, gssanova0)
+S3method(summary, ssanova)
+S3method(summary, ssanova0)
+S3method(summary, ssanova9)
+S3method(residuals, gssanova)
+S3method(residuals, ssanova)

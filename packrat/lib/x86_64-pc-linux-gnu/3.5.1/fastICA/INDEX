@@ -1,0 +1,3 @@
+fastICA                 FastICA algorithm
+ica.R.def               R code for FastICA using a deflation scheme
+ica.R.par               R code for FastICA using a parallel scheme
