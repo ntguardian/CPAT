@@ -10,9 +10,12 @@ POWERSIMPREFIX=data/XOUTPowerSimulations
 POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
 POWERSIMTEMPFILEMETAPREFIX=data/PowerSimulationsMetadataDist
 POWERSIMPARAMSUFF=PowerSimulationParameters.R
+POWERSIMMETARDASUFF=PowerSimulationParameters.Rda
 POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
 POWERSIMTEMPFILEMETA:= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
+POWERSIMMETARDA:= \
+  $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=data/%$(POWERSIMMETARDASUFF))
 POWERSIMSTATMETA=data/PowerSimulationStatsMetadata.csv
 
 LRVPLOTPREFIX=inst/plots/LRVEstPlot
@@ -36,13 +39,14 @@ BANKFILE=data/Portfolios.csv
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
       inst/package
 
+$(POWERSIMMETARDA) : data/%$(POWERSIMMETARDASUFF) : exec/%$(POWERSIMPARAMSUFF)
+	$(RSCRIPT) $< -f $@
+
 $(POWERSIMTEMPFILEMETA) : $(POWERSIMTEMPFILEMETAPREFIX)%.csv : \
-  exec/%$(POWERSIMPARAMSUFF) exec/PowerSimulations.R R/ProbabilityFunctions.R
+  data/%$(POWERSIMMETARDASUFF) exec/PowerSimulations.R R/ProbabilityFunctions.R
 	make package
-	$(RSCRIPT) $< -f data/%PowerSimulationParameters.Rda
 	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/%PowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)%.csv
+		-p $(POWERSIMPREFIX) -i $< -o $@
 
 $(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA)
 	head -1 $< > $@

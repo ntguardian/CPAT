@@ -1,0 +1,26 @@
+Package: rngtools
+Authors@R: person("Renaud", "Gaujoux", email = "renozao@protonmail.com", role = c("aut", "cre"))
+Version: 1.3.1
+License: GPL-3
+Title: Utility Functions for Working with Random Number Generators
+Description: Provides a set of functions for working with
+    Random Number Generators (RNGs). In particular, a generic
+    S4 framework is defined for getting/setting the current RNG, or RNG data
+    that are embedded into objects for reproducibility.
+    Notably, convenient default methods greatly facilitate the way current
+    RNG settings can be changed.
+URL: https://renozao.github.io/rngtools
+BugReports: http://github.com/renozao/rngtools/issues
+Encoding: UTF-8
+Depends: R (>= 3.0.0), methods, pkgmaker (>= 0.20)
+Imports: stringr, digest, utils, stats, parallel
+Suggests: RUnit, testthat
+Collate: 'rngtools-package.r' 'format.R' 'RNG.R' 'RNGseq.R'
+RoxygenNote: 6.0.1.9000
+NeedsCompilation: no
+Packaged: 2018-05-15 11:15:29 UTC; renaud
+Author: Renaud Gaujoux [aut, cre]
+Maintainer: Renaud Gaujoux <renozao@protonmail.com>
+Repository: CRAN
+Date/Publication: 2018-05-15 16:41:13 UTC
+Built: R 3.5.1; ; 2018-09-15 07:06:41 UTC; unix

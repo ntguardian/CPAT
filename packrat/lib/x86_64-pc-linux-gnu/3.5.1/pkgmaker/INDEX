@@ -1,0 +1,101 @@
+.silenceF               Silencing Functions
+CRAN                    Main CRAN Mirror URL
+ExposeAttribute         Exposing Object Attributes
+R.exec                  Executing R Commands
+RdSection2latex         Format Rd Sections into LatTeX
+Rversion                Complete R version
+Sys.getenv_value        System Environment Variables
+addToLogger             Enhancing RUnit Logger
+add_lib                 Adding Package Libraries
+addnames                Generating Names
+alphacol                Colour utilities
+askUser                 User Queries
+bibtex                  Bibtex Utilities
+cgetAnywhere            Get Anywhere
+charmap                 Substituting Strings Against a Mapping Table
+checkWarning            Extra Check Functions for RUnit
+citecmd                 Citing Package References
+compile_src             Compile Source Files from a Development Package
+exitCheck               Exit Error Checks
+expand_list             Expanding Lists
+extractLocalFun         Extracting Local Function Definition
+factor2character        Converting Factors to Character Vectors
+file_extension          Extract File Extension
+find_devpackage         Find Path to Development Package Root Directory
+getLoadingNamespace     Namespace Development Functions
+gfile                   Open a File Graphic Device
+graphics-utils          Utility Functions for Graphics
+hasArg2                 Checking for Missing Arguments
+hasEnvar                Check Environment Variables
+inSweave                Identifying Sweave Run
+irequire                Require a Package with User Interaction
+isCRANcheck             Package Check Utils
+is_package_path         Test for Package Root Directory
+is_something            Testing Object Type
+iterCount               Simple Text Iteration Counter
+knit_ex                 Knitr Extensions
+latex_preamble          LaTeX Utilities for Vignettes
+list.libs               Library Files Utilities
+load_project            Load Development Package
+lverbose                Logging Feature
+makeFakeVignette        Generate a Fake Vignette
+makeUnitVignette        Make Vignette for Unit Tests
+make_vignette_auxfiles
+                        Generate RMarkdown Vignette Axiliary Files
+messagef                General Log Formating
+mkoptions               Quick Option-like Feature
+new2                    Alternative S4 Constructor
+onLoad                  Default Load/Unload Functions
+oneoffVariable          One-off Global Variables
+option_symlink          'option_symlink' creates a symbolic link to
+                        option 'x'.
+orderVersion            Ordering Version Numbers
+packageData             Loading Package Data
+packageEnv              Package Development Utilities
+packageReference        Package References
+packageRegistry         Package Registry
+packageTestEnv          Returns the package internal environment where
+                        unit tests are stored.
+parsePackageCitation    Formatting Package Citations in Sweave/knitr
+                        Documents
+pkgmaker-deprecated     Deprecated Functions in pkgmaker
+postponeAction          Postponing Actions
+quickinstall            Quick Installation of a Source Package
+read.yaml_section       Reads YAML Options Embbeded into a File
+regfetch                Finds an entry in a registry.
+render_notes            Renders rmarkdown Documents Using User Default
+                        Options
+reorder_columns         Reordering Columns
+require.quiet           Loading Packages
+requireRUnit            Load RUnit Compatible Package
+rnw                     Utilities for Vignettes
+sVariable               Global Static Variable
+setBiocMirror           Setting Mirrors and Repositories
+setClassRegistry        Automatic S4 Class for Registry Entries
+setPackageExtraHandler
+                        Install/Run Extra Things After Standard Package
+                        Installation
+setupPackageOptions     Package Specific Options
+simpleRegistry          Simple Package Registry
+source_files            Source Multiple Files
+str_diff                Finding Differences Between Strings
+str_out                 Formatting Utilities
+testRversion            Testing R Version
+unit.test               Embedded Unit Tests
+unlist_                 Flatten a List Conserving Names
+unlist_with_sep         Flattens All List Levels Using Separated Names
+userData                User Data Directory 'userData' returns the path
+                        to a local directory/file where package-related
+                        user data can be stored. Note that a base
+                        directory is *always* created if necessary (see
+                        details).
+userIs                  Checking R User
+using_something         Execute code in temporarily altered
+                        environment.
+utest                   Running Unit Tests
+utestFramework          Inferring Unit Test Framework
+utestPath               Unit Tests Result Directory
+winbuild                Build a Windows Binary Package
+write.bib               Defunct Functions in pkgmaker
+write.pkgbib            Generate a Bibtex File from Package Citations
+writeUnitVignette       Writes Unit Tests Vignette
