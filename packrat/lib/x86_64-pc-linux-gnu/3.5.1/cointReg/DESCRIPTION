@@ -1,0 +1,59 @@
+Package: cointReg
+Type: Package
+Title: Parameter Estimation and Inference in a Cointegrating Regression
+Date: 2016-06-14
+Version: 0.2.0
+Authors@R: c( person("Philipp", "Aschersleben", role = c("aut", "cre"),
+    email = "aschersleben@statistik.tu-dortmund.de"), person("Martin",
+    "Wagner", role = "aut", email = "wagner@statistik.tu-dortmund.de",
+    comment = "Author of underlying MATLAB code."))
+Description: Cointegration methods are widely used in empirical
+    macroeconomics and empirical finance. It is well known that in a
+    cointegrating regression the ordinary least squares (OLS) estimator
+    of the parameters is super-consistent, i.e. converges at rate equal
+    to the sample size T. When the regressors are endogenous, the
+    limiting distribution of the OLS estimator is contaminated by
+    so-called second order bias terms, see e.g. Phillips and Hansen
+    (1990) <DOI:10.2307/2297545>. The presence of these bias terms
+    renders inference difficult. Consequently, several modifications to
+    OLS that lead to zero mean Gaussian mixture limiting distributions
+    have been proposed, which in turn make standard asymptotic
+    inference feasible. These methods include the fully modified OLS
+    (FM-OLS) approach of Phillips and Hansen (1990)
+    <DOI:10.2307/2297545>, the dynamic OLS (D-OLS) approach of Phillips
+    and Loretan (1991) <DOI:10.2307/2298004>, Saikkonen (1991)
+    <DOI:10.1017/S0266466600004217> and Stock and Watson (1993)
+    <DOI:10.2307/2951763> and the new estimation approach called
+    integrated modified OLS (IM-OLS) of Vogelsang and Wagner (2014)
+    <DOI:10.1016/j.jeconom.2013.10.015>. The latter is based on an
+    augmented partial sum (integration) transformation of the
+    regression model. IM-OLS is similar in spirit to the FM- and D-OLS
+    approaches, with the key difference that it does not require
+    estimation of long run variance matrices and avoids the need to
+    choose tuning parameters (kernels, bandwidths, lags). However,
+    inference does require that a long run variance be scaled out. This
+    package provides functions for the parameter estimation and
+    inference with all three modified OLS approaches. That includes the
+    automatic bandwidth selection approaches of Andrews (1991)
+    <DOI:10.2307/2938229> and of Newey and West (1994)
+    <DOI:10.2307/2297912> as well as the calculation of the long run
+    variance.
+URL: https://github.com/aschersleben/cointReg
+BugReports: https://github.com/aschersleben/cointReg/issues
+License: GPL-3
+Imports: checkmate (>= 1.6.0), MASS, matrixStats (>= 0.14.1)
+RoxygenNote: 5.0.1
+Suggests: testthat, knitr, rmarkdown
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2016-06-14 07:49:50 UTC; Aschersleben
+Author: Philipp Aschersleben [aut, cre], Martin Wagner [aut] (Author of
+    underlying MATLAB code.)
+Maintainer: Philipp Aschersleben
+    <aschersleben@statistik.tu-dortmund.de>
+Repository: CRAN
+Date/Publication: 2016-06-14 11:58:42
+Built: R 3.5.1; ; 2018-09-13 04:40:41 UTC; unix
+InstallAgent: packrat 0.4.9.3
+InstallSource: CRAN
+Hash: f1f6ac08bc941ad9e27eb926272bcb0e

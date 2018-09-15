@@ -1,0 +1,34 @@
+Package: Rdpack
+Type: Package
+Title: Update and Manipulate Rd Documentation Objects
+Version: 0.9-0
+Date: 2018-08-04
+Authors@R: c( person(given = c("Georgi", "N."), family = "Boshnakov",
+    role = c("aut", "cre"), email =
+    "georgi.boshnakov@manchester.ac.uk"), person(given = "Duncan",
+    family = "Murdoch", role = "ctb", email =
+    "murdoch.duncan@gmail.com") )
+Description: Functions for manipulation of R documentation objects,
+    including functions reprompt() and ereprompt() for updating 'Rd'
+    documentation for functions, methods and classes; 'Rd' macros for
+    citations and import of references from 'bibtex' files for use in
+    'Rd' files and 'roxygen2' comments; and many functions for
+    manipulation of references and Rd files.
+URL: https://github.com/GeoBosh/Rdpack
+BugReports: https://github.com/GeoBosh/Rdpack/issues
+Depends: R (>= 2.15.0), methods
+Imports: tools, utils, grDevices, bibtex (>= 0.4.0), gbRd
+Suggests: rstudioapi, rprojroot
+License: GPL (>= 2)
+LazyLoad: yes
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2018-08-04 22:01:36 UTC; mcbssgb2
+Author: Georgi N. Boshnakov [aut, cre], Duncan Murdoch [ctb]
+Maintainer: Georgi N. Boshnakov <georgi.boshnakov@manchester.ac.uk>
+Repository: CRAN
+Date/Publication: 2018-08-04 22:40:03 UTC
+Built: R 3.5.1; ; 2018-09-13 04:41:04 UTC; unix
+InstallAgent: packrat 0.4.9.3
+InstallSource: CRAN
+Hash: 8b66aec33c3117d32c7044366cc02c41

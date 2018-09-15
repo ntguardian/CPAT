@@ -1,0 +1,116 @@
+---
+title: "cointReg"
+author: "Philipp Aschersleben"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{cointReg}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{R, include = FALSE}
+knitr::opts_chunk$set(fig.path = "figures/vignette-", fig.width = 5,
+                      message = FALSE)
+```
+
+
+## Install cointReg
+
+```{R, eval = FALSE}
+install.packages("cointReg")
+```
+
+If you like to use the development version, you can install the package directly
+from GitHub:
+```{R, eval = FALSE}
+devtools::install_github("aschersleben/cointReg", build_vignettes = TRUE)
+```
+
+Load the package:
+```{R}
+library("cointReg")
+```
+
+
+
+## Basic examples
+
+### Simple test model with one regression variable
+
+Generate a regression variable `x` and a dependant variable `y`. The fastest
+and easiest way to plot both time series is `matplot(...)`.
+```{R}
+set.seed(42)
+x <- cumsum(rnorm(200, mean = 0, sd = 0.1)) + 10
+y <- x + rnorm(200, sd = 0.4) + 2
+matplot(1:200, cbind(y, x), type = "l", main = "Cointegration Model")
+```
+
+Now you can estimate the model parameters with the FM-OLS method and include an
+intercept in the model via the `deter` variable:
+```{R}
+deter <- rep(1, 200)
+test <- cointRegFM(x = x, y = y, deter = deter)
+```
+
+Print the results:
+```{R}
+print(test)
+```
+
+You can see that both the intercept and the regression variable are significant.
+
+Finally, you can plot the residuals:
+```{R}
+plot(test, main = "Residuals of the Cointegration Model")
+```
+
+
+
+### Another test model with three regression variables and a linear trend
+
+```{R}
+set.seed(1909)
+x1 <- cumsum(rnorm(100, mean = 0.05, sd = 0.1))
+x2 <- cumsum(rnorm(100, sd = 0.1)) + 1
+x3 <- cumsum(rnorm(100, sd = 0.2)) + 2
+x <- cbind(x1, x2, x3)
+y <- x1 + x2 + x3 + rnorm(100, sd = 0.2) + 1
+matplot(1:100, cbind(y, x), type = "l", main = "Cointegration Model")
+```
+
+
+```{R}
+deter <- cbind(level = 1, trend = 1:100)
+test <- cointRegFM(x, y, deter, kernel = "ba", bandwidth = "and")
+print(test)
+```
+
+```{R}
+plot(test, main = "Residuals of the Cointegration Model")
+```
+
+
+
+## Spurious regression example
+
+This is why you should use modified OLS methods instead of a normal OLS model
+to estimate parameters of a cointegrating regression:
+
+```{R}
+set.seed(26)
+x <- cumsum(rnorm(200))
+y <- cumsum(rnorm(200))
+summary(lm(y ~ x))
+```
+The independant variable `x` seems to be significant at a very secure level.
+
+And now have a look at the results of an FM-OLS regression:
+```{R}
+cointRegFM(x = x, y = y, deter = rep(1, 200))
+```
+So the `x` variable doesn't have an influence on `y` -- which makes sense
+because they were generated independently.

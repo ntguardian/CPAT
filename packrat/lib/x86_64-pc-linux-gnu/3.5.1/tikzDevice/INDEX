@@ -1,0 +1,12 @@
+anyMultibyteUTF8Characters
+                        Check If a String Contains Multibyte UTF-8
+                        characters
+getLatexStrWidth        Obtain Font Metrics from LaTeX
+gridToDevice            Convert grid coordinates to device coordinates
+sanitizeTexString       Replace LaTeX Special Characters in a String
+setTikzDefaults         Reset tikzDevice options to default values.
+tikz                    TikZ Graphics Device
+tikzAnnotate            Add Custom TikZ Code to an Active Device
+tikzCompilerInfo        Print paths to TeX compilers.
+tikzDevice-package      Support for native LaTeX output of R graphics
+tikzTest                Test invocation of a LaTeX engine.

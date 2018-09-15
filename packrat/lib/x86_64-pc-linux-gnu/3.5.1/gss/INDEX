@@ -1,0 +1,214 @@
+## SSANOVA, GSSANOVA, SSDEN, SSCDEN, SSLLRM, SSHZD, AND SSCOX SUITES
+ssanova                     Fitting smoothing spline ANOVA models
+predict.ssanova             Predicting from ssanova fits
+predict1.ssanova            Predicting from ssanova fits
+summary.ssanova             Summarizing ssanova fits
+project.ssanova             Projecting ssanova fits for model diagnostic
+ssanova9                    Fitting smoothing spline ANOVA models with correlated data
+summary.ssanova9            Summarizing ssanova9 fits
+project.ssanova9            Projecting ssanova9 fits for model diagnostic
+ssanova0                    Fitting smoothing spline ANOVA models
+predict.ssanova0            Predicting from ssanova0 fits
+summary.ssanova0            Summarizing ssanova0 fits
+residuals.ssanova           Extracting the residuals from ssanova objects
+fitted.ssanova              Extracting the fitted values from ssanova objects
+print.ssanova               Print function for ssanova objects
+print.ssanova0              Print function for ssanova0 objects
+print.summary.ssanova       Print function for summary.ssanova objects
+
+gssanova                    Fitting smoothing spline ANOVA models with non Gaussian data
+gssanova1                   Fitting smoothing spline ANOVA models with non Gaussian data
+summary.gssanova            Summarizing gssanova fits
+project.gssanova            Projecting gssanova1 fits for model diagnostic
+gssanova0                   Fitting smoothing spline ANOVA models with non Gaussian data
+summary.gssanova0           Summarizing gssanova0 fits
+residuals.gssanova          Extracting the residuals from gssanova objects
+fitted.gssanova             Extracting the fitted values from gssanova objects
+print.gssanova              Print function for gssanova objects
+print.summary.gssanova      Print function for summary.gssanova objects
+print.summary.gssanova0     Print function for summary.gssanova0 objects
+
+ssden                       Estimating probability density using smoothing splines
+d.ssden                     Evaluating pdf of ssden estimates
+project.ssden               Projecting ssden fits for model diagnostic
+ssden1                      Estimating probability density using smoothing splines
+d.ssden1                    Evaluating pdf of ssden1 estimates
+project.ssden1              Projecting ssden1 fits for model diagnostic
+dssden                      Evaluating pdf of ssden estimates
+pssden                      Evaluating cdf of 1-D ssden estimates
+qssden                      Evaluating quantiles of 1-D ssden estimates
+cdssden                     Evaluating conditional pdf of ssden estimates
+cpssden                     Evaluating 1-D conditional cdf of ssden estimates
+cqssden                     Evaluating 1-D conditional quantiles of ssden estimates
+print.ssden                 Print function for ssden objects
+
+sscden                      Estimating conditional density using smoothing splines
+d.sscden                    Evaluating pdf of sscden estimates
+project.sscden              Projecting sscden fits for model diagnostic
+sscden1                     Estimating conditional density using smoothing splines
+d.sscden1                   Evaluating pdf of sscden1 estimates
+project.sscden1             Projecting sscden1 fits for model diagnostic
+dsscden                     Evaluating pdf of sscden estimates
+psscden                     Evaluating cdf of sscden estimates with 1-D Y
+qsscden                     Evaluating quantiles of ssden estimates with 1-D Y
+cdsscden                    Evaluating conditional pdf of sscden estimates
+cpsscden                    Evaluating 1-D conditional cdf of sscden estimates
+cqsscden                    Evaluating 1-D conditional quantiles of sscden estimates
+print.sscden                Print function for sscden objects
+
+ssllrm                      Fitting smoothing spline log-linear regression models
+predict.ssllrm              Evaluating log-linear regression model fits
+project.ssllrm              Projecting ssllrm fits for model diagnostic
+print.ssllrm                Print function for ssllrm objects
+
+sshzd                       Estimating hazard function using smoothing splines
+project.sshzd               Projecting sshzd fits for model diagnostic
+sshzd1                      Estimating hazard function using smoothing splines
+project.sshzd1              Projecting sshzd1 fits for model diagnostic
+hzdrate.sshzd               Evaluating hazard estimates
+hzdcurve.sshzd              Evaluating hazard curves
+survexp.sshzd               Computing expected survivals
+print.sshzd                 Print function for sshzd objects
+
+sscox                       Estimating relative risk using smoothing splines
+predict.sscox               Projecting sscox fits for model diagnostic
+project.sscox               Predicting from sscox fits
+print.sscox                 Print function for sscox objects
+
+## UTILITIES FOR MAKING MODEL TERMS
+mkterm                      Making model terms
+
+mkphi.cubic                 Making phi function for cubic splines
+mkrk.cubic                  Making RK function for cubic splines
+mkrk.cubic.per              Making RK function for periodic cubic splines
+mkrk.linear                 Making RK function for linear splines
+mkrk.linear.per             Making RK function for periodic linear splines
+
+mkphi.tp                    Making phi functions for thin-plate splines
+mkphi.tp.p                  Making pseudo phi functions for thin-plate splines
+mkrk.tp                     Making RK functions for thin-plate splines
+mkrk.tp.p                   Making pseudo RK functions for thin-plate splines
+mkrk.sphere                 Making RK functions for spherical splines
+
+mkrk.nominal                Making RK function for nominal factors
+mkrk.ordinal                Making RK function for ordinal factors
+
+mkran                       Generating random effects in mixed-effect models
+mkran1                      Combining random effects in mixed-effect models
+
+mkcov.arma                  Making covariance function for ARMA models
+mkcov.long                  Making covariance function for longitudinal data
+mkcov.known                 Passing known covariance function to ssanova9
+
+mkint                       Generating integrals of basis terms for ssden1 suite
+mkint2                      Generating integrals of basis terms for ssden1 suite
+
+## UTILITIES FOR DISTRIBUTION FAMILIES
+mkdata.binomial             Making pseudo data for logistic regression
+dev.resid.binomial          Deviance residuals for logistic regression
+dev.null.binomial           Null model deviance for logistic regression
+cv.binomial                 CV score for logistic regression
+y0.binomial                 Preparing for KL projection of logistic fit
+proj0.binomial              Making pseudo data for projection of logistic fit
+kl.binomial                 Computing KL distance between logistic fits
+cfit.binomial               Computing constant logistic fit
+
+mkdata.poisson              Making pseudo data for Poisson regression
+dev.resid.poisson           Deviance residuals for Poisson regression
+dev.null.poisson            Null model deviance for Poisson regression
+cv.poisson                  CV score for Poisson regression
+y0.poisson                  Preparing for KL projection of Poisson fit
+proj0.poisson               Making pseudo data for projection of Poisson fit
+kl.poisson                  Computing KL distance between Poisson fits
+cfit.poisson                Computing constant Poisson fit
+
+mkdata.Gamma                Making pseudo data for gamma regression
+dev.resid.Gamma             Deviance residuals for gamma regression
+dev.null.Gamma              Null model deviance for gamma regression
+cv.Gamma                    CV score for gamma regression
+y0.Gamma                    Preparing for KL projection of Gamma fit
+proj0.Gamma                 Making pseudo data for projection of Gamma fit
+kl.Gamma                    Computing KL distance between Gamma fits
+cfit.Gamma                  Computing constant Gamma fit
+
+mkdata.inverse.gaussian     Making pseudo data for IG regression
+dev.resid.inverse.gaussian  Deviance residuals for IG regression
+dev.null.inverse.gaussian   Null model deviance for IG regression
+
+mkdata.nbinomial            Making pseudo data for negative binomial regression
+dev.resid.nbinomial         Deviance residuals for negative binomial regression
+dev.null.nbinomial          Null model deviance for negative binomial regression
+cv.nbinomial                CV score for negative binomial regression
+y0.nbinomial                Preparing for KL projection of negative binomial fit
+proj0.nbinomial             Making pseudo data for projection of negative binomial fit
+kl.nbinomial                Computing KL distance between negative binomial fits
+cfit.nbinomial              Computing constant negative binomial fit
+
+mkdata.weibull              Making pseudo data for Weibull regression
+dev.resid.weibull           Deviance residuals for Weibull regression
+dev.null.weibull            Null model deviance for Weibull regression
+cv.weibull                  CV score for Weibull regression
+y0.weibull                  Preparing for KL projection of Weibull fit
+proj0.weibull               Making pseudo data for projection of Weibull fit
+kl.weibull                  Computing KL distance between Weibull fits
+cfit.weibull                Computing constant Weibull fit
+
+mkdata.lognorm              Making pseudo data for log normal regression
+dev.resid.lognorm           Deviance residuals for log normal regression
+dev0.resid.lognorm          Pseudo deviance residuals for log normal regression
+dev.null.lognorm            Null model deviance for log normal regression
+cv.lognorm                  CV score for log normal regression
+y0.lognorm                  Preparing for KL projection of log normal fit
+proj0.lognorm               Making pseudo data for projection of log normal fit
+kl.lognorm                  Computing KL distance between log normal fits
+cfit.lognorm                Computing constant log normal fit
+
+mkdata.loglogis             Making pseudo data for log logistic regression
+dev.resid.loglogis          Deviance residuals for log logistic regression
+dev0.resid.loglogis         Pseudo deviance residuals for log logistic regression
+dev.null.loglogis           Null model deviance for log logistic regression
+cv.loglogis                  CV score for log logistic regression
+y0.loglogis                  Preparing for KL projection of log logistic fit
+proj0.loglogis               Making pseudo data for projection of log logistic fit
+kl.loglogis                  Computing KL distance between log logistic fits
+cfit.loglogis                Computing constant log logistic fit
+
+## UTILITIES FOR NUMERICAL INTEGRATION
+gauss.quad                  Generating Gauss-Legendre quadrature
+smolyak.quad                Generating Smolyak cubature
+smolyak.size                Getting the size of Smolyak cubature
+
+## UTILITY FOR OPTIMIZATION
+nlm0                        Minimizing univariate functions on finite intervals
+
+## NUMERICAL ENGINE
+sspreg0                     An interface to RKPACK driver DSIDR
+mspreg0                     An interface to RKPACK driver DMUDR
+sspregpoi                   Performance-oriented iteration using RKPACK driver DSIDR
+mspregpoi                   Performance-oriented iteration using RKPACK driver DMUDR
+getcrdr                     An interface to RKPACK utility DCRDR
+getsms                      An interface to RKPACK utility DSMS
+
+sspreg1                     Compute regression estimate with single smoothing parameter
+mspreg1                     Compute regression estimate with multiple smoothing parameters
+sspreg91                    Compute regression estimate with single smoothing parameter
+mspreg91                    Compute regression estimate with multiple smoothing parameters
+sspngreg                    Compute NG regression estimate with single smoothing parameter
+mspngreg                    Compute NG regression estimate with single smoothing parameter
+ngreg                       Newton iteration for NG regression with fixed smoothing parameter
+ngreg1                      Performance-oriented iteration using sspreg1 and mspreg1
+regaux                      Obtain auxiliary information needed for se calculation
+ngreg.proj                  Calculate Kullback-Leibler projection for NG regression
+
+sspdsty                     Compute density estimate with single smoothing parameter
+mspdsty                     Compute density estimate with multiple smoothing parameters
+sspdsty1                    Compute density estimate with single smoothing parameter
+mspdsty1                    Compute density estimate with multiple smoothing parameters
+mspcdsty                    Compute conditional density estimate
+mspcdsty1                   Compute conditional density estimate
+msphzd                      Compute hazard estimate with single or multiple smoothing parameters
+msphzd1                     Compute hazard estimate with single or multiple smoothing parameters
+sspcox                      Compute relative risk estimate with single smoothing parameter
+mspcox                      Compute relative risk estimate with multiple smoothing parameters
+
+mspllrm                     Compute log-linear regression model with multiple smoothing parameters

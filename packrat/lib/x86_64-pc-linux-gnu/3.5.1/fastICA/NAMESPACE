@@ -1,0 +1,5 @@
+useDynLib(fastICA, .registration = TRUE)
+
+importFrom("stats", "rnorm")
+
+export(fastICA, ica.R.def, ica.R.par)

@@ -1,0 +1,15 @@
+gbRd-package	gbRd-package
+gbRd	gbRd-package
+Rdo_args2txt	Rdo_args2txt
+Rdo_args2txt_list	Rdo_args2txt_list
+Rdo_create	Rdo_create
+Rdo_empty	Rdo_create
+Rdo_get_arg	Rdo_get_args
+Rdo_get_args	Rdo_get_args
+Rdo_section	Rdo_section
+Rdo_set_sectag	Rd_title
+Rd_args	Rd_title
+Rd_fun	Rd_fun
+Rd_help2txt	Rd_help2txt
+Rd_name	Rd_title
+Rd_title	Rd_title

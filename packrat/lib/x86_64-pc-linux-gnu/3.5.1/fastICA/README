@@ -1,0 +1,52 @@
+R Package - fastICA
+
+INTRODUCTION
+
+This file explains how to install the R package fastICA. I assume
+that you have a basic knowledge of UNIX/LINUX and that you already
+have R installed on your machine.
+
+INSTALLATION
+
+1. Download the g-zipped tar archive  fastICA_*.*-*.tar.gz
+
+2.  Install the package using     
+
+	R CMD INSTALL -l /path/to/LIB fastICA_*.*-*.tar.gz
+
+/path/to/LIB should be the library directory where you wish to put the package.
+
+If you have root access to your machine then use 
+
+	R CMD INSTALL fastICA_*.*-*.tar.gz
+
+and the package will be put into the default R library tree.
+
+5. You can then start an R session and load the package using
+
+	library(fastICA,lib.loc="/path/to/LIB")
+
+or 
+
+ library(fastICA) 
+
+(if you installed the package into the default R library tree)
+
+
+FUNCTIONS
+
+The package contains the following functions 
+
+fastICA   - FastICA algorithm
+ica.R.def - R code for FastICA using a deflation scheme
+ica.R.par - R code for FastICA using a parallel scheme       
+
+PROBLEMS/SUGGESTIONS
+
+If you have any problems/suggestions using this package, please email
+ripley@stats.ox.ac.uk
+
+
+
+
+

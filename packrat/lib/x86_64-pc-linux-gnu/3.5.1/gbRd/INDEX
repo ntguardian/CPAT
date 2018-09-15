@@ -1,0 +1,14 @@
+Rd_fun                  Return all or selected sections of a help topic
+                        as an Rd object
+Rd_help2txt             Extract selected help sections as text.
+Rd_title                Wrap an object so that it can be used as a
+                        section element of an Rd object.
+Rdo_args2txt            Extract the descriptions of one or more
+                        arguments of a function
+Rdo_args2txt_list       Extract the descriptions of the arguments of a
+                        function
+Rdo_create              Create basic Rd objects
+Rdo_get_args            Extract argument description from a help topic
+Rdo_section             Extract a section element from an Rd object or
+                        Rd fragment
+gbRd-package            Utilities for processing Rd objects and files

@@ -1,0 +1,38 @@
+TimeSeriesData          Time Series Data Sets
+absMoments              Absolute Moments of GARCH Distributions
+coef-methods            GARCH Coefficients Methods
+fGARCH-class            Class "fGARCH"
+fGARCHSPEC-class        Class "fGARCHSPEC"
+fGarch-package          Modelling Heterskedasticity in Financial Time
+                        Series
+fitted-methods          Extract GARCH Model Fitted Values
+formula-methods         Extract GARCH Model formula
+garchFit                Univariate GARCH Time Series Fitting
+garchFitControl         GARCH Fitting Algorithms and Control
+garchSim                Univariate GARCH/APARCH Time Series Simulation
+garchSpec               Univariate GARCH Time Series Specification
+ged                     Generalized Error Distribution
+gedFit                  Generalized Error Distribution Parameter
+                        Estimation
+gedSlider               Geeneralized Error Distribution Slider
+plot-methods            GARCH Plot Methods
+predict-methods         GARCH Prediction Function
+residuals-methods       Extract GARCH Model Residuals
+sged                    Skew Generalized Error Distribution
+sgedFit                 Skew Generalized Error Distribution Parameter
+                        Estimation
+sgedSlider              Skew GED Distribution Slider
+show-methods            GARCH Modelling Show Methods
+snorm                   Skew Normal Distribution
+snormFit                Skew Normal Distribution Parameter Estimation
+snormSlider             Skew Normal Distribution Slider
+sstd                    Skew Student-t Distribution and Parameter
+                        Estimation
+sstdFit                 Skew Student-t Distribution Parameter
+                        Estimation
+sstdSlider              Skew Student-t Distribution Slider
+std                     Student-t Distribution
+stdFit                  Student-t Distribution Parameter Estimation
+stdSlider               Student-t Distribution Slider
+summary-methods         GARCH Summary Methods
+volatility.fGARCH       Extract GARCH Model Volatility

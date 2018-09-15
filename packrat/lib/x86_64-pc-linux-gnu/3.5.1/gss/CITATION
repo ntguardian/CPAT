@@ -1,0 +1,18 @@
+citHeader("To cite gss in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Smoothing Spline ANOVA Models: {R} Package {gss}",
+  author       = personList(as.person("Chong Gu")),
+  journal      = "Journal of Statistical Software",
+  year         = "2014",
+  volume       = "58",
+  number       = "5",
+  pages        = "1--25",
+  url          = "http://www.jstatsoft.org/v58/i05/",
+
+  textVersion  =
+  paste("Chong Gu (2014).",
+        "Smoothing Spline ANOVA Models: R Package gss.",
+        "Journal of Statistical Software, 58(5), 1-25.",
+        "URL http://www.jstatsoft.org/v58/i05/.")
+)
