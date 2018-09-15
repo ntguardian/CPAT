@@ -64,6 +64,7 @@ sim_Vn_stat <- CPAT:::sim_Vn_stat
 sim_Zn_stat <- CPAT:::sim_Zn_stat
 sim_de_stat <- CPAT:::sim_de_stat
 sim_hs_stat <- CPAT:::sim_hs_stat
+rchangepoint <- CPAT:::rchangepoint
 
 registerDoParallel(cores = detectCores())
 
