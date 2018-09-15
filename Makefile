@@ -46,8 +46,6 @@ $(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA)
 	head -1 $< > $@
 	for filename in $(POWERSIMTEMPFILEMETA); do sed 1d $$filename >> $@; done
 
-$(POWERSIMSTATMETA) : ;
-
 $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
               R/ProbabilityFunctions.R R/SimulationUtils.R \
               exec/PowerSimStatDataGenerator.R
