@@ -1,0 +1,5 @@
+statistic,crit_value,conv_func
+Zn,perc95Zntheo,powerSim_Zn_to_df
+Vn,perc95Vntheo,powerSim_Vn_to_df
+DE,perc95DEtheo,powerSim_Vn_to_df
+HS,perc95HStheo,powerSim_Vn_to_df
