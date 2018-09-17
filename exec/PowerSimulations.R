@@ -249,8 +249,8 @@ for (distname in names(distfunc)) {
   power_simulations$hs[distname] <- NULL
 
   out_df <- rbind(out_df, data.frame(
-    "file" = c(Vn_filename, Zn_filename, de_filename, hs_filename),
+    "file" = prefix %s0% c(Vn_filename, Zn_filename, de_filename, hs_filename),
     "statistic" = c("Vn", "Zn", "de", "hs"),
     stringsAsFactors = FALSE))
-  write.csv(out_df, file = cl_args$outfile)
+  write.csv(out_df, file = cl_args$outfile, row.names = FALSE)
 }
