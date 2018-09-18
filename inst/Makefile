@@ -1,6 +1,7 @@
 SHELL=/bin/sh
 RSCRIPT=Rscript
 
+LEVEL=0.05
 POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
 POWERDAT=data/PowerSimStat95Data.csv
@@ -57,7 +58,7 @@ $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
               exec/PowerSimStatDataGenerator.R
 	make package
 	$(RSCRIPT) exec/PowerSimStatDataGenerator.R -f $(POWERSIMFILEMETA) \
-		-s $(POWERSIMSTATMETA) -o $@ -a 0.05
+		-s $(POWERSIMSTATMETA) -o $@ -a $(LEVEL)
 
 $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	make package
@@ -111,6 +112,8 @@ clean :
 	-rm $(POWERPLOT)
 	-rm $(POWERSIMPREFIX)*
 	-rm $(POWERSIMFILEMETA)
+	-rm $(POWERSIMTEMPFILEMETA)
+	-rm $(POWERSIMMETARDA)
 	-rm $(POWERDAT)
 	-rm $(LRVDAT)
 	-rm $(LRVPLOT)
@@ -118,13 +121,15 @@ clean :
 	-rm $(ZNCONVPLOT)
 	-rm $(CAPMDAT)
 	-rm $(CAPMPLOT)
+	-rm inst/plots/*.tex
 
 .PHONY : mostlyclean
 mostlyclean :
-	rm $(POWERPLOT)
-	rm $(LRVPLOT)
-	rm $(ZNCONVPLOT)
-	rm $(CAPMPLOT)
+	-rm $(POWERPLOT)
+	-rm $(LRVPLOT)
+	-rm $(ZNCONVPLOT)
+	-rm $(CAPMPLOT)
+	-rm inst/plots/*.tex
 
 .PHONY : init
 init :
