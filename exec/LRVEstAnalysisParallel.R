@@ -44,7 +44,6 @@ main <- function(file, replications = 10000, seed = 20180906,
   ar_1_lrv <- function(sd, phi) {sd / (1 - phi)^2}
   theo_lrv <- sapply(ar_coef, function(phi) ar_1_lrv(1, phi))
 
-
   # AR(1) (phi > 0)
   # Bartlett kernel, Andrews bandwidth
 
