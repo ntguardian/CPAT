@@ -61,6 +61,7 @@ dist_conv_plot_tikz <- function(obj, dist, trim, size, title = "", width = 4,
   theme_bw <- ggplot2::theme_bw
   unit <- ggplot2::unit
   theme <- ggplot2::theme
+  xlim <- ggplot2::xlim
   tikz <- tikzDevice::tikz
 
   if (is.null(filename)) {
@@ -359,6 +360,7 @@ lrv_plot_tikz <- function(data, n, ker_name, true_lrv, phi = NULL,
   unit <- ggplot2::unit
   xlab <- ggplot2::xlab
   ylab <- ggplot2::ylab
+  xlim <- ggplot2::xlim
   ggtitle <- ggplot2::ggtitle
   theme_bw <- ggplot2::theme_bw
   theme <- ggplot2::theme
