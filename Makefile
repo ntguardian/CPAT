@@ -71,7 +71,7 @@ $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
-	mv $(notdir $(basename $@).pdf) $@
+	mv $(notdir $(basename $@))*.pdf $(dir $@)
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
