@@ -50,13 +50,15 @@ main <- function(file, outfile = "dist_conv", verbose = FALSE, width = 4,
       for (t in conv_trim) {
         # dist_conv_plot_tikz(d, t, T, title = paste(paste0("$T = ", T, "$"),
         # conv_dstring[d], conv_tstring[t], sep = ", "))
-        dist_conv_plot_tikz(d, t, T, title = paste0("$T = ", T, "$"),
+        dist_conv_plot_tikz(Zn_simulations, d, t, T,
+                            title = paste0("$T = ", T, "$"),
                             verbose = verbose,
                             filename = paste0(outfile, "_", d, "_n", T, "_", t),
                             makePDF = TRUE, width = width, height = height)
       }
     }
   }
+  
 }
 
 ################################################################################
