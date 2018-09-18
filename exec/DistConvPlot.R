@@ -37,7 +37,7 @@ main <- function(file, outfile = "dist_conv", verbose = FALSE, width = 4,
   dist_conv_plot_tikz <- CPAT:::dist_conv_plot_tikz
 
   # filename <- paste0("dist_conv_", dist, "_n", size, "_", trim)
-  filename <- gsub(".", "", filename, fixed = TRUE)
+  filename <- gsub(".", "", file, fixed = TRUE)
   filename.tex <- paste0(filename, ".tex")
   filename.pdf <- paste0(filename, ".pdf")
 
