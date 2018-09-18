@@ -37,7 +37,7 @@ main <- function(file, outfile = "dist_conv", verbose = FALSE, width = 4,
   dist_conv_plot_tikz <- CPAT:::dist_conv_plot_tikz
 
   # filename <- paste0("dist_conv_", dist, "_n", size, "_", trim)
-  filename <- gsub(".", "", file, fixed = TRUE)
+  filename <- gsub(".", "", outfile, fixed = TRUE)
   filename.tex <- paste0(filename, ".tex")
   filename.pdf <- paste0(filename, ".pdf")
 
@@ -50,13 +50,15 @@ main <- function(file, outfile = "dist_conv", verbose = FALSE, width = 4,
       for (t in conv_trim) {
         # dist_conv_plot_tikz(d, t, T, title = paste(paste0("$T = ", T, "$"),
         # conv_dstring[d], conv_tstring[t], sep = ", "))
-        dist_conv_plot_tikz(d, t, T, title = paste0("$T = ", T, "$"),
+        dist_conv_plot_tikz(Zn_simulations, d, t, T,
+                            title = paste0("$T = ", T, "$"),
                             verbose = verbose,
                             filename = paste0(outfile, "_", d, "_n", T, "_", t),
                             makePDF = TRUE, width = width, height = height)
       }
     }
   }
+  
 }
 
 ################################################################################
