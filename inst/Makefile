@@ -4,7 +4,7 @@ RSCRIPT=Rscript
 POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
 POWERDAT=data/PowerSimStat95Data.csv
-POWERREPLICATIONS=5000
+POWERREPLICATIONS=20
 POWERSEED=20180910
 POWERSIMPREFIX=data/XOUTPowerSimulations_
 POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
@@ -20,13 +20,13 @@ POWERSIMSTATMETA=data/PowerSimulationStatsMetadata.csv
 
 LRVPLOTPREFIX=inst/plots/LRVEstPlot
 LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)
-LRVREPLICATIONS=10000
+LRVREPLICATIONS=20
 LRVSEED=20180912
 LRVDAT=data/LRVSimulations.Rda
 
 ZNDAT=data/ZnSimulations.Rda
 ZNSIMSEED=20180911
-ZNSIMREP=100000
+ZNSIMREP=20
 ZNCONVPLOTPREFIX=inst/plots/DistConv
 ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)
 
@@ -118,15 +118,13 @@ clean :
 	-rm $(ZNCONVPLOT)
 	-rm $(CAPMDAT)
 	-rm $(CAPMPLOT)
-	-rm inst/plots/*.tex
 
 .PHONY : mostlyclean
 mostlyclean :
-	-rm $(POWERPLOT)
-	-rm $(LRVPLOT)
-	-rm $(ZNCONVPLOT)
-	-rm $(CAPMPLOT)
-	-rm inst/plots/*.tex
+	rm $(POWERPLOT)
+	rm $(LRVPLOT)
+	rm $(ZNCONVPLOT)
+	rm $(CAPMPLOT)
 
 .PHONY : init
 init :

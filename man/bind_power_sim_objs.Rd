@@ -31,6 +31,6 @@ a better, higher-level interface to \code{\link{power_sim_Zn_to_df}} and
 filenames <- c("powerSimulations_sdest_norm_DE.rda",
                "powerSimulations_sdest_ar1_0.5_DE.rda")
 bind_power_sim_objs(filenames, crit_value = qdarling_erdos(.95),
-                    conv_func = power_sim_Vn_to_df, stat_name = "DE")
+                    conv_func = power_sim_Vn_to_df, stat_name = "de")
 }
 }
