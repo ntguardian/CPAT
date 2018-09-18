@@ -44,7 +44,7 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
   banks <- portf[,"Banks"]
   ff <- xts::xts(ff, order.by = as.Date(rownames(ff), format = "%Y%m%d"))
 
-  model_banks_df <- merge(banks["2007/2008"], ff, join = "inner")[-1,]
+  model_banks_df <- merge(banks["2005/2008"], ff, join = "inner")[-1,]
   names(model_banks_df)[1] <- "Return"
   tail(model_banks_df)
 
@@ -55,7 +55,7 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
                                                   RMW + SMB + CMA, 
                                                 data = as.data.frame(
                                                   model_banks_df),
-                                                min_n = 100, m = 105)
+                                                min_n = 754, m = 931)
 
   rownames(test_p_vals) <- rownames(as.data.frame(
     model_banks_df[test_p_vals[, "n"],]
