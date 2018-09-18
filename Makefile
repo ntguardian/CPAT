@@ -108,16 +108,16 @@ package : R/*.R
 
 .PHONY : clean
 clean :
-	rm $(POWERPLOT)
-	rm $(POWERSIMPREFIX)*
-	rm $(POWERSIMFILEMETA)
-	rm $(POWERDAT)
-	rm $(LRVDAT)
-	rm $(LRVPLOT)
-	rm $(ZNDAT)
-	rm $(ZNCONVPLOT)
-	rm $(CAPMDAT)
-	rm $(CAPMPLOT)
+	-rm $(POWERPLOT)
+	-rm $(POWERSIMPREFIX)*
+	-rm $(POWERSIMFILEMETA)
+	-rm $(POWERDAT)
+	-rm $(LRVDAT)
+	-rm $(LRVPLOT)
+	-rm $(ZNDAT)
+	-rm $(ZNCONVPLOT)
+	-rm $(CAPMDAT)
+	-rm $(CAPMPLOT)
 
 .PHONY : mostlyclean
 mostlyclean :
