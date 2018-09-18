@@ -8,3 +8,4 @@ XOUT.*$
 ^packrat/
 ^\.Rprofile$
 ^Makefile$
+^package$
