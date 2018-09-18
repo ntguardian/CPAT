@@ -48,14 +48,17 @@ main <- function(file, outfile = "lrv_est_plot", verbose = FALSE, width = 4.5,
   lrv_phi <- unique(ar1_plotlist_pos_phi$phi)
   lrv_phi_neg <- unique(ar1_plotlist_neg_phi$phi)
 
+  ar_1_lrv <- function(sd, phi) {sd / (1 - phi)^2}
+  garch_1_1_lrv <- function(alpha, beta, omega) {omega / (1 - alpha - beta)}
+
   for (n in lrv_n) {
     for (p in lrv_phi) {
       lrv_plot_tikz(ar1_plotlist_pos_phi, n, p, ker_name = "bartlett",
-                    true_lrv = get_theo_lrv(1, p), xrange = c(0, 20),
+                    true_lrv = ar_1_lrv(1, p), xrange = c(0, 20),
                     filename = paste(outfile, "bartlett",
                       "ar" %s0% "_" %s0% p, n, sep = "_"))
       lrv_plot_tikz(ar1_ft_plotlist_pos_phi, n, p, ker_name = "flattop",
-                    true_lrv = get_theo_lrv(1, p), xrange = c(0, 20),
+                    true_lrv = ar_1_lrv(1, p), xrange = c(0, 20),
                     filename = paste(outfile, "flattop",
                       "ar" %s0% "_" %s0% p, n, sep = "_"))
     }
@@ -64,11 +67,11 @@ main <- function(file, outfile = "lrv_est_plot", verbose = FALSE, width = 4.5,
   for (n in lrv_n) {
     for (p in lrv_phi_neg) {
       lrv_plot_tikz(ar1_plotlist_neg_phi, n, p, ker_name = "bartlett",
-                    true_lrv = get_theo_lrv(1, p), xrange = c(0, 5),
+                    true_lrv = ar_1_lrv(1, p), xrange = c(0, 5),
                     filename = paste(outfile, "bartlett",
                       "ar" %s0% "_" %s0% p, n, sep = "_"))
       lrv_plot_tikz(ar1_ft_plotlist_neg_phi, n, p, ker_name = "flattop",
-                    true_lrv = get_theo_lrv(1, p), xrange = c(0, 5),
+                    true_lrv = ar_1_lrv(1, p), xrange = c(0, 5),
                     filename = paste(outfile, "flattop",
                       "ar" %s0% "_" %s0% p, n, sep = "_"))
     }
