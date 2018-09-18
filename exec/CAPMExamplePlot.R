@@ -88,7 +88,7 @@ main <- function(file, outfile = "BankCAPMChange", verbose = FALSE,
     print(sig2_bk)
   }
   dev.off()
-  texi2pdf(outfile %s0% ".tex")
+  texi2pdf(outfile %s0% ".tex", clean = TRUE)
 }
 
 ################################################################################
