@@ -1,16 +1,18 @@
 SHELL=/bin/sh
 RSCRIPT=Rscript
 
-POWERPLOTPREFIX=inst/plots/power_plot
+POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
 POWERDAT=data/PowerSimStat95Data.csv
 POWERREPLICATIONS=20
 POWERSEED=20180910
-POWERSIMPREFIX=data/XOUTPowerSimulations_
-POWERSIMRDA=$(wildcard $(POWERSIMPREFIX)_*.Rda)
+POWERSIMPREFIX=data/XOUTPowerSimulations
 POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
 POWERSIMTEMPFILEMETAPREFIX=data/PowerSimulationsMetadataDist
-POWERSIMTEMPFILEMETA=$(wildcard $(POWERSIMTEMPFILEMETAPREFIX)*.csv)
+POWERSIMPARAMSUFF=PowerSimulationParameters.R
+POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
+POWERSIMTEMPFILEMETA:= \
+  $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
 POWERSIMSTATMETA=data/PowerSimulationStatsMetadata.csv
 
 LRVPLOTPREFIX=inst/plots/LRVEstPlot
@@ -34,33 +36,16 @@ BANKFILE=data/Portfolios.csv
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
       inst/package
 
-$(POWERSIMPREFIX)_garch11_a0.1_b0.7_o0.5_*.Rda : \
-                               exec/GARCHPowerSimulationParameters.R \
-                               exec/PowerSimulations.R R/ProbabilityFunctions.R
-	make package
-	$(RSCRIPT) $< -f data/GARCHPowerSimulationParameters.Rda
-	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/GARCHPowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)GARCH.csv
-
-$(POWERSIMPREFIX)_ar1_0.5_*.Rda : exec/AR1PowerSimulationParameters.R \
-                                  exec/PowerSimulations.R \
-                                  R/ProbabilityFunctions.R
-	make package
-	$(RSCRIPT) $< -f data/AR1PowerSimulationParameters.Rda
-	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/AR1PowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)AR1.csv
-
-$(POWERSIMPREFIX)_norm_*.Rda : exec/NormPowerSimulationParameters.R \
-                               exec/PowerSimulations.R R/ProbabilityFunctions.R
+$(POWERSIMTEMPFILEMETAPREFIX)%.csv : exec/%PowerSimulationParameters.R \
+                                     exec/PowerSimulations.R \
+                                     exec/ProbabilityFunctions.R
 	make package
 	$(RSCRIPT) $< -f data/NormPowerSimulationParameters.Rda
 	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/NormPowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)Norm.csv
+		-p $(POWERSIMPREFIX) -i data/%PowerSimulationParameters.Rda \
+		-o $(POWERSIMTEMPFILEMETAPREFIX)%.csv
 
-$(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA) $(POWERSIMRDA)
+$(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA)
 	head -1 $< > $@
 	for filename in $(POWERSIMTEMPFILEMETA); do sed 1d $$filename >> $@; done
 
@@ -74,6 +59,7 @@ $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 	make package
@@ -83,6 +69,7 @@ $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
@@ -92,6 +79,7 @@ $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
@@ -103,6 +91,7 @@ $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 	mv $(notdir $(basename $@).pdf) $@
+	rm *.log *.aux
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
@@ -118,7 +107,7 @@ package : R/*.R
 	touch package
 
 .PHONY : clean
-clean:
+clean :
 	rm $(POWERPLOT)
 	rm $(POWERSIMPREFIX)*
 	rm $(POWERSIMFILEMETA)
@@ -131,8 +120,15 @@ clean:
 	rm $(CAPMPLOT)
 
 .PHONY : mostlyclean
-mostlyclean:
+mostlyclean :
 	rm $(POWERPLOT)
 	rm $(LRVPLOT)
 	rm $(ZNCONVPLOT)
 	rm $(CAPMPLOT)
+
+.PHONY : init
+init :
+	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50.pdf
+	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
+	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
+

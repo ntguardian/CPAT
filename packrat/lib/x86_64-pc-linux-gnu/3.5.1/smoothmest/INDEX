@@ -1,0 +1,7 @@
+ddoublex                The double exponential (Laplace) distribution
+dhuber                  Huber's least favourable distribution
+pdens                   Auxiliary functions for pitman
+pitman                  Pitman location estimator
+smoothm                 Smoothed and unsmoothed 1-d location
+                        M-estimators
+smpsi                   Auxiliary functions for smoothm

@@ -20,12 +20,11 @@ if (suppressPackageStartupMessages(!require("optparse"))) {
 main <- function(filemeta, statmeta, prefix = "", outfile = "out.csv",
   alpha = 0.05, help = FALSE) {
   power_sim_stat_df_creator <- CPAT:::power_sim_stat_df_creator
-  perc_Zn_theo <- CPAT:::qZn(1 - alpha)
-  perc_Vn_theo <- CPAT:::qkolmogorov(1 - alpha)
-  perc_de_theo <- CPAT:::qdarling_erdos(1 - alpha)
-  perc_hs_theo <- CPAT:::qhidalgo_seo(1 - alpha)
 
-  power_sim_stat_data <- power_sim_stat_df_creator(filemeta, statmeta, prefix)
+  # Be aware: perc_Zn_theo, perc_Vn_theo, perc_de_theo, and perc_hs_theo are a
+  # part of the function definition of power_sim_stat_df_creator
+  power_sim_stat_data <- power_sim_stat_df_creator(filemeta, statmeta, prefix,
+                                                   alpha)
   write.csv(power_sim_stat_data, file = outfile, row.names = FALSE)
 }
 

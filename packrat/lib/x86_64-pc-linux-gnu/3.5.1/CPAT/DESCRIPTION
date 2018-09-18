@@ -17,7 +17,7 @@ LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 6.1.0
 Author: Curtis Miller [aut, cre]
 Maintainer: Curtis Miller <cmiller@math.utah.edu>
-Built: R 3.5.1; x86_64-pc-linux-gnu; 2018-09-15 06:25:45 UTC; unix
+Built: R 3.5.1; x86_64-pc-linux-gnu; 2018-09-18 04:20:21 UTC; unix
 RemoteType: local
 RemoteUrl: /home/curtis/Development/CPAT
 RemoteSha: NA

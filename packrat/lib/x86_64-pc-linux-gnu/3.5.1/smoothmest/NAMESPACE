@@ -1,0 +1,10 @@
+# Remove the previous line if you edit this file
+# Default file not changed, just nicked.
+
+# Export all names
+exportPattern(".")
+
+# Import all packages listed as Imports or Depends
+import(
+  MASS
+)

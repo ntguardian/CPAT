@@ -38,7 +38,6 @@ main <- function(file, replications = 10000, seed = 20180906,
 
   `%s0%` <- function(x,y) {paste0(x,y)}
 
-  replications <- 10000
   N <- c(50, 100, 200, 500)
   ar_coef <- c(0, .05, .1, .2, .5, .7)
 
@@ -52,7 +51,7 @@ main <- function(file, replications = 10000, seed = 20180906,
   ar1_plotlist_pos_phi <- foreach(phi = ar_coef, .combine = rbind) %do% {
     foreach(n = N, .combine = rbind) %do% {
       print("Working for n = " %s0% n %s0% " and phi = " %s0% phi)
-      lrvs <- foreach(icount(replications), .combine = c) %dopar% {
+      lrvs <- foreach(i = 1:replications, .combine = c) %dopar% {
         get_lrv_vec(arima.sim(list(order = c(1, 0, 0), ar = phi), n = n,
                     n.start = 500))[round(n/2)]
       }
@@ -67,7 +66,7 @@ main <- function(file, replications = 10000, seed = 20180906,
   ar1_plotlist_neg_phi <- foreach(phi = -ar_coef, .combine = rbind) %do% {
     foreach(n = N, .combine = rbind) %do% {
       print("Working for n = " %s0% n %s0% " and phi = " %s0% phi)
-      lrvs <- foreach(icount(replications), .combine = c) %dopar% {
+      lrvs <- foreach(i = 1:replications, .combine = c) %dopar% {
         get_lrv_vec(arima.sim(list(order = c(1, 0, 0), ar = phi), n = n,
             n.start = 500))[round(n/2)]
       }
@@ -81,7 +80,7 @@ main <- function(file, replications = 10000, seed = 20180906,
 
   garch_plotlist <- foreach(n = N, .combine = rbind) %do% {
     print("Working for n = " %s0% n)
-    lrvs <- foreach(icount(replications), .combine = c) %dopar% {
+    lrvs <- foreach(i = 1:replications, .combine = c) %dopar% {
       get_lrv_vec(garchSim(garchSpec(list(alpha = 0.1, beta = 0.1, omega = .5)),
           n.start = 500, n = n)$garch)[round(n/2)]
     }
@@ -97,7 +96,7 @@ main <- function(file, replications = 10000, seed = 20180906,
   ar1_ft_plotlist_pos_phi <- foreach(phi = ar_coef, .combine = rbind) %do% {
     foreach(n = N, .combine = rbind) %do% {
       print("Working for n = " %s0% n %s0% " and phi = " %s0% phi)
-      lrvs <- foreach(icount(replications), .combine = c) %dopar% {
+      lrvs <- foreach(i = 1:replications, .combine = c) %dopar% {
         get_lrv_vec(arima.sim(list(order = c(1, 0, 0), ar = phi), n = n,
             n.start = 500), kernel = flattop)[round(n/2)]
       }
@@ -112,7 +111,7 @@ main <- function(file, replications = 10000, seed = 20180906,
   ar1_ft_plotlist_neg_phi <- foreach(phi = -ar_coef, .combine = rbind) %do% {
     foreach(n = N, .combine = rbind) %do% {
       print("Working for n = " %s0% n %s0% " and phi = " %s0% phi)
-      lrvs <- foreach(icount(replications), .combine = c) %dopar% {
+      lrvs <- foreach(i = 1:replications, .combine = c) %dopar% {
         get_lrv_vec(arima.sim(list(order = c(1, 0, 0), ar = phi), n = n,
             n.start = 500), kernel = flattop)[round(n/2)]
       }
@@ -126,7 +125,7 @@ main <- function(file, replications = 10000, seed = 20180906,
 
   garch_ft_plotlist <- foreach(n = N, .combine = rbind) %do% {
     print("Working for n = " %s0% n)
-    lrvs <- foreach(icount(replications), .combine = c) %dopar% {
+    lrvs <- foreach(i = 1:replications, .combine = c) %dopar% {
       get_lrv_vec(garchSim(garchSpec(list(alpha = 0.1, beta = 0.1, omega = .5)),
           n.start = 500, n = n)$garch, kernel = flattop)[round(n/2)]
     }
