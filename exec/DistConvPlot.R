@@ -30,7 +30,7 @@ main <- function(file, outfile = "dist_conv", verbose = FALSE, width = 4,
   # help parameter does nothing
 
   load(file)
-  if (!exists(Zn_simulations)) stop("The object Zn_simulations must be in" %s%
+  if (!exists("Zn_simulations")) stop("The object Zn_simulations must be in" %s%
                                     "loaded file")
 
   dZn <- CPAT:::dZn
