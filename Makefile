@@ -1,6 +1,8 @@
 SHELL=/bin/sh
 RSCRIPT=Rscript
 
+SMALLREPLICATIONS=20
+
 LEVEL=0.05
 POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
@@ -137,3 +139,8 @@ init :
 	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
 	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
 
+.PHONY : small
+small :
+	make POWERREPLICATIONS=$(SMALLREPLICATIONS) \
+		LRVREPLICATIONS=$(SMALLREPLICATIONS) \
+		ZNSIMREP=$(SMALLREPLICATIONS)
