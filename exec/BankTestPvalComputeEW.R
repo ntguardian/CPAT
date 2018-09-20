@@ -21,6 +21,7 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
   library(doParallel)
   library(foreach)
   library(xts)
+  library(CPAT)
 
   ff <- read.csv(ff_file, skip = 3, row.names = 1)
   portf <- read.csv(b_file, skip = 9,
