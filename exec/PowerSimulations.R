@@ -38,7 +38,7 @@ cl_args <- parse_args(OptionParser(
                   help = "Number of replications per point"),
       make_option(c("--seed", "-s"), type = "integer", default = 20180904,
                   help = "The seed of the simulations"),
-      make_option(c("--seedless", "-R"), action = "store_true",
+      make_option(c("--seedless", "-R"), action = "store_true", default = FALSE,
                   help = "Don't set a seed (causes --seed to be ignored)"),
       make_option(c("--prefix", "-p"), type = "character", default = "",
                   help = "Prefix to attach to save names (useful for saving" %s%
@@ -64,6 +64,7 @@ sim_Vn_stat <- CPAT:::sim_Vn_stat
 sim_Zn_stat <- CPAT:::sim_Zn_stat
 sim_de_stat <- CPAT:::sim_de_stat
 sim_hs_stat <- CPAT:::sim_hs_stat
+rchangepoint <- CPAT:::rchangepoint
 
 registerDoParallel(cores = detectCores())
 
@@ -248,8 +249,8 @@ for (distname in names(distfunc)) {
   power_simulations$hs[distname] <- NULL
 
   out_df <- rbind(out_df, data.frame(
-    "file" = c(Vn_filename, Zn_filename, de_filename, hs_filename),
+    "file" = prefix %s0% c(Vn_filename, Zn_filename, de_filename, hs_filename),
     "statistic" = c("Vn", "Zn", "de", "hs"),
     stringsAsFactors = FALSE))
-  write.csv(out_df, file = cl_args$outfile)
+  write.csv(out_df, file = cl_args$outfile, row.names = FALSE)
 }

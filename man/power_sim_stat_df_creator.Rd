@@ -4,7 +4,8 @@
 \alias{power_sim_stat_df_creator}
 \title{Create Power Simulation Results Data Frame}
 \usage{
-power_sim_stat_df_creator(file_meta, stat_meta, prefix = "")
+power_sim_stat_df_creator(file_meta, stat_meta, prefix = "",
+  alpha = 0.05)
 }
 \arguments{
 \item{file_meta}{The location of a \code{CSV} file that contains file names

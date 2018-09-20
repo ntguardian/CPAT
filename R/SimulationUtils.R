@@ -161,12 +161,18 @@ power_sim_Vn_to_df <- function(obj, crit) {
 #' \dontrun{
 #' power_sim_stat_df_creator("FileStatMeta.csv", "StatMeta.csv")
 #' }
-power_sim_stat_df_creator <- function(file_meta, stat_meta, prefix = "") {
+power_sim_stat_df_creator <- function(file_meta, stat_meta, prefix = "",
+                                      alpha = 0.05) {
   stat_meta <- read.csv(stat_meta, stringsAsFactors = FALSE)
   file_meta <- read.csv(file_meta, stringsAsFactors = FALSE)
   file_meta$file <- paste0(prefix, file_meta$file)
 
   stats <- unique(file_meta$statistic)
+
+  perc_Zn_theo <- qZn(1 - alpha)
+  perc_Vn_theo <- qkolmogorov(1 - alpha)
+  perc_de_theo <- qdarling_erdos(1 - alpha)
+  perc_hs_theo <- qhidalgo_seo(1 - alpha)
 
   Zn_df <- bind_power_sim_objs(with(file_meta, file[statistic == "Zn"]),
                                with(stat_meta, eval(as.name(
@@ -219,7 +225,7 @@ power_sim_stat_df_creator <- function(file_meta, stat_meta, prefix = "") {
 #' filenames <- c("powerSimulations_sdest_norm_DE.rda",
 #'                "powerSimulations_sdest_ar1_0.5_DE.rda")
 #' bind_power_sim_objs(filenames, crit_value = qdarling_erdos(.95),
-#'                     conv_func = power_sim_Vn_to_df, stat_name = "DE")
+#'                     conv_func = power_sim_Vn_to_df, stat_name = "de")
 #' }
 bind_power_sim_objs <- function(files, crit_value, conv_func, stat_name) {
   # Formerly known as bind_powerSim_objs()

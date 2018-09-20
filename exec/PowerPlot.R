@@ -46,7 +46,7 @@ main <- function(file, outfile = "power_sim", by_stat = FALSE, verbose = FALSE,
   power_plot_tikz_by_n <- CPAT:::power_plot_tikz_by_n
   power_plot_tikz <- CPAT:::power_plot_tikz
 
-  statlines <- eval(parse(statlines))
+  statlines <- eval(parse(text = statlines))
 
   power_dist <- unique(dat$dist)
   power_cpt <- unique(dat$cpt)
@@ -97,7 +97,7 @@ if (sys.nframe() == 0) {
                       help = "Print progress reports"),
           make_option(c("--statlines", "-t"), type = "character",
                       default = "c('Zn' = 'solid', 'Vn' = 'longdash'," %s%
-                                "'de' = 'dotdash', 'hs' = F24242)",
+                                "'de' = 'dotdash', 'hs' = 'F24242')",
                       help = "An R-parseable string creating a named" %s%
                              "character vector where names are labels for" %s%
                              "statistics and values are identifiers for" %s%
@@ -105,7 +105,7 @@ if (sys.nframe() == 0) {
         )
       ))
 
-  names(cl_args)[which(names(cl_args == c("by-stat")))] <- "by_stat"
+  names(cl_args)[which(names(cl_args) == c("by-stat"))] <- "by_stat"
   do.call(main, cl_args)
 }
 

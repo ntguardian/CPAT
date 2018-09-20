@@ -35,51 +35,51 @@ main <- function(file, help = FALSE) {
 
   power_simulations <- list(
     Vn = list(
-      norm = list(
-        n200 = list(
+      "ar1_0.5" = list(
+        n50 = list(
           c4rt = list()
         )
       )
     ),
     # Vn_weight_3rd = list(
-    #   norm = list(
-    #     n200 = list(
+    #   "ar1_0.5" = list(
+    #     n50 = list(
     #       c4rt = list()
     #     )
     #   )
     # ),
     # Vn_trim_5perc = list(
-    #   norm = list(
-    #     n200 = list(
+    #   "ar1_0.5" = list(
+    #     n50 = list(
     #       c4rt = list()
     #     )
     #   )
     # ),
     # Vn_trim_10perc = list(
-    #   norm = list(
-    #     n200 = list(
+    #   "ar1_0.5" = list(
+    #     n50 = list(
     #       c4rt = list()
     #     )
     #   )
     # ),
     de = list(
-      norm = list(
-        n200 = list(
+      "ar1_0.5" = list(
+        n50 = list(
           c4rt = list()
         )
       )
     ),
     hs = list(
-      norm = list(
-        n200 = list(
+      "ar1_0.5" = list(
+        n50 = list(
           c4rt = list()
         )
       )
     ),
     Zn = list(
-      norm = list(
+      "ar1_0.5" = list(
         log = list(
-          n200 = list(
+          n50 = list(
             c4rt = list()
           )
         )

@@ -365,8 +365,8 @@ sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
                                      args))
     }
 
-    return(stat_Vn(dataset, kn = kn, tau = tau, use_kernel_var = use_kernel_var,
-                  kernel = kernel, bandwidth = bandwidth))
+    stat_Vn(dataset, kn = kn, tau = tau, use_kernel_var = use_kernel_var,
+      kernel = kernel, bandwidth = bandwidth)
     # The following should be equivalent (yet slow) R code
     #n = length(dataset)
     #dataset_mean = mean(dataset)
@@ -389,7 +389,7 @@ sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    times(size) %dopar% Vn_realization()
+    foreach(i = 1:size, .combine = 'c') %dopar% Vn_realization()
   } else {
     sapply(1:size, function(throwaway) Vn_realization())
   }
@@ -462,8 +462,8 @@ sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
       dataset <- do.call(gen_func, c(list(n = n),
                                      args))
     }
-    return(stat_Zn(dataset, kn, use_kernel_var = use_kernel_var,
-                   kernel = kernel, bandwidth = bandwidth))
+    stat_Zn(dataset, kn, use_kernel_var = use_kernel_var,
+      kernel = kernel, bandwidth = bandwidth)
   }
 
   has_parallel <- requireNamespace("foreach", quietly = TRUE) &&
@@ -477,10 +477,9 @@ sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    return(times(size) %dopar% Zn_realization())
+    foreach(i = 1:size, .combine = 'c') %dopar% Zn_realization()
   } else {
-    return(sapply(1:size,
-              function(throwaway) Zn_realization()))
+    sapply(1:size, function(throwaway) Zn_realization())
   }
 }
 
@@ -548,8 +547,8 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
       dataset <- do.call(gen_func, c(list(n = n), args))
     }
 
-    return(stat_de(dataset, a = a, b = b, use_kernel_var = use_kernel_var,
-                  kernel = kernel, bandwidth = bandwidth))
+    stat_de(dataset, a = a, b = b, use_kernel_var = use_kernel_var,
+      kernel = kernel, bandwidth = bandwidth)
   }
 
   has_parallel <- requireNamespace("foreach", quietly = TRUE) &&
@@ -563,9 +562,9 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    return(times(size) %dopar% de_realization())
+    foreach(i = 1:size, .combine = 'c') %dopar% de_realization()
   } else {
-    return(sapply(1:size, function(throwaway) de_realization()))
+    sapply(1:size, function(throwaway) de_realization())
   }
 }
 
@@ -625,7 +624,7 @@ sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
                                      args))
     }
 
-    return(stat_hs(dataset, corr = corr))
+    stat_hs(dataset, corr = corr)
   }
 
   has_parallel <- requireNamespace("foreach", quietly = TRUE) &&
@@ -639,10 +638,9 @@ sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    return(times(size) %dopar% hs_realization())
+    foreach(i = 1:size, .combine = 'c') %dopar% hs_realization()
   } else {
-    return(sapply(1:size,
-                  function(throwaway) hs_realization()))
+    sapply(1:size, function(throwaway) hs_realization())
   }
 }
 
@@ -692,5 +690,5 @@ rchangepoint <- function(n, changepoint = NULL, mean1 = 0, mean2 = 0,
   datavec1 <- do.call(dist, distargs_pre)
   datavec2 <- do.call(dist, distargs_post)
 
-  return(c(datavec1, datavec2))
+  c(datavec1, datavec2)
 }

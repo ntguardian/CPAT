@@ -1,15 +1,22 @@
 SHELL=/bin/sh
 RSCRIPT=Rscript
 
+LEVEL=0.05
 POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
 POWERDAT=data/PowerSimStat95Data.csv
 POWERREPLICATIONS=5000
 POWERSEED=20180910
-POWERSIMPREFIX=data/XOUTPowerSimulations
+POWERSIMPREFIX=data/XOUTPowerSimulations_
 POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
 POWERSIMTEMPFILEMETAPREFIX=data/PowerSimulationsMetadataDist
-POWERSIMTEMPFILEMETA=$(wildcard $(POWERSIMTEMPFILEMETAPREFIX)*.csv)
+POWERSIMPARAMSUFF=PowerSimulationParameters.R
+POWERSIMMETARDASUFF=PowerSimulationParameters.Rda
+POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
+POWERSIMTEMPFILEMETA:= \
+  $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
+POWERSIMMETARDA:= \
+  $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=data/%$(POWERSIMMETARDASUFF))
 POWERSIMSTATMETA=data/PowerSimulationStatsMetadata.csv
 
 LRVPLOTPREFIX=inst/plots/LRVEstPlot
@@ -33,14 +40,14 @@ BANKFILE=data/Portfolios.csv
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
       inst/package
 
-$(POWERSIMTEMPFILEMETAPREFIX)%.csv : exec/%PowerSimulationParameters.R \
-                                     exec/PowerSimulations.R \
-                                     exec/ProbabilityFunctions.R
+$(POWERSIMMETARDA) : data/%$(POWERSIMMETARDASUFF) : exec/%$(POWERSIMPARAMSUFF)
+	$(RSCRIPT) $< -f $@
+
+$(POWERSIMTEMPFILEMETA) : $(POWERSIMTEMPFILEMETAPREFIX)%.csv : \
+  data/%$(POWERSIMMETARDASUFF) exec/PowerSimulations.R R/ProbabilityFunctions.R
 	make package
-	$(RSCRIPT) $< -f data/NormPowerSimulationParameters.Rda
 	$(RSCRIPT) exec/PowerSimulations.R -N $(POWERREPLICATIONS) -s $(POWERSEED) \
-		-p $(POWERSIMPREFIX) -i data/%PowerSimulationParameters.Rda \
-		-o $(POWERSIMTEMPFILEMETAPREFIX)%.csv
+		-p $(POWERSIMPREFIX) -i $< -o $@
 
 $(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA)
 	head -1 $< > $@
@@ -49,14 +56,14 @@ $(POWERSIMFILEMETA) : $(POWERSIMTEMPFILEMETA)
 $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
               R/ProbabilityFunctions.R R/SimulationUtils.R \
               exec/PowerSimStatDataGenerator.R
+	make package
 	$(RSCRIPT) exec/PowerSimStatDataGenerator.R -f $(POWERSIMFILEMETA) \
-		-s $(POWERSIMSTATMETA) -o $@ -a 0.05
+		-s $(POWERSIMSTATMETA) -o $@ -a $(LEVEL)
 
 $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
-	mv $(notdir $(basename $@).pdf) $@
-	rm *.log *.aux
+	mv $(notdir $(POWERPLOTPREFIX))*.pdf $(dir $(POWERPLOTPREFIX))
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 	make package
@@ -65,8 +72,7 @@ $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
-	mv $(notdir $(basename $@).pdf) $@
-	rm *.log *.aux
+	mv $(notdir $(basename $(LRVPLOTPREFIX)))*.pdf $(dir $(LRVPLOTPREFIX))
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
@@ -75,8 +81,7 @@ $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
-	mv $(notdir $(basename $@).pdf) $@
-	rm *.log *.aux
+	mv $(notdir $(basename $(ZNCONVPLOTPREFIX)))*.pdf $(dir $(ZNCONVPLOTPREFIX))
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
@@ -88,7 +93,6 @@ $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 	mv $(notdir $(basename $@).pdf) $@
-	rm *.log *.aux
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
@@ -105,27 +109,31 @@ package : R/*.R
 
 .PHONY : clean
 clean :
-	rm $(POWERPLOT)
-	rm $(POWERSIMPREFIX)*
-	rm $(POWERSIMFILEMETA)
-	rm $(POWERDAT)
-	rm $(LRVDAT)
-	rm $(LRVPLOT)
-	rm $(ZNDAT)
-	rm $(ZNCONVPLOT)
-	rm $(CAPMDAT)
-	rm $(CAPMPLOT)
+	-rm $(POWERPLOT)
+	-rm $(POWERSIMPREFIX)*
+	-rm $(POWERSIMFILEMETA)
+	-rm $(POWERSIMTEMPFILEMETA)
+	-rm $(POWERSIMMETARDA)
+	-rm $(POWERDAT)
+	-rm $(LRVDAT)
+	-rm $(LRVPLOT)
+	-rm $(ZNDAT)
+	-rm $(ZNCONVPLOT)
+	-rm $(CAPMDAT)
+	-rm $(CAPMPLOT)
+	-rm inst/plots/*.tex
 
 .PHONY : mostlyclean
 mostlyclean :
-	rm $(POWERPLOT)
-	rm $(LRVPLOT)
-	rm $(ZNCONVPLOT)
-	rm $(CAPMPLOT)
+	-rm $(POWERPLOT)
+	-rm $(LRVPLOT)
+	-rm $(ZNCONVPLOT)
+	-rm $(CAPMPLOT)
+	-rm inst/plots/*.tex
 
 .PHONY : init
 init :
-	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50.pdf
+	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50_log_c4rt.pdf
 	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
 	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
 

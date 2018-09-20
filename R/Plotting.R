@@ -61,6 +61,7 @@ dist_conv_plot_tikz <- function(obj, dist, trim, size, title = "", width = 4,
   theme_bw <- ggplot2::theme_bw
   unit <- ggplot2::unit
   theme <- ggplot2::theme
+  xlim <- ggplot2::xlim
   tikz <- tikzDevice::tikz
 
   if (is.null(filename)) {
@@ -94,7 +95,7 @@ dist_conv_plot_tikz <- function(obj, dist, trim, size, title = "", width = 4,
     print(p)
     dev.off()
     
-    tools::texi2pdf(, clean = TRUE, quiet = verbose, clean = TRUE, quiet = verbose)
+    tools::texi2pdf(filename.tex, clean = TRUE, quiet = verbose)
   }
   if (verbose) {cat("Creating", filename.tex, "\n")}
   tikz(filename.tex, width = width, height = height)
@@ -154,8 +155,8 @@ power_plot_tikz_by_n <- function(data, d, t, c, N, statlines, title = "",
 
   ggplot <- ggplot2::ggplot
   aes <- ggplot2::aes
-  scale_y_continuous <- ggplot::scale_y_continuous
-  scale_linetype_manual <- ggplot::scale_linetype_manual
+  scale_y_continuous <- ggplot2::scale_y_continuous
+  scale_linetype_manual <- ggplot2::scale_linetype_manual
   guides <- ggplot2::guides
   guide_legend <- ggplot2::guide_legend
   geom_hline <- ggplot2::geom_hline
@@ -213,7 +214,7 @@ power_plot_tikz_by_n <- function(data, d, t, c, N, statlines, title = "",
     print(p)
     dev.off()
 
-    tools::texi2pdf(, clean = TRUE, quiet = verbose, clean = TRUE, quiet = verbose)
+    tools::texi2pdf(filename.tex, clean = TRUE, quiet = verbose)
   }
   if (verbose) {cat("Creating", filename.tex, "\n")}
   tikz(filename.tex, width = width, height = height)
@@ -250,7 +251,7 @@ power_plot_tikz <- function(data, d, t, c, s, title = "", legend_pos = "none",
 
   ggplot <- ggplot2::ggplot
   aes <- ggplot2::aes
-  scale_y_continuous <- ggplot::scale_y_continuous
+  scale_y_continuous <- ggplot2::scale_y_continuous
   guides <- ggplot2::guides
   guide_legend <- ggplot2::guide_legend
   geom_hline <- ggplot2::geom_hline
@@ -306,7 +307,7 @@ power_plot_tikz <- function(data, d, t, c, s, title = "", legend_pos = "none",
     print(p)
     dev.off()
     
-    tools::texi2pdf(, clean = TRUE, quiet = verbose, clean = TRUE, quiet = verbose)
+    tools::texi2pdf(filename.tex, clean = TRUE, quiet = verbose)
   }
   if (verbose) {cat("Creating", filename.tex, "\n")}
   tikz(filename.tex, width = width, height = height)
@@ -359,6 +360,7 @@ lrv_plot_tikz <- function(data, n, ker_name, true_lrv, phi = NULL,
   unit <- ggplot2::unit
   xlab <- ggplot2::xlab
   ylab <- ggplot2::ylab
+  xlim <- ggplot2::xlim
   ggtitle <- ggplot2::ggtitle
   theme_bw <- ggplot2::theme_bw
   theme <- ggplot2::theme
