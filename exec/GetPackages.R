@@ -42,10 +42,13 @@ main <- function(repos = "http://cran.us.r-project.org",
     "RcppArmadillo",
     "cointReg",
     "purrr",
-    "Rdpack"
+    "Rdpack",
+    "roxygen2",
+    "testthat"
   )
 
-  install.packages(needed_packages, lib = lib, destdir = destdir, repos = repos)
+  install.packages(needed_packages, lib = lib, destdir = destdir, repos = repos,
+                   dependencies = TRUE)
 }
 
 ################################################################################
