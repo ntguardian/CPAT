@@ -379,7 +379,7 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'                 change point
 #' @param corr If \code{TRUE}, the long-run variance will be computed under the
 #'             assumption of correlated residuals; ignored if \code{custom_var}
-#'             is not \code{NULL}
+#'             is not \code{NULL} or \code{use_kernel_var} is \code{TRUE}
 #' @param get_all_vals If \code{TRUE}, return all values for the statistic at
 #'                   every tested point in the data set
 #' @param custom_var Can be a vector the same length as \code{dat} consisting of
@@ -391,6 +391,28 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'                   vector, with \code{x} representing the data vector and
 #'                   \code{k} the position of a potential change point; if
 #'                   \code{NULL}, this argument is ignored
+#' @param use_kernel_var Set to \code{TRUE} to use kernel methods for long-run
+#'                       variance estimation (typically used when the data is
+#'                       believed to be correlated); if \code{FALSE}, then the
+#'                       long-run variance is estimated using
+#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
+#'                       \sum_{s = t + 1}^{T}\left(X_s -
+#'                       \tilde{X}_{T - t}\right)^2\right)}, where
+#'                       \eqn{\bar{X}_t = t^{-1}\sum_{s = 1}^t X_s} and
+#'                       \eqn{\tilde{X}_{T - t} = (T - t)^{-1}
+#'                       \sum_{s = t + 1}^{T} X_s}; if \code{custom_var} is not
+#'                       \code{NULL}, this argument is ignored
+#' @param kernel If character, the identifier of the kernel function as used in
+#'               \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
+#'               function, the kernel function to be used for long-run variance
+#'               estimation (default is the Bartlett kernel in \pkg{cointReg})
+#' @param bandwidth If character, the identifier for how to compute the
+#'               bandwidth as defined in \pkg{cointReg} (see
+#'               \code{\link[cointReg]{getBandwidth}}); if function, a function
+#'               to use for computing the bandwidth; if numeric, the bandwidth
+#'               value to use (the default is to use Andrews' method, as used in
+#'               \pkg{cointReg})
 #' @return If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
 #'         value of the test statistic; otherwise, a list that contains the test
 #'         statistic and the other values requested (if both are \code{TRUE},
@@ -402,7 +424,8 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #' stat_hs(rnorm(1000))
 #' stat_hs(rnorm(1000), corr = FALSE)
 stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
-                    custom_var = NULL) {
+                    custom_var = NULL, use_kernel_var = FALSE, kernel = "ba",
+                    bandwidth = "and") {
   # Formerly named statHS()
 
   n <- length(dat)
@@ -418,10 +441,18 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
     Delta <- ((n-1)/n) * var(u)
   }
 
+  # To implement kernel LRV estimation that is consistent under H_A, I play
+  # around with custom_var; this will be the avenue through which that
+  # functionality is implemented.
+  if (is.null(custom_var)) {
+    if (use_kernel_var) {
+      # TODO: curtis: IMPLEMENT stat_Zn-STYLE LRV ESTIMATION -- Thu 20 Sep 2018
+    }
+  } else {
+
   # To allow greater flexibility, Delta will be made a vector so that Delta can
   # take values at different possible change points; this allows for greater
   # experimentation on our part
-  if (!is.null(custom_var)) {
     if (is.function(custom_var)) {
       # This may seem silly, but this is so that error codes refer to
       # custom_var, and we don't want recursion either
@@ -577,7 +608,7 @@ andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
 #' stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
                     use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
-                    bandwidth = "and", get_all_vals = FALSE) {
+                    bandwidth = "and", get_all_vals = false) {
   # Formerly known as statZn()
   if (use_kernel_var) {
     lrv <- get_lrv_vec(dat, kernel, bandwidth)
