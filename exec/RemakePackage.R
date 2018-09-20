@@ -14,7 +14,7 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
   require("optparse")
 }
 
-`%s%` <- CPAT:::`%s%`
+`%s%` <- function(x, y) {paste(x, y)}
 
 ################################################################################
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
