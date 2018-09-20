@@ -44,7 +44,8 @@ main <- function(repos = "http://cran.us.r-project.org",
     "purrr",
     "Rdpack",
     "roxygen2",
-    "testthat"
+    "testthat",
+    "git2r"
   )
 
   install.packages(needed_packages, lib = lib, destdir = destdir, repos = repos,

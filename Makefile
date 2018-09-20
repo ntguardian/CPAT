@@ -135,8 +135,20 @@ mostlyclean :
 
 .PHONY : init
 init :
+	make initpower
+	make initlrv
+	make initconv
+
+.PHONY : initpower
+initpower :
 	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50_log_c4rt.pdf
+
+.PHONY : initlrv
+initlrv :
 	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
+
+.PHONY : initconv
+initconv :
 	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
 
 .PHONY : small
