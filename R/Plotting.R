@@ -32,6 +32,7 @@
 #'                 \code{dist_conv_dist_nsize_trim})
 #' @param verbose Print updates about progress (via \code{link[base]{cat}})
 #' @param makePDF Automatically compile the resulting \code{.tex} file
+#' @import grDevices
 #' @examples
 #' \dontrun{
 #' ZnSimulations <- list(

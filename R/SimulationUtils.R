@@ -157,6 +157,7 @@ power_sim_Vn_to_df <- function(obj, crit) {
 #'               directory and there is no desire to edit \code{file_meta}'s
 #'               data
 #' @return A data frame containing the power simulation data
+#' @import utils
 #' @examples
 #' \dontrun{
 #' power_sim_stat_df_creator("FileStatMeta.csv", "StatMeta.csv")

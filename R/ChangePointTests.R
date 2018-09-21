@@ -29,6 +29,7 @@
 #'
 #' @param x A numeric vector for the data set
 #' @param k The potential change point at which the data set is split
+#' @import stats
 #' @return The estimated change-consistent variance
 #' @examples
 #' cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
@@ -44,6 +45,80 @@ cpt_consistent_var <- function(x, k) {
   sse2 <- sum((x2 - mu2)^2)
 
   (sse1 + sse2)/n
+}
+
+#' Weights for Long-Run Variance
+#'
+#' Compute some weights for long-run variance. This code comes directly from the
+#' source code of \pkg{cointReg}; see \code{\link[cointReg]{getLongRunWeights}}.
+#'
+#' @param n Length of weights' vector
+#' @param bandwidth A number for the bandwidth
+#' @param kernel The kernel function; see \code{\link[cointReg]{getLongRunVar}}
+#'        for possible values
+#' @return List with components \code{w} containing the vector of weights and
+#'         \code{upper}, the index of the largest non-zero entry in \code{w}
+#' @examples
+#' getLongRunWeights(10, 1)
+getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
+  w <- numeric(n - 1)
+  bw<- bandwidth
+  if (kernel == "tr") {
+    w <- w + 1
+    upper <- min(bw, n - 1)
+  }
+  else if (kernel == "ba") {
+    upper <- ceiling(bw) - 1
+    if (upper > 0) {
+        j <- 1:upper
+    }
+    else {
+        j <- 1
+    }
+    w[j] <- 1 - j/bw
+  }
+  else if (kernel == "pa") {
+    upper1 <- floor(bw/2)
+    if (upper1 > 0) {
+        j <- 1:upper1
+    }
+    else {
+        j <- 1
+    }
+    jj <- j/bw
+    w[j] <- 1 - 6 * jj^2 + 6 * jj^3
+    j2 <- (floor(bw/2) + 1):bw
+    jj2 <- j2/bw
+    w[j2] <- 2 * (1 - jj2)^3
+    upper <- ceiling(bw) - 1
+  }
+  else if (kernel == "bo") {
+    upper <- ceiling(bw) - 1
+    if (upper > 0) {
+        j <- 1:upper
+    }
+    else {
+        j <- 1
+    }
+    jj <- j/bw
+    w[j] <- (1 - jj) * cos(pi * jj) + sin(pi * jj)/pi
+  }
+  else if (kernel == "da") {
+    upper <- n - 1
+    j <- 1:upper
+    w[j] <- sin(pi * j/bw)/(pi * j/bw)
+  }
+  else if (kernel == "qs") {
+    sc <- 1.2 * pi
+    upper <- n - 1
+    j <- 1:upper
+    jj <- j/bw
+    w[j] <- 25/(12 * pi^2 * jj^2) * (sin(sc * jj)/(sc * jj) - 
+        cos(sc * jj))
+  }
+  if (upper <= 0) 
+    upper <- 1
+  list(w = w, upper = upper)
 }
 
 #' Long-Run Variance Estimation With Possible Change Points
@@ -90,7 +165,7 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
       } else {
          kervar = "ba"
       }
-      h <- cointReg:::getBandwidth(dat, bandwidth = bandwidth, kernel = kervar)
+      h <- cointReg::getBandwidth(dat, bandwidth = bandwidth, kernel = kervar)
     }
   } else if (is.numeric(bandwidth)) {
     if (bandwidth <= 0) {
@@ -106,14 +181,8 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
   }
 
   if (is.character(kernel)) {
-    if (!has_cointreg) {
-      warning("cointReg is not installed! Defaulting to Bartlett kernel.")
-      kernel <- function(z) {ifelse(abs(z) < 1, 1 - abs(z), 0)}
-      kern_vals <- sapply(1:(n - 1)/h, kernel)
-    } else {
-      kern_vals <- c(1, cointReg:::getLongRunWeights(n, kernel = kernel,
-                                                     bandwidth = h)$w[-n])
-    }
+    kern_vals <- c(1, getLongRunWeights(n, kernel = kernel,
+                                        bandwidth = h)$w[-n])
   } else if (!is.function(kernel)) {
     stop("kernel must be a function or a valid character string.")
   } else {
@@ -273,7 +342,7 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #'
 #' This function computes the Darling-Erdös statistic.
 #'
-#' If \eqn{\bazar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
+#' If \eqn{\bar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
 #' with weighting parameter \eqn{\tau} and trimming parameter \eqn{t_T} (see
 #' \code{\link{stat_Vn}}), then the Darling-Erdös statistic is
 #'
@@ -357,13 +426,13 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'
 #' For a data set \eqn{x_t} with \eqn{n} observations, the test statistic is
 #'
-#' \deqn{(\max_{1 \leq s \leq n - 1} \mathscr{LM}(s) - B_n)/A_n}
+#' \deqn{(\max_{1 \leq s \leq n - 1} \mathcal{LM}(s) - B_n)/A_n}
 #'
 #' where \eqn{\hat{u}_t = x_t - \bar{x}} (\eqn{\bar{x}} is the sample mean),
 #' \eqn{a_n = (2 \log \log n)^{1/2}}, \eqn{b_n = a_n^2 - \frac{1}{2} \log \log
 #' \log n - \log \Gamma (1/2)}, \eqn{A_n = b_n / a_n^2}, \eqn{B_n =
 #' b_n^2/a_n^2}, \eqn{\hat{\Delta} = \hat{\sigma}^2 = n^{-1} \sum_{t = 1}^{n}
-#' \hat{u}_t^2}, and \eqn{\mathscr{LM}(s) = n (n - s)^{-1} s^{-1}
+#' \hat{u}_t^2}, and \eqn{\mathcal{LM}(s) = n (n - s)^{-1} s^{-1}
 #' \hat{\Delta}^{-1} \left( \sum_{t = 1}^{s} \hat{u}_t\right)^2}.
 #'
 #' If \code{corr} is \code{FALSE}, then the residuals are assumed to be

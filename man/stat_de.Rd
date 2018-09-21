@@ -59,7 +59,7 @@ If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
 This function computes the Darling-Erdös statistic.
 }
 \details{
-If \eqn{\bazar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
+If \eqn{\bar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
 with weighting parameter \eqn{\tau} and trimming parameter \eqn{t_T} (see
 \code{\link{stat_Vn}}), then the Darling-Erdös statistic is
 

@@ -11,6 +11,7 @@
 #'
 #' Makes package startup message.
 #'
+#' @import utils
 #' @examples
 #' CPAT_startup_message()
 CPAT_startup_message <- function() {
@@ -19,8 +20,8 @@ CPAT_startup_message <- function() {
            "  ___/\n   /   /    /  /__/  //  /__/  /    /  /\n  /   /___ /  __",
            "____//  ___   /    /  /\n /       //  /      /  /  /  /    /  /\n/",
            "_______//__/      /__/  /__/    /__/        v. ",
-           packageVersion("CPAT")), "\nType citation(\"CPAT\") for citing this ",
-           "R package in publications")
+           utils::packageVersion("CPAT")),
+     "\nType citation(\"CPAT\") for citing this R package in publications")
 }
 
 #' Package Attach Hook Function
