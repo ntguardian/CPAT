@@ -65,9 +65,9 @@ test_that("stat_Zn() functions properly", {
                               bandwidth = sqrt), 2.27610096950933)
   expect_equal(CPAT:::stat_Zn(dat, custom_var = function(x, k) {
                                 var(x[1:(min(k + 1, length(x)))])
-                              }), 1.58902205341715)
+                              }), 1.25197565798885)
   expect_equal(CPAT:::stat_Zn(dat, custom_var = function(x, k) var(x)),
-               1.58902205341715)
+               1.439370888561)
 })
 
 test_that("get_lrv_vec() functions properly, interfaces where it should", {

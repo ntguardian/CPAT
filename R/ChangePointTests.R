@@ -582,6 +582,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
   if (use_kernel_var) {
     lrv <- get_lrv_vec(dat, kernel, bandwidth)
   } else if (!is.null(custom_var)) {
+    use_kernel_var <- TRUE  # Otherwise stat_Zn_cpp() will ignore lrv
     if (is.function(custom_var)) {
       # This may seem silly, but this is so that error codes refer to
       # custom_var, and we don't want recursion either
