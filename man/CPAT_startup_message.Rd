@@ -10,5 +10,5 @@ CPAT_startup_message()
 Makes package startup message.
 }
 \examples{
-CPAT_startup_message()
+CPAT:::CPAT_startup_message()
 }

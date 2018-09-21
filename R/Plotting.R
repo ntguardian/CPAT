@@ -126,7 +126,6 @@ dist_conv_plot_tikz <- function(obj, dist, trim, size, title = "", width = 4,
 #'                   the legend
 #' @param width The width of the plot
 #' @param height The height of the plot
-#' @param verbose Print progress information
 #' @param filename The name of the file to save output (without stems; files
 #'                 with this string appended with \code{.tex} and maybe
 #'                 \code{.pdf} will be created); if \code{NULL}, the name will

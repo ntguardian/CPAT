@@ -35,7 +35,7 @@ with this string appended with \code{.tex} and maybe
 \code{.pdf} will be created); if \code{NULL}, the name will
 be automatically determined}
 
-\item{verbose}{Print progress information}
+\item{verbose}{Print updates about progress (via \code{link[base]{cat}})}
 
 \item{makePDF}{Automatically compile the resulting \code{.tex} file}
 }

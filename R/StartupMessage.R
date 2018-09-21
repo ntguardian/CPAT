@@ -13,7 +13,7 @@
 #'
 #' @import utils
 #' @examples
-#' CPAT_startup_message()
+#' CPAT:::CPAT_startup_message()
 CPAT_startup_message <- function() {
   c(paste0("      ________ _________ _________ __________\n     /       //  __",
            "_   //  ___   //         /\n    /   ____//  /  /  //  /  /  //___ ",
@@ -32,7 +32,7 @@ CPAT_startup_message <- function() {
 #'            defining the namespace was found
 #' @param pkg a character string giving the name of the package 
 #' @examples
-#' .onAttach(.libPaths()[1], "CPAT")
+#' CPAT:::.onAttach(.libPaths()[1], "CPAT")
 .onAttach <- function(lib, pkg) {
   msg <- CPAT_startup_message()
   if (!interactive())

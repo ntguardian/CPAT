@@ -583,13 +583,14 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
 #'             of correlated residuals
 #' @param use_kernel_var Set to \code{TRUE} to use kernel-based long-run
 #'                       variance estimation (\code{FALSE} means this is not
-#'                       employed)
+#'                       employed); \emph{TODO: NOT CURRENTLY IMPLEMENTED}
 #' @param kernel If character, the identifier of the kernel function as used in
 #'               the \pkg{cointReg} (see documentation for
 #'               \code{cointReg::getLongRunVar}); if function, the kernel
 #'               function to be used for long-run variance estimation (default
 #'               is the Bartlett kernel in \pkg{cointReg}); this parameter
-#'               has no effect if \code{use_kernel_var} is \code{FALSE}
+#'               has no effect if \code{use_kernel_var} is \code{FALSE};
+#'               \emph{TODO: NOT CURRENTLY IMPLEMENTED}
 #' @param bandwidth If character, the identifier of how to compute the bandwidth
 #'                  as defined in the \pkg{cointReg} package (see
 #'                  documentation for \code{cointReg::getLongRunVar}); if
@@ -597,7 +598,8 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
 #'                  numeric, the bandwidth to use (the default behavior is to
 #'                  use the \insertCite{andrews91b;textual}{CPAT} method, as
 #'                  used in \pkg{cointReg}); this parameter has no effect if
-#'                  \code{use_kernel_var} is \code{FALSE}
+#'                  \code{use_kernel_var} is \code{FALSE}; \emph{TODO: NOT
+#'                  CURRENTLY IMPLEMENTED}
 #' @param n The sample size for each realization
 #' @param gen_func The function generating the random sample from which the
 #'                 statistic is computed
@@ -613,7 +615,8 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
 #' sim_hs_stat(100, gen_func = rchangepoint, args = list(changepoint = 250,
 #'                                                       mean2 = 1))
 sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
-                        n = 500, parallel = FALSE) {
+                        n = 500, parallel = FALSE, use_kernel_var = FALSE,
+                        kernel = "ba", bandwidth = "and") {
   # Formerly known as simHSStat
   hs_realization <- function() {
     # Generate data set

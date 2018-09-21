@@ -156,6 +156,7 @@ power_sim_Vn_to_df <- function(obj, crit) {
 #'               to those names, in case the files are not in the working
 #'               directory and there is no desire to edit \code{file_meta}'s
 #'               data
+#' @param alpha Numeric for level of significance used in power calculations
 #' @return A data frame containing the power simulation data
 #' @import utils
 #' @examples

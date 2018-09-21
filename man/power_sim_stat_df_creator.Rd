@@ -22,6 +22,8 @@ in \code{file_meta}; could be used for adding path information
 to those names, in case the files are not in the working
 directory and there is no desire to edit \code{file_meta}'s
 data}
+
+\item{alpha}{Numeric for level of significance used in power calculations}
 }
 \value{
 A data frame containing the power simulation data

@@ -43,13 +43,13 @@ This function computes the Hidalgo-Seo statistic for a change in mean model.
 \details{
 For a data set \eqn{x_t} with \eqn{n} observations, the test statistic is
 
-\deqn{(\max_{1 \leq s \leq n - 1} \mathscr{LM}(s) - B_n)/A_n}
+\deqn{(\max_{1 \leq s \leq n - 1} \mathcal{LM}(s) - B_n)/A_n}
 
 where \eqn{\hat{u}_t = x_t - \bar{x}} (\eqn{\bar{x}} is the sample mean),
 \eqn{a_n = (2 \log \log n)^{1/2}}, \eqn{b_n = a_n^2 - \frac{1}{2} \log \log
 \log n - \log \Gamma (1/2)}, \eqn{A_n = b_n / a_n^2}, \eqn{B_n =
 b_n^2/a_n^2}, \eqn{\hat{\Delta} = \hat{\sigma}^2 = n^{-1} \sum_{t = 1}^{n}
-\hat{u}_t^2}, and \eqn{\mathscr{LM}(s) = n (n - s)^{-1} s^{-1}
+\hat{u}_t^2}, and \eqn{\mathcal{LM}(s) = n (n - s)^{-1} s^{-1}
 \hat{\Delta}^{-1} \left( \sum_{t = 1}^{s} \hat{u}_t\right)^2}.
 
 If \code{corr} is \code{FALSE}, then the residuals are assumed to be
