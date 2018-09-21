@@ -11,7 +11,8 @@ Suggests:
     doParallel (>= 1.0.11),
     ggplot2 (>= 2.2.1),
     dplyr (>= 0.7.6),
-    tikzDevice (>= 0.12)
+    tikzDevice (>= 0.12),
+    testthat
 Imports:
     Rdpack (>= 0.9),
     Rcpp (>= 0.12.18),
