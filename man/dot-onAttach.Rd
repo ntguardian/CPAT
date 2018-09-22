@@ -16,5 +16,5 @@ defining the namespace was found}
 Hook triggered when package attached
 }
 \examples{
-.onAttach(.libPaths()[1], "CPAT")
+CPAT:::.onAttach(.libPaths()[1], "CPAT")
 }

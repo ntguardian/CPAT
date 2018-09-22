@@ -33,7 +33,7 @@ change in multivarate data, aso originally described. See
 x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
-andrews_test_reg(y ~ x, data = df, m = 900)
+CPAT:::andrews_test_reg(y ~ x, data = df, m = 900)
 }
 \references{
 \insertAllCited{}

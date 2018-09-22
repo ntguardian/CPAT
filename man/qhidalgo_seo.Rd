@@ -16,5 +16,5 @@ A The quantile associated with \code{p}
 Quantile function for the limiting distribution of the Hidalgo-Seo statistic
 }
 \examples{
-qhidalgo_seo(0.5)
+CPAT:::qhidalgo_seo(0.5)
 }

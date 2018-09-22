@@ -36,7 +36,7 @@
 #'                       "c4rt" = list(
 #'                         "d_0" = c(1.551, 1.276, 1.348, 1.982, 1.423)
 #' )))))
-#' power_sim_Zn_to_df(saveobj, qZn(.95))
+#' CPAT:::power_sim_Zn_to_df(saveobj, CPAT:::qZn(.95))
 power_sim_Zn_to_df <- function(obj, crit) {
   # Formerly known as powerSim_Zn_to_df()
 
@@ -101,7 +101,7 @@ power_sim_Zn_to_df <- function(obj, crit) {
 #'                     "c4rt" = list(
 #'                       "d_0" = c(1.551, 1.276, 1.348, 1.982, 1.423)
 #' ))))
-#' power_sim_Vn_to_df(saveobj, qkolmogorov(.95))
+#' CPAT:::power_sim_Vn_to_df(saveobj, CPAT:::qkolmogorov(.95))
 power_sim_Vn_to_df <- function(obj, crit) {
   # Formerly known as powerSim_Vn_to_df()
 
@@ -268,7 +268,7 @@ bind_power_sim_objs <- function(files, crit_value, conv_func, stat_name) {
 #'         each statistic
 #' @examples
 #' if (require("foreach") & require("doParallel")) {
-#'   get_expanding_window_pvals(rnorm(1000), m = 900)
+#'   CPAT:::get_expanding_window_pvals(rnorm(1000), m = 900)
 #' }
 get_expanding_window_pvals <- function(dat, m = Inf) {
   has_parallel <- requireNamespace("foreach", quietly = TRUE) &&
@@ -332,7 +332,7 @@ get_expanding_window_pvals <- function(dat, m = Inf) {
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' if (require("foreach") & require("doParallel")) {
-#'   get_expanding_window_pvals_reg(y ~ x, data = df, min_n = 4, m = 900)
+#'   CPAT:::get_expanding_window_pvals_reg(y ~ x, data = df, min_n = 4, m = 900)
 #' }
 get_expanding_window_pvals_reg <- function(formula, data, min_n = 3, m = Inf,
                                            verbose = FALSE) {

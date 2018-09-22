@@ -32,7 +32,7 @@
 #' @import stats
 #' @return The estimated change-consistent variance
 #' @examples
-#' cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
+#' CPAT:::cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
 cpt_consistent_var <- function(x, k) {
   n <- length(x)
   if (n < k | k < 0) {stop("k must be an integer between 1 and length(x)")}
@@ -59,7 +59,7 @@ cpt_consistent_var <- function(x, k) {
 #' @return List with components \code{w} containing the vector of weights and
 #'         \code{upper}, the index of the largest non-zero entry in \code{w}
 #' @examples
-#' getLongRunWeights(10, 1)
+#' CPAT:::getLongRunWeights(10, 1)
 getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
   w <- numeric(n - 1)
   bw<- bandwidth
@@ -147,8 +147,8 @@ getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
 #'  \insertAllCited{}
 #' @examples
 #' x <- rnorm(1000)
-#' get_lrv_vec(x)
-#' get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
+#' CPAT:::get_lrv_vec(x)
+#' CPAT:::get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
 get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
   has_cointreg <- requireNamespace("cointReg", quietly = TRUE)
 
@@ -275,7 +275,7 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #'                       variance estimation (typically used when the data is
 #'                       believed to be correlated); if \code{FALSE}, then the
 #'                       long-run variance is estimated using
-#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 #'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 #'                       \sum_{s = t + 1}^{T}\left(X_s -
 #'                       \tilde{X}_{T - t}\right)^2\right)}, where
@@ -302,9 +302,9 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' stat_Vn(rnorm(1000))
-#' stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
-#' stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_Vn(rnorm(1000))
+#' CPAT:::stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
+#' CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
                    use_kernel_var = FALSE, kernel = "ba", bandwidth = "and",
                    get_all_vals = FALSE) {
@@ -394,8 +394,8 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' stat_DE(rnorm(1000))
-#' stat_DE(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_de(rnorm(1000))
+#' CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_de <- function(dat, a = log, b = log, estimate = FALSE,
                     use_kernel_var = FALSE, kernel = "ba", bandwidth = "and",
                     get_all_vals = FALSE) {
@@ -426,7 +426,7 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'
 #' For a data set \eqn{x_t} with \eqn{n} observations, the test statistic is
 #'
-#' \deqn{(\max_{1 \leq s \leq n - 1} \mathcal{LM}(s) - B_n)/A_n}
+#' \deqn{\max_{1 \leq s \leq n - 1} 	(\mathcal{LM}(s) - B_n)/A_n}
 #'
 #' where \eqn{\hat{u}_t = x_t - \bar{x}} (\eqn{\bar{x}} is the sample mean),
 #' \eqn{a_n = (2 \log \log n)^{1/2}}, \eqn{b_n = a_n^2 - \frac{1}{2} \log \log
@@ -437,7 +437,7 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'
 #' If \code{corr} is \code{FALSE}, then the residuals are assumed to be
 #' uncorrelated. Otherwise, the residuals are assumed to be correlated and
-#' \eqn{\hat{\Delta} = \hat{gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
+#' \eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
 #' \rfloor} (1 - \frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j)
 #' = \frac{1}{n}\sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}.
 #'
@@ -468,8 +468,8 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' stat_hs(rnorm(1000))
-#' stat_hs(rnorm(1000), corr = FALSE)
+#' CPAT:::stat_hs(rnorm(1000))
+#' CPAT:::stat_hs(rnorm(1000), corr = FALSE)
 stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
                     custom_var = NULL) {
   # Formerly named statHS()
@@ -553,7 +553,7 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' andrews_test(rnorm(1000), m = 900)
+#' CPAT:::andrews_test(rnorm(1000), m = 900)
 andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
   mu <- mean(x)
   u <- x - mu
@@ -641,9 +641,9 @@ andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
 #'         the test statistic is in the first position and the estimated change
 #'         point in the second)
 #' @examples
-#' stat_Zn(rnorm(1000))
-#' stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
-#' stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_Zn(rnorm(1000))
+#' CPAT:::stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
+#' CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
                     use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
                     bandwidth = "and", get_all_vals = FALSE) {
@@ -714,7 +714,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' andrews_test_reg(y ~ x, data = df, m = 900)
+#' CPAT:::andrews_test_reg(y ~ x, data = df, m = 900)
 andrews_test_reg <- function(formula, data, m, pval = TRUE, stat = TRUE) {
   fit <- lm(formula = formula, data = data)
   beta <- coefficients(fit)

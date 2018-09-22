@@ -31,5 +31,5 @@ computed automatically as \code{length(x)} and \code{k} corresponds to
 \eqn{t}, a potential change point.
 }
 \examples{
-cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
+CPAT:::cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
 }

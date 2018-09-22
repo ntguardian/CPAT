@@ -18,5 +18,6 @@ A string combining \code{x} and \code{y} with a space separating them
 Concatenate and form strings (with space separation)
 }
 \examples{
+`\%s\%` <- CPAT:::`\%s\%`
 "Hello" \%s\% "world"
 }

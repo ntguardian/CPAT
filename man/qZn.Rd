@@ -27,5 +27,5 @@ and many of the the accepted parameters are arguments for that function; see
 its documentation for more details.
 }
 \examples{
-qZn(0.5)
+CPAT:::qZn(0.5)
 }

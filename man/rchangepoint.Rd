@@ -37,8 +37,8 @@ no change. If \code{changepoint} is \code{NULL}, then by default the change
 point will be at about the middle of the data.
 }
 \examples{
-rchangepoint(500)
-rchangepoint(500, changepoint = 10, mean2 = 2, sd = 2)
-rchangepoint(500, changepoint = 250, dist = rexp, meanparam = "rate",
-             mean1 = 1, mean2 = 2)
+CPAT:::rchangepoint(500)
+CPAT:::rchangepoint(500, changepoint = 10, mean2 = 2, sd = 2)
+CPAT:::rchangepoint(500, changepoint = 250, dist = rexp, meanparam = "rate",
+                    mean1 = 1, mean2 = 2)
 }

@@ -61,9 +61,9 @@ for more details. Otherwise, the sample variance is the estimate for the
 long-run variance, as described in \insertCite{hidalgoseo13;textual}{CPAT}.
 }
 \examples{
-sim_hs_stat(100)
-sim_hs_stat(100, gen_func = rchangepoint, args = list(changepoint = 250,
-                                                      mean2 = 1))
+CPAT:::sim_hs_stat(100)
+CPAT:::sim_hs_stat(100, gen_func = rchangepoint, 
+                   args = list(changepoint = 250, mean2 = 1))
 }
 \references{
 \insertAllCited{}

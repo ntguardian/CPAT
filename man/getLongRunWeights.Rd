@@ -23,5 +23,5 @@ Compute some weights for long-run variance. This code comes directly from the
 source code of \pkg{cointReg}; see \code{\link[cointReg]{getLongRunWeights}}.
 }
 \examples{
-getLongRunWeights(10, 1)
+CPAT:::getLongRunWeights(10, 1)
 }

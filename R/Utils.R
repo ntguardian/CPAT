@@ -27,6 +27,7 @@ NULL
 #' @param y Another object
 #' @return A string combining \code{x} and \code{y} with a space separating them
 #' @examples
+#' `%s%` <- CPAT:::`%s%`
 #' "Hello" %s% "world"
 `%s%` <- function(x, y) {paste(x, y)}
 
@@ -37,5 +38,6 @@ NULL
 #' @inheritParams %s%
 #' @return A string combining \code{x} and \code{y}
 #' @examples
+#' `%s0%` <- CPAT:::`%s0%`
 #' "Hello" %s0% "world"
 `%s0%` <- function(x, y) {paste0(x, y)}

@@ -21,5 +21,5 @@ Function for computing the value of the density function of the limiting
 distribution of the Rényi-type statistic.
 }
 \examples{
-dZn(1)
+CPAT:::dZn(1)
 }

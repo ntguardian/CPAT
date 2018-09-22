@@ -20,5 +20,5 @@ If \eqn{Z} is the random variable following the limiting
 CDF for the limiting distribution of the Rènyi-type statistic.
 }
 \examples{
-pZn(0.1)
+CPAT:::pZn(0.1)
 }

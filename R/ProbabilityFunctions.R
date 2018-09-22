@@ -22,7 +22,7 @@
 #'                 machine accurate)
 #' @return Value of the density function at \eqn{x}
 #' @examples
-#' dZn(1)
+#' CPAT:::dZn(1)
 dZn <- function(x, summands = 500) {
   if (!is.numeric(summands)) {
     if (q > 6) {
@@ -57,7 +57,7 @@ dZn <- Vectorize(dZn, "x")
 #' @return If \eqn{Z} is the random variable following the Kolmogorov
 #'         distribution, the quantity \eqn{P(Z \leq q)}
 #' @examples
-#' pkolmogorov(0.1)
+#' CPAT:::pkolmogorov(0.1)
 pkolmogorov <- function(q, summands = ceiling(q * sqrt(72) + 3/2)) {
   # Formerly called pKolmogorov
   sqrt(2 * pi) * sapply(q, function(x) { if (x > 0) {
@@ -76,7 +76,7 @@ pkolmogorov <- Vectorize(pkolmogorov, "q")
 #' @return If \eqn{Z} is the random variable with this distribution, the
 #'         quantity \eqn{P(Z \leq q)}
 #' @examples
-#' pdarling_erdos(0.1)
+#' CPAT:::pdarling_erdos(0.1)
 pdarling_erdos <- function(q) {
   # Formerly called pDarlingErdos
   exp(-2 * exp(-q))
@@ -93,7 +93,7 @@ pdarling_erdos <- Vectorize(pdarling_erdos, "q")
 #' @return If \eqn{Z} is the random variable following the limiting
 #'         distribution, the quantity \eqn{P(Z \leq q)}
 #' @examples
-#' pZn(0.1)
+#' CPAT:::pZn(0.1)
 pZn <- function(q, summands = NULL) {
   if (!is.numeric(summands)) {
     if (q > 6) {
@@ -123,7 +123,7 @@ pZn <- Vectorize(pZn, "q")
 #' @return If \eqn{Z} is the random variable following the limiting
 #'         distribution, the quantity \eqn{P(Z \leq q)}
 #' @examples
-#' phidalgo_seo(0.1)
+#' CPAT:::phidalgo_seo(0.1)
 phidalgo_seo <- function(q) {
   # Formerly called pHidalgoSeo
   pdarling_erdos(q/2)
@@ -141,7 +141,7 @@ phidalgo_seo <- function(q) {
 #' @param p The probability associated with the desired quantile
 #' @return The quantile associated with \code{p}
 #' @examples
-#' qdarling_erdos(0.5)
+#' CPAT:::qdarling_erdos(0.5)
 qdarling_erdos <- function(p) {
   # Formerly called qDarlingErdos
   -log(log(1/sqrt(p)))
@@ -155,7 +155,7 @@ qdarling_erdos <- Vectorize(qdarling_erdos, "p")
 #' @param p The probability associated with the desired quantile
 #' @return A The quantile associated with \code{p}
 #' @examples
-#' qhidalgo_seo(0.5)
+#' CPAT:::qhidalgo_seo(0.5)
 qhidalgo_seo <- function(p) {
   # Formerly called qHidalgoSeo
   2 * qdarling_erdos(p)
@@ -175,7 +175,7 @@ qhidalgo_seo <- function(p) {
 #'        \code{\link[stats]{uniroot}}
 #' @return The quantile associated with \code{p}
 #' @examples
-#' qZn(0.5)
+#' CPAT:::qZn(0.5)
 qZn <- function(p, summands = 500, interval = c(0, 100),
                 tol = .Machine$double.eps, ...) {
   objective <- function(q) {pZn(q, summands = summands) - p}
@@ -202,7 +202,7 @@ qZn <- Vectorize(qZn, "p")
 #'        \code{\link[stats]{uniroot}}
 #' @return The quantile associated with \code{p}
 #' @examples
-#' qkolmogorov(0.5)
+#' CPAT:::qkolmogorov(0.5)
 qkolmogorov <- function(p, summands = 500, interval = c(0, 100),
                 tol = .Machine$double.eps, ...) {
   objective <- function(q) {pkolmogorov(q, summands = summands) - p}
@@ -235,7 +235,7 @@ qkolmogorov <- Vectorize(qkolmogorov, "p")
 #' @param sd The square root of the second moment of the data
 #' @return A vector of simulated realizations of the Rènyi-type statistic
 #' @examples
-#' sim_Zn(100, kn = function(n) {floor(log(n))})
+#' CPAT:::sim_Zn(100, kn = function(n) {floor(log(n))})
 #' sim_Zn(100, kn = function(n) {floor(log(n))}, gen_func = rchangepoint,
 #'        args = list(changepoint = 250, mean2 = 1))
 sim_Zn <- function(size, kn, n = 500, gen_func = rnorm, args = NULL, sd = 1) {
@@ -270,9 +270,9 @@ sim_Zn <- function(size, kn, n = 500, gen_func = rnorm, args = NULL, sd = 1) {
 #' @param args A list of arguments to be passed to \code{gen_func}
 #' @return A vector of simulated realizations of the CUSUM statistic
 #' @examples
-#' sim_Vn(100)
-#' sim_Vn(100, gen_func = rchangepoint, args = list(changepoint = 250,
-#'                                                  mean2 = 1))
+#' CPAT:::sim_Vn(100)
+#' CPAT:::sim_Vn(100, gen_func = rchangepoint, args = list(changepoint = 250,
+#'                                                         mean2 = 1))
 sim_Vn <- function(size, n = 500, gen_func = rnorm, sd = 1, args = NULL) {
   # Formerly called simVn
   Vn_realization <- function() {
@@ -347,10 +347,10 @@ sim_Vn <- function(size, n = 500, gen_func = rnorm, sd = 1, args = NULL) {
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' sim_Vn_stat(100)
-#' sim_Vn_stat(100, kn = function(n) {floor(0.1 * n)}, tau = 1/3,
-#'             use_kernel_var = TRUE, gen_func = rchangepoint,
-#'             args = list(changepoint = 250, mean2 = 1))
+#' CPAT:::sim_Vn_stat(100)
+#' CPAT:::sim_Vn_stat(100, kn = function(n) {floor(0.1 * n)}, tau = 1/3,
+#'                    use_kernel_var = TRUE, gen_func = rchangepoint,
+#'                    args = list(changepoint = 250, mean2 = 1))
 sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
                         use_kernel_var = FALSE, kernel = "ba",
                         bandwidth = "and", n = 500, gen_func = rnorm,
@@ -445,10 +445,10 @@ sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' sim_Zn_stat(100)
-#' sim_Zn_stat(100, kn = function(n) {floor(log(n))}, use_kernel_var = TRUE,
-#'             gen_func = rchangepoint, args = list(changepoint = 250,
-#'             mean2 = 1))
+#' CPAT:::sim_Zn_stat(100)
+#' CPAT:::sim_Zn_stat(100, kn = function(n) {floor(log(n))},
+#'             use_kernel_var = TRUE, gen_func = rchangepoint,
+#'             args = list(changepoint = 250, mean2 = 1))
 sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
                         use_kernel_var = FALSE, kernel = "ba",
                         bandwidth = "and", n = 500, gen_func = rnorm,
@@ -532,9 +532,9 @@ sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' sim_de_stat(100)
-#' sim_de_stat(100, use_kernel_var = TRUE, gen_func = rchangepoint,
-#'             args = list(changepoint = 250, mean2 = 1))
+#' CPAT:::sim_de_stat(100)
+#' CPAT:::sim_de_stat(100, use_kernel_var = TRUE, gen_func = rchangepoint,
+#'                    args = list(changepoint = 250, mean2 = 1))
 sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
                         kernel = "ba", bandwidth = "and", n = 500,
                         gen_func = rnorm, args = NULL, parallel = FALSE) {
@@ -611,9 +611,9 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' sim_hs_stat(100)
-#' sim_hs_stat(100, gen_func = rchangepoint, args = list(changepoint = 250,
-#'                                                       mean2 = 1))
+#' CPAT:::sim_hs_stat(100)
+#' CPAT:::sim_hs_stat(100, gen_func = rchangepoint, 
+#'                    args = list(changepoint = 250, mean2 = 1))
 sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
                         n = 500, parallel = FALSE, use_kernel_var = FALSE,
                         kernel = "ba", bandwidth = "and") {
@@ -667,10 +667,10 @@ sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
 #' @param ... Other arguments to be passed to dist
 #' @return A vector of the simulated data
 #' @examples
-#' rchangepoint(500)
-#' rchangepoint(500, changepoint = 10, mean2 = 2, sd = 2)
-#' rchangepoint(500, changepoint = 250, dist = rexp, meanparam = "rate",
-#'              mean1 = 1, mean2 = 2)
+#' CPAT:::rchangepoint(500)
+#' CPAT:::rchangepoint(500, changepoint = 10, mean2 = 2, sd = 2)
+#' CPAT:::rchangepoint(500, changepoint = 250, dist = rexp, meanparam = "rate",
+#'                     mean1 = 1, mean2 = 2)
 rchangepoint <- function(n, changepoint = NULL, mean1 = 0, mean2 = 0,
                          dist = rnorm, meanparam = "mean", ...) {
   if (is.null(changepoint)) {

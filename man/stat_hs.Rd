@@ -43,7 +43,7 @@ This function computes the Hidalgo-Seo statistic for a change in mean model.
 \details{
 For a data set \eqn{x_t} with \eqn{n} observations, the test statistic is
 
-\deqn{(\max_{1 \leq s \leq n - 1} \mathcal{LM}(s) - B_n)/A_n}
+\deqn{\max_{1 \leq s \leq n - 1} 	(\mathcal{LM}(s) - B_n)/A_n}
 
 where \eqn{\hat{u}_t = x_t - \bar{x}} (\eqn{\bar{x}} is the sample mean),
 \eqn{a_n = (2 \log \log n)^{1/2}}, \eqn{b_n = a_n^2 - \frac{1}{2} \log \log
@@ -54,15 +54,15 @@ b_n^2/a_n^2}, \eqn{\hat{\Delta} = \hat{\sigma}^2 = n^{-1} \sum_{t = 1}^{n}
 
 If \code{corr} is \code{FALSE}, then the residuals are assumed to be
 uncorrelated. Otherwise, the residuals are assumed to be correlated and
-\eqn{\hat{\Delta} = \hat{gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
+\eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
 \rfloor} (1 - \frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j)
 = \frac{1}{n}\sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}.
 
 This statistic was presented in \insertCite{hidalgoseo13}{CPAT}.
 }
 \examples{
-stat_hs(rnorm(1000))
-stat_hs(rnorm(1000), corr = FALSE)
+CPAT:::stat_hs(rnorm(1000))
+CPAT:::stat_hs(rnorm(1000), corr = FALSE)
 }
 \references{
 \insertAllCited{}

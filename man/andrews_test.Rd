@@ -27,7 +27,7 @@ change in univariate data. See \insertCite{andrews03}{CPAT} for
 a description of the test.
 }
 \examples{
-andrews_test(rnorm(1000), m = 900)
+CPAT:::andrews_test(rnorm(1000), m = 900)
 }
 \references{
 \insertAllCited{}

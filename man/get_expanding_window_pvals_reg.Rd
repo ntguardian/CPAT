@@ -35,6 +35,6 @@ x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 if (require("foreach") & require("doParallel")) {
-  get_expanding_window_pvals_reg(y ~ x, data = df, min_n = 4, m = 900)
+  CPAT:::get_expanding_window_pvals_reg(y ~ x, data = df, min_n = 4, m = 900)
 }
 }

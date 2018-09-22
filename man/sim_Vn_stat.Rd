@@ -75,10 +75,10 @@ can be simulated with the function by passing values to \code{kn} and
 \code{tau}; again, see the documentation for \code{\link{stat_Vn}}.
 }
 \examples{
-sim_Vn_stat(100)
-sim_Vn_stat(100, kn = function(n) {floor(0.1 * n)}, tau = 1/3,
-            use_kernel_var = TRUE, gen_func = rchangepoint,
-            args = list(changepoint = 250, mean2 = 1))
+CPAT:::sim_Vn_stat(100)
+CPAT:::sim_Vn_stat(100, kn = function(n) {floor(0.1 * n)}, tau = 1/3,
+                   use_kernel_var = TRUE, gen_func = rchangepoint,
+                   args = list(changepoint = 250, mean2 = 1))
 }
 \references{
 \insertAllCited{}

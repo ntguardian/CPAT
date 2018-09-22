@@ -73,8 +73,8 @@ with \eqn{l(x) = \sqrt{2 \log x}} and \eqn{u(x) = 2 \log x + \frac{1}{2} \log
 See \insertCite{horvathricemiller19}{CPAT} to learn more.
 }
 \examples{
-stat_DE(rnorm(1000))
-stat_DE(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_de(rnorm(1000))
+CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 }
 \references{
 \insertAllCited{}

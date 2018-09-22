@@ -17,5 +17,5 @@ Quantile function for the limiting distribution of the Darling-Erdös
 statistic.
 }
 \examples{
-qdarling_erdos(0.5)
+CPAT:::qdarling_erdos(0.5)
 }

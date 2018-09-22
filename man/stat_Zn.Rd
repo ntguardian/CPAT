@@ -75,7 +75,7 @@ The definition of the statistic is
 The parameter \code{kn} corresponds to the trimming parameter \eqn{t_T}.
 }
 \examples{
-stat_Zn(rnorm(1000))
-stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
-stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_Zn(rnorm(1000))
+CPAT:::stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
+CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 }

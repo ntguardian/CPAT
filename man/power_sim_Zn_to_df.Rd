@@ -34,5 +34,5 @@ saveobj <- list("norm" = list(
                       "c4rt" = list(
                         "d_0" = c(1.551, 1.276, 1.348, 1.982, 1.423)
 )))))
-power_sim_Zn_to_df(saveobj, qZn(.95))
+CPAT:::power_sim_Zn_to_df(saveobj, CPAT:::qZn(.95))
 }
