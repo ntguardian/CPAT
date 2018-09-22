@@ -236,8 +236,9 @@ qkolmogorov <- Vectorize(qkolmogorov, "p")
 #' @return A vector of simulated realizations of the Rènyi-type statistic
 #' @examples
 #' CPAT:::sim_Zn(100, kn = function(n) {floor(log(n))})
-#' sim_Zn(100, kn = function(n) {floor(log(n))}, gen_func = rchangepoint,
-#'        args = list(changepoint = 250, mean2 = 1))
+#' CPAT:::sim_Zn(100, kn = function(n) {floor(log(n))},
+#'               gen_func = CPAT:::rchangepoint, args = list(changepoint = 250,
+#'                                                           mean2 = 1))
 sim_Zn <- function(size, kn, n = 500, gen_func = rnorm, args = NULL, sd = 1) {
   # Formerly called simZn
   Zn_realization <- function() {
@@ -271,8 +272,8 @@ sim_Zn <- function(size, kn, n = 500, gen_func = rnorm, args = NULL, sd = 1) {
 #' @return A vector of simulated realizations of the CUSUM statistic
 #' @examples
 #' CPAT:::sim_Vn(100)
-#' CPAT:::sim_Vn(100, gen_func = rchangepoint, args = list(changepoint = 250,
-#'                                                         mean2 = 1))
+#' CPAT:::sim_Vn(100, gen_func = CPAT:::rchangepoint,
+#'               args = list(changepoint = 250, mean2 = 1))
 sim_Vn <- function(size, n = 500, gen_func = rnorm, sd = 1, args = NULL) {
   # Formerly called simVn
   Vn_realization <- function() {
@@ -349,7 +350,7 @@ sim_Vn <- function(size, n = 500, gen_func = rnorm, sd = 1, args = NULL) {
 #' @examples
 #' CPAT:::sim_Vn_stat(100)
 #' CPAT:::sim_Vn_stat(100, kn = function(n) {floor(0.1 * n)}, tau = 1/3,
-#'                    use_kernel_var = TRUE, gen_func = rchangepoint,
+#'                    use_kernel_var = TRUE, gen_func = CPAT:::rchangepoint,
 #'                    args = list(changepoint = 250, mean2 = 1))
 sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
                         use_kernel_var = FALSE, kernel = "ba",
@@ -447,7 +448,7 @@ sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
 #' @examples
 #' CPAT:::sim_Zn_stat(100)
 #' CPAT:::sim_Zn_stat(100, kn = function(n) {floor(log(n))},
-#'             use_kernel_var = TRUE, gen_func = rchangepoint,
+#'             use_kernel_var = TRUE, gen_func = CPAT:::rchangepoint,
 #'             args = list(changepoint = 250, mean2 = 1))
 sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
                         use_kernel_var = FALSE, kernel = "ba",
@@ -533,7 +534,7 @@ sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
 #'  \insertAllCited{}
 #' @examples
 #' CPAT:::sim_de_stat(100)
-#' CPAT:::sim_de_stat(100, use_kernel_var = TRUE, gen_func = rchangepoint,
+#' CPAT:::sim_de_stat(100, use_kernel_var = TRUE, gen_func = CPAT:::rchangepoint,
 #'                    args = list(changepoint = 250, mean2 = 1))
 sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
                         kernel = "ba", bandwidth = "and", n = 500,
@@ -612,7 +613,7 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
 #'  \insertAllCited{}
 #' @examples
 #' CPAT:::sim_hs_stat(100)
-#' CPAT:::sim_hs_stat(100, gen_func = rchangepoint, 
+#' CPAT:::sim_hs_stat(100, gen_func = CPAT:::rchangepoint, 
 #'                    args = list(changepoint = 250, mean2 = 1))
 sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
                         n = 500, parallel = FALSE, use_kernel_var = FALSE,

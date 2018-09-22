@@ -62,7 +62,7 @@ long-run variance, as described in \insertCite{hidalgoseo13;textual}{CPAT}.
 }
 \examples{
 CPAT:::sim_hs_stat(100)
-CPAT:::sim_hs_stat(100, gen_func = rchangepoint, 
+CPAT:::sim_hs_stat(100, gen_func = CPAT:::rchangepoint, 
                    args = list(changepoint = 250, mean2 = 1))
 }
 \references{

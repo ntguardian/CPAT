@@ -23,6 +23,8 @@ Imports:
     purrr (>= 0.2)
 RdMacros:
     Rdpack
+SystemRequirements:
+    GNU make
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

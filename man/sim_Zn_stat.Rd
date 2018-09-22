@@ -70,7 +70,7 @@ passed directly to \code{\link{stat_Zn}}.
 \examples{
 CPAT:::sim_Zn_stat(100)
 CPAT:::sim_Zn_stat(100, kn = function(n) {floor(log(n))},
-            use_kernel_var = TRUE, gen_func = rchangepoint,
+            use_kernel_var = TRUE, gen_func = CPAT:::rchangepoint,
             args = list(changepoint = 250, mean2 = 1))
 }
 \references{

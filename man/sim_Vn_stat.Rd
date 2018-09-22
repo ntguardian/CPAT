@@ -77,7 +77,7 @@ can be simulated with the function by passing values to \code{kn} and
 \examples{
 CPAT:::sim_Vn_stat(100)
 CPAT:::sim_Vn_stat(100, kn = function(n) {floor(0.1 * n)}, tau = 1/3,
-                   use_kernel_var = TRUE, gen_func = rchangepoint,
+                   use_kernel_var = TRUE, gen_func = CPAT:::rchangepoint,
                    args = list(changepoint = 250, mean2 = 1))
 }
 \references{

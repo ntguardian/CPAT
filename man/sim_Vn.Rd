@@ -27,6 +27,6 @@ variance of the data is known.
 }
 \examples{
 CPAT:::sim_Vn(100)
-CPAT:::sim_Vn(100, gen_func = rchangepoint, args = list(changepoint = 250,
-                                                        mean2 = 1))
+CPAT:::sim_Vn(100, gen_func = CPAT:::rchangepoint,
+              args = list(changepoint = 250, mean2 = 1))
 }
