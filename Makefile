@@ -6,12 +6,12 @@ SMALLREPLICATIONS=20
 LEVEL=0.05
 POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
-POWERDAT=data/PowerSimStat95Data.csv
+POWERDAT=inst/extdata/PowerSimStat95Data.csv
 POWERREPLICATIONS=5000
 POWERSEED=20180910
 POWERSIMPREFIX=data/XOUTPowerSimulations_
-POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
-POWERSIMTEMPFILEMETAPREFIX=data/PowerSimulationsMetadataDist
+POWERSIMFILEMETA=inst/extdata/PowerSimulationFileMetadata.csv
+POWERSIMTEMPFILEMETAPREFIX=inst/extdata/PowerSimulationsMetadataDist
 POWERSIMPARAMSUFF=PowerSimulationParameters.R
 POWERSIMMETARDASUFF=PowerSimulationParameters.Rda
 POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
@@ -19,7 +19,7 @@ POWERSIMTEMPFILEMETA::= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
 POWERSIMMETARDA::= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=data/%$(POWERSIMMETARDASUFF))
-POWERSIMSTATMETA=data/PowerSimulationStatsMetadata.csv
+POWERSIMSTATMETA=inst/extdata/PowerSimulationStatsMetadata.csv
 
 LRVPLOTPREFIX=inst/plots/LRVEstPlot
 LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)
@@ -145,14 +145,18 @@ init :
 
 .PHONY : initpower
 initpower :
+	-mkdir $(dir $(POWERPLOTPREFIX))
+	-mkdir $(dir $(POWERSIMSTATMETA))
 	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50_log_c4rt.pdf
 
 .PHONY : initlrv
 initlrv :
+	-mkdir $(dir $(LRVPLOTPREFIX))
 	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
 
 .PHONY : initconv
 initconv :
+	-mkdir $(dir $(ZNCONVPLOTPREFIX))
 	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
 
 .PHONY : small
@@ -161,6 +165,6 @@ small :
 		LRVREPLICATIONS=$(SMALLREPLICATIONS) \
 		ZNSIMREP=$(SMALLREPLICATIONS)
 
-.PHONY : packs
-packs :
+.PHONY : dependencies
+dependencies :
 	$(RSCRIPT) exec/GetPackages.R

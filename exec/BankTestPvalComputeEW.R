@@ -23,27 +23,9 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
   library(xts)
   library(CPAT)
 
-  ff <- read.csv(ff_file, skip = 3, row.names = 1)
-  portf <- read.csv(b_file, skip = 9,
-                    stringsAsFactors = FALSE)
-  portf <- portf[-nrow(portf),]
-  portf$X <- as.character(portf$X)
-
-  get_expanding_window_pvals_reg <- CPAT:::get_expanding_window_pvals_reg
-
-  cl <- makeCluster(max(detectCores() - 1, min(2, detectCores())), outfile = "",
-                    type = "FORK")
-  registerDoParallel(cl)
-
-  portf <- xts::xts(as.data.frame(lapply(portf[1:24099, -1], as.numeric)),
-               order.by = as.Date(portf$X[1:24099], format = "%Y%m%d"))
-  portf <- xts::xts(as.data.frame(lapply(portf, function(l) {
-                 l[l == -99.99 | l == -999.99] <- NA
-                 return(l)
-               })), order.by = as.Date(rownames(as.data.frame(portf)),
-                                       format = "%Y-%m-%d"))
-  banks <- portf[,"Banks"]
   ff <- xts::xts(ff, order.by = as.Date(rownames(ff), format = "%Y%m%d"))
+  banks <- xts::xts(banks, order.by = as.Date(rownames(banks),
+                                              format = "%Y-%m-%d"))
 
   model_banks_df <- merge(banks["2005/2008"], ff, join = "inner")[-1,]
   names(model_banks_df)[1] <- "Return"
