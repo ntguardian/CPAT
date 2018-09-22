@@ -9,3 +9,4 @@ XOUT.*$
 ^Makefile$
 ^package$
 ^data-raw/
+^R/Data.R

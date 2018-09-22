@@ -23,6 +23,9 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
   library(xts)
   library(CPAT)
 
+  data(ff)
+  data(banks)
+
   ff <- xts::xts(ff, order.by = as.Date(rownames(ff), format = "%Y%m%d"))
   banks <- xts::xts(banks, order.by = as.Date(rownames(banks),
                                               format = "%Y-%m-%d"))
