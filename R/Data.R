@@ -11,7 +11,7 @@
 #'
 #' Data set containing the five factors described by
 #' \insertCite{famafrench15;textual}{CPAT}, from the data library maintained by
-#' \insertCite{french17;textual}{CPAT}. Data ranges from July 1, 1963 to October
+#' Kenneth French. Data ranges from July 1, 1963 to October
 #' 31, 2017.
 #'
 #' @format A data frame with 13679 rows and 6 variables:
@@ -39,8 +39,8 @@
 #'
 #' Data set representing the returns of an industry portfolio representing the
 #' banking industry based on company four-digit SIC codes, obtained from the
-#' data library maintained by \insertCite{french17;textual}{CPAT}. Data ranges
-#' from July 1, 1926 to October 31, 2017.
+#' data library maintained by Kenneth French. Data ranges from July 1, 1926
+#' to October 31, 2017.
 #'
 #' @format A data frame with 24099 rows and 1 variable:
 #' \describe{
