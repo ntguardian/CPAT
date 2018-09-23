@@ -19,7 +19,6 @@ Imports:
     grDevices (>= 3.5),
     Rdpack (>= 0.9),
     Rcpp (>= 0.12),
-    RcppArmadillo (>= 0.8),
     purrr (>= 0.2)
 RdMacros:
     Rdpack

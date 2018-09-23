@@ -18,7 +18,7 @@
 #'
 #' This is the estimator
 #'
-#' \deqn{\hat{sigma}^2_{T,t} = T^{-1}\left(\sum_{s = 1}^t \left(X_s -
+#' \deqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(\sum_{s = 1}^t \left(X_s -
 #'       \bar{X}_t\right)^2 + \sum_{s = t + 1}^{T}\left(X_s - \tilde{X}_{T - t}
 #'       \right)^2\right)}
 #'
@@ -367,7 +367,7 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #'                       variance estimation (typically used when the data is
 #'                       believed to be correlated); if \code{FALSE}, then the
 #'                       long-run variance is estimated using
-#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 #'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 #'                       \sum_{s = t + 1}^{T}\left(X_s -
 #'                       \tilde{X}_{T - t}\right)^2\right)}, where
@@ -606,7 +606,7 @@ andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
 #'                       variance estimation (typically used when the data is
 #'                       believed to be correlated); if \code{FALSE}, then the
 #'                       long-run variance is estimated using
-#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 #'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 #'                       \sum_{s = t + 1}^{T}\left(X_s -
 #'                       \tilde{X}_{T - t}\right)^2\right)}, where
