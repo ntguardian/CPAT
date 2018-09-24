@@ -11,7 +11,7 @@ HS.test(x, corr = TRUE, stat_plot = FALSE)
 
 \item{corr}{If \code{TRUE}, the long-run variance will be computed under the
 assumption of correlated residuals; ignored if \code{custom_var}
-is not \code{NULL}}
+is not \code{NULL} or \code{use_kernel_var} is \code{TRUE}}
 
 \item{stat_plot}{Whether to create a plot of the values of the statistic at
 all potential change points}

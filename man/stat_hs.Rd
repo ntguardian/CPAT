@@ -5,7 +5,8 @@
 \title{Compute the Hidalgo-Seo Statistic}
 \usage{
 stat_hs(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
-  custom_var = NULL)
+  custom_var = NULL, use_kernel_var = FALSE, kernel = "ba",
+  bandwidth = "and")
 }
 \arguments{
 \item{dat}{The data vector}
@@ -15,7 +16,7 @@ change point}
 
 \item{corr}{If \code{TRUE}, the long-run variance will be computed under the
 assumption of correlated residuals; ignored if \code{custom_var}
-is not \code{NULL}}
+is not \code{NULL} or \code{use_kernel_var} is \code{TRUE}}
 
 \item{get_all_vals}{If \code{TRUE}, return all values for the statistic at
 every tested point in the data set}
@@ -29,6 +30,31 @@ change point occured) or a function taking two parameters
 vector, with \code{x} representing the data vector and
 \code{k} the position of a potential change point; if
 \code{NULL}, this argument is ignored}
+
+\item{use_kernel_var}{Set to \code{TRUE} to use kernel methods for long-run
+variance estimation (typically used when the data is
+believed to be correlated); if \code{FALSE}, then the
+long-run variance is estimated using
+\eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+\sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
+\sum_{s = t + 1}^{T}\left(X_s -
+\tilde{X}_{T - t}\right)^2\right)}, where
+\eqn{\bar{X}_t = t^{-1}\sum_{s = 1}^t X_s} and
+\eqn{\tilde{X}_{T - t} = (T - t)^{-1}
+\sum_{s = t + 1}^{T} X_s}; if \code{custom_var} is not
+\code{NULL}, this argument is ignored}
+
+\item{kernel}{If character, the identifier of the kernel function as used in
+\pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
+function, the kernel function to be used for long-run variance
+estimation (default is the Bartlett kernel in \pkg{cointReg})}
+
+\item{bandwidth}{If character, the identifier for how to compute the
+bandwidth as defined in \pkg{cointReg} (see
+\code{\link[cointReg]{getBandwidth}}); if function, a function
+to use for computing the bandwidth; if numeric, the bandwidth
+value to use (the default is to use Andrews' method, as used in
+\pkg{cointReg})}
 }
 \value{
 If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the

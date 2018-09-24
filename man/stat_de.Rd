@@ -5,8 +5,8 @@
 \title{Compute the Darling-Erdös Statistic}
 \usage{
 stat_de(dat, a = log, b = log, estimate = FALSE,
-  use_kernel_var = FALSE, kernel = "ba", bandwidth = "and",
-  get_all_vals = FALSE)
+  use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
+  bandwidth = "and", get_all_vals = FALSE)
 }
 \arguments{
 \item{dat}{The data vector}
@@ -33,6 +33,16 @@ long-run variance is estimated using
 \eqn{\tilde{X}_{T - t} = (T - t)^{-1}
 \sum_{s = t + 1}^{T} X_s}}
 
+\item{custom_var}{Can be a vector the same length as \code{dat} consisting of
+variance-like numbers at each potential change point (so
+each entry of the vector would be the "best estimate" of
+the long-run variance if that location were where the
+change point occured) or a function taking two parameters
+\code{x} and \code{k} that can be used to generate this
+vector, with \code{x} representing the data vector and
+\code{k} the position of a potential change point; if
+\code{NULL}, this argument is ignored}
+
 \item{kernel}{If character, the identifier of the kernel function as used in
 \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
 function, the kernel function to be used for long-run variance
@@ -52,7 +62,7 @@ every tested point in the data set}
 If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
         value of the test statistic; otherwise, a list that contains the test
         statistic and the other values requested (if both are \code{TRUE},
-        the test statistic is in the first position and the estimated change
+        the test statistic is in the first position and the estimated changg
         point in the second)
 }
 \description{

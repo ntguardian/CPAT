@@ -77,5 +77,6 @@ The parameter \code{kn} corresponds to the trimming parameter \eqn{t_T}.
 \examples{
 CPAT:::stat_Zn(rnorm(1000))
 CPAT:::stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
-CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw",
+               kernel = "bo")
 }
