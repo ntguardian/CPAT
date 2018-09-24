@@ -544,7 +544,7 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 #' a description of the test.
 #'
 #' @param x Vector of the data to test
-#' @param m Numeric index of the location of the first potential change point
+#' @param M Numeric index of the location of the first potential change point
 #' @param pval If \code{TRUE}, return a p-value
 #' @param stat If \code{TRUE}, return a test statistic
 #' @return If both \code{pval} and \code{stat} are \code{TRUE}, a list
@@ -553,11 +553,11 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' CPAT:::andrews_test(rnorm(1000), m = 900)
-andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
+#' CPAT:::andrews_test(rnorm(1000), M = 900)
+andrews_test <- function(x, M, pval = TRUE, stat = TRUE) {
   mu <- mean(x)
   u <- x - mu
-  m <- length(x) - m  # Deriving m and n as described in Andrews (2003)
+  m <- length(x) - M  # Deriving m and n as described in Andrews (2003)
   n <- length(x) - m
 
   Sigma <- Reduce("+", lapply(1:(n + 1), function(j)
@@ -714,15 +714,17 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' CPAT:::andrews_test_reg(y ~ x, data = df, m = 900)
-andrews_test_reg <- function(formula, data, m, pval = TRUE, stat = TRUE) {
+#' CPAT:::andrews_test_reg(y ~ x, data = df, M = 900)
+andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
+  if (!is(formula, "formula")) stop("Bad formula passed to argument" %s%
+                                    "\"formula\"")
   fit <- lm(formula = formula, data = data)
   beta <- coefficients(fit)
   d <- length(beta)
   X <- model.matrix(fit)
   u <- residuals(fit)
   y <- fit$model[[1]]
-  m <- nrow(X) - m  # Deriving m and n as described in Andrews (2003)
+  m <- nrow(X) - M  # Deriving m and n as described in Andrews (2003)
   n <- nrow(X) - m
 
   Sigma <- Reduce("+", lapply(1:(n + 1), function(j)
@@ -992,23 +994,23 @@ HS.test <- function(x, corr = TRUE, stat_plot = FALSE) {
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' Andrews.test(rnorm(1000), m = 900)
+#' Andrews.test(rnorm(1000), M = 900)
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' Andrews.test(df, y ~ x, m = 900)
+#' Andrews.test(df, y ~ x, M = 900)
 #' @export
-Andrews.test <- function(x, m, formula = NULL) {
+Andrews.test <- function(x, M, formula = NULL) {
   testobj <- list()
   testobj$method <- "Andrews' Test for Structural Change"
   testobj$data.name <- deparse(substitute(x))
 
   if (is.numeric(x)) {
-    mchange <- length(x) - m
-    res <- andrews_test(x, m, pval = TRUE, stat = TRUE)
+    mchange <- length(x) - M
+    res <- andrews_test(x, M, pval = TRUE, stat = TRUE)
   } else if (is.data.frame(x)) {
-    mchange <- nrow(x) - m
-    res <- andrews_test_reg(formula, x, m, pval = TRUE, stat = TRUE)
+    mchange <- nrow(x) - M
+    res <- andrews_test_reg(formula, x, M, pval = TRUE, stat = TRUE)
   } else {
     stop("x must be vector-like or a data frame")
   }

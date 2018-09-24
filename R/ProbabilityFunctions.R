@@ -23,19 +23,21 @@
 #' @return Value of the density function at \eqn{x}
 #' @examples
 #' CPAT:::dZn(1)
-dZn <- function(x, summands = 500) {
+dZn <- function(x, summands = NULL) {
   if (!is.numeric(summands)) {
-    if (q > 6) {
+    if (x > 6) {
       return(1)
-    } else if (q <= 0) {
+    } else if (x <= 0) {
       return(0)
     } else {
       # Used some rootfinding procedures to find the proper number of summands
       # to guarantee machine-level accuracy, thus yielding these numbers
       best_summands <- c(5, 9, 14, 18, 23, 27, 32)
-      summands <- best_summands[ceiling(q)]
+      summands <- best_summands[ceiling(x)]
     }
   }
+
+  if (x <= 0) return(0)
   
   2 * pi * sqrt(pZn(x, summands = summands)) * sum((-1)^(0:summands) * 
     (2 * (0:summands) + 1)/x^3 * exp(-pi^2*(2*(0:summands)+1)^2/
@@ -178,6 +180,9 @@ qhidalgo_seo <- function(p) {
 #' CPAT:::qZn(0.5)
 qZn <- function(p, summands = 500, interval = c(0, 100),
                 tol = .Machine$double.eps, ...) {
+  if (p == 1) return(Inf)
+  if (p == 0) return(0)
+  if (p < 0 | p > 1) return(NaN)
   objective <- function(q) {pZn(q, summands = summands) - p}
   # Set up arguments for uniroot()
   args <- list(...); args$tol <- tol; args$interval <- interval
@@ -205,6 +210,9 @@ qZn <- Vectorize(qZn, "p")
 #' CPAT:::qkolmogorov(0.5)
 qkolmogorov <- function(p, summands = 500, interval = c(0, 100),
                 tol = .Machine$double.eps, ...) {
+  if (p == 1) return(Inf)
+  if (p == 0) return(0)
+  if (p < 0 | p > 1) return(NaN)
   objective <- function(q) {pkolmogorov(q, summands = summands) - p}
   # Set up arguments for uniroot()
   args <- list(...); args$tol <- tol; args$interval <- interval
@@ -534,7 +542,8 @@ sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
 #'  \insertAllCited{}
 #' @examples
 #' CPAT:::sim_de_stat(100)
-#' CPAT:::sim_de_stat(100, use_kernel_var = TRUE, gen_func = CPAT:::rchangepoint,
+#' CPAT:::sim_de_stat(100, use_kernel_var = TRUE,
+#'                    gen_func = CPAT:::rchangepoint,
 #'                    args = list(changepoint = 250, mean2 = 1))
 sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
                         kernel = "ba", bandwidth = "and", n = 500,

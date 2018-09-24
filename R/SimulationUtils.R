@@ -289,7 +289,7 @@ get_expanding_window_pvals <- function(dat, m = Inf) {
       hs_ker <- HS.test(dat[1:n], corr = TRUE)
 
       if (n > m) {
-        andrew <- Andrews.test(dat[1:n], m = m)$p.value[[1]]
+        andrew <- Andrews.test(dat[1:n], M = m)$p.value[[1]]
       } else {
         andrew <- NA
       }
@@ -367,7 +367,7 @@ get_expanding_window_pvals_reg <- function(formula, data, min_n = 3, m = Inf,
     
     if (n > m) {
       andrew <- tryCatch(Andrews.test(x = data[1:n,], formula = formula,
-                                      m = m)$p.value[[1]],
+                                      M = m)$p.value[[1]],
                          error = function(e) {return(NA)})
     } else {
       andrew <- NA
