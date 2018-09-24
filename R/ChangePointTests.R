@@ -507,6 +507,8 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
       2 * (1 - j/m) * sum(u[(j + 1):n] * u[1:(n - j)])/n
     }))
   } else {
+    # Delta will be the analog of lrv in stat_Zn, but this variable was already
+    # defined and the naming is in alignment with Hidalgo's paper
     Delta <- ((n-1)/n) * var(u)
   }
 
@@ -515,14 +517,16 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
   # functionality is implemented.
   if (is.null(custom_var)) {
     if (use_kernel_var) {
-      # TODO: curtis: IMPLEMENT stat_Zn-STYLE LRV ESTIMATION -- Thu 20 Sep 2018
+      Delta <- get_lrv_vec(dat, kernel, bandwidth)
+    } else {
+      Delta <- rep(Delta, length(dat))
     }
   } else {
-
-  # To allow greater flexibility, Delta will be made a vector so that Delta can
-  # take values at different possible change points; this allows for greater
-  # experimentation on our part
     if (is.function(custom_var)) {
+      # To allow greater flexibility, Delta will be made a vector so that Delta
+      # can take values at different possible change points; this allows for
+      # greater experimentation on our part
+
       # This may seem silly, but this is so that error codes refer to
       # custom_var, and we don't want recursion either
       custom_var_temp <- custom_var
@@ -542,8 +546,6 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
       stop("custom_var suggests a negative variance, which is impossible.")
     }
     Delta <- custom_var_vec
-  } else {
-    Delta <- rep(Delta, length(dat))
   }
 
   la_mu <- sapply(1:(n - 1), function(s) {
@@ -676,10 +678,11 @@ andrews_test <- function(x, M, pval = TRUE, stat = TRUE) {
 #' @examples
 #' CPAT:::stat_Zn(rnorm(1000))
 #' CPAT:::stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
-#' CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw",
+#'                kernel = "bo")
 stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
                     use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
-                    bandwidth = "and", get_all_vals = false) {
+                    bandwidth = "and", get_all_vals = FALSE) {
   # Formerly known as statZn()
   if (use_kernel_var) {
     lrv <- get_lrv_vec(dat, kernel, bandwidth)
