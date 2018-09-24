@@ -35,8 +35,8 @@ ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)
 
 CAPMPLOT=inst/plots/BankCAPMChange.pdf
 CAPMDAT=data/BankCAPMPValues.Rda
-FFFILE=data/FF_factors.csv
-BANKFILE=data/Portfolios.csv
+FFFILE=data/ff.rda
+BANKFILE=data/banks.rda
 
 .PHONY : all
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
@@ -92,7 +92,7 @@ $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
              R/SimulationUtils.R
 	make package
-	$(RSCRIPT) $< -f $(FFFILE) -b $(BANKFILE) -o $@
+	$(RSCRIPT) $< -o $@
 
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
@@ -109,7 +109,7 @@ inst/Makefile : Makefile
 inst/package : package
 	cp $< $@
 
-package : R/*.R
+package : R/*.R src/*.cpp $(FFFILE) $(BANKFILE)
 	$(RSCRIPT) exec/RemakePackage.R
 	touch package
 

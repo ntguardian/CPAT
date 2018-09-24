@@ -17,12 +17,14 @@ if (suppressPackageStartupMessages(!require("optparse"))) {
 # Main function; executes the program
 #
 # See cl_args definition for description
-main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
+main <- function(out = "BankCAPMPValues.Rda", help = FALSE) {
   library(doParallel)
   library(foreach)
   library(xts)
   library(CPAT)
 
+  registerDoParallel(max(detectCores() - 1, min(detectCores(), 2)))
+  
   data(ff)
   data(banks)
 
@@ -37,8 +39,8 @@ main <- function(ff_file, b_file, out = "BankCAPMPValues.Rda", help = FALSE) {
   capm_model <- lm(I(Return - RF) ~ Mkt.RF + HML + RMW + SMB + CMA,
                    data = model_banks_df)
 
-  test_p_vals <- get_expanding_window_pvals_reg(I(Return - RF) ~ Mkt.RF + HML + 
-                                                  RMW + SMB + CMA, 
+  test_p_vals <- CPAT:::get_expanding_window_pvals_reg(I(Return - RF) ~ Mkt.RF +
+                                                  HML + RMW + SMB + CMA, 
                                                 data = as.data.frame(
                                                   model_banks_df),
                                                 min_n = 754, m = 931)
@@ -58,16 +60,11 @@ if (sys.nframe() == 0) {
                           "of banking sector stocks, and creates a file",
                           "containing the results of the tests"),
       option_list = list(
-        make_option(c("--ff-file", "-f"), type = "character",
-            help = "The location of the CSV file containing Fama-French data"),
-        make_option(c("--bank-file", "-b"), type = "character",
-            help = "The location of the CSV file containing stock data"),
         make_option(c("--out", "-o"), type = "character",
             default = "BankCAPMPValues.Rda",
             help = "The name of the output file")
       )
   ))
 
-  names(cl_args) <- c("ff_file", "b_file", "out", "help")
   do.call(main, cl_args)
 }
