@@ -93,11 +93,11 @@ test_that("stat_Vn() functions properly", {
 
   expect_equal(CPAT:::stat_Vn(dat, use_kernel_var = TRUE, kernel = ker_func,
                               bandwidth = sqrt), 1.27237912286901)
-  # expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) {
-  #                               var(x[1:(min(k + 1, length(x)))])
-  #                             }), )
-  # expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) var(x)),
-  #              )
+  expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) {
+      var(x[1:(min(k + 1, length(x)))])
+                              }), 0.699875669359526)
+  expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) var(x)),
+               0.804632787914169)
 
   check_cointReg()
 
@@ -121,11 +121,11 @@ test_that("stat_de() functions properly", {
 
   expect_equal(CPAT:::stat_de(dat, use_kernel_var = TRUE, kernel = ker_func,
                               bandwidth = sqrt), 2.35771330424856)
-  # expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) {
-  #                               var(x[1:(min(k + 1, length(x)))])
-  #                             }), )
-  # expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) var(x)),
-  #              )
+  expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) {
+      var(x[1:(min(k + 1, length(x)))])
+                              }), 2.02497320978937)
+  expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) var(x)),
+               1.42222063433888)
 
   check_cointReg()
 
@@ -147,8 +147,8 @@ test_that("stat_hs() functions properly", {
                  -2.244864368803760, -2.22744398880951, -2.09014950652634,
                  -1.954438886999530))
 
-  # expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE, kernel = ker_func,
-  #                             bandwidth = sqrt), )
+  expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE, kernel = ker_func,
+      bandwidth = sqrt), 3.99463145080931)
   expect_equal(CPAT:::stat_hs(dat, custom_var = function(x, k) {
                  var(x[1:(min(k + 1, length(x)))])
                }), 2.46376948017636)
@@ -156,9 +156,9 @@ test_that("stat_hs() functions properly", {
                0.236019124621259)
   expect_equal(CPAT:::stat_hs(dat, corr = TRUE), 1.21370945972696)
 
-  # check_cointReg()
+  check_cointReg()
 
-  # expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE), 1.58872558212097)
+  expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE), 0.78115982765937)
 })
 
 test_that("andrews_test() functions properly", {
