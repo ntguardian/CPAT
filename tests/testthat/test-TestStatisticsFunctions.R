@@ -93,11 +93,11 @@ test_that("stat_Vn() functions properly", {
 
   expect_equal(CPAT:::stat_Vn(dat, use_kernel_var = TRUE, kernel = ker_func,
                               bandwidth = sqrt), 1.27237912286901)
-  # expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) {
-  #                               var(x[1:(min(k + 1, length(x)))])
-  #                             }), )
-  # expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) var(x)),
-  #              )
+  expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) {
+      var(x[1:(min(k + 1, length(x)))])
+                              }), 0.699875669359526)
+  expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) var(x)),
+               0.804632787914169)
 
   check_cointReg()
 
@@ -121,11 +121,11 @@ test_that("stat_de() functions properly", {
 
   expect_equal(CPAT:::stat_de(dat, use_kernel_var = TRUE, kernel = ker_func,
                               bandwidth = sqrt), 2.35771330424856)
-  # expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) {
-  #                               var(x[1:(min(k + 1, length(x)))])
-  #                             }), )
-  # expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) var(x)),
-  #              )
+  expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) {
+      var(x[1:(min(k + 1, length(x)))])
+                              }), 2.02497320978937)
+  expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) var(x)),
+               1.42222063433888)
 
   check_cointReg()
 
