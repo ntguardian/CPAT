@@ -33,5 +33,5 @@ saveobj <- list("norm" = list(
                     "c4rt" = list(
                       "d_0" = c(1.551, 1.276, 1.348, 1.982, 1.423)
 ))))
-power_sim_Vn_to_df(saveobj, qkolmogorov(.95))
+CPAT:::power_sim_Vn_to_df(saveobj, CPAT:::qkolmogorov(.95))
 }

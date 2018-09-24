@@ -18,7 +18,7 @@
 #'
 #' This is the estimator
 #'
-#' \deqn{\hat{sigma}^2_{T,t} = T^{-1}\left(\sum_{s = 1}^t \left(X_s -
+#' \deqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(\sum_{s = 1}^t \left(X_s -
 #'       \bar{X}_t\right)^2 + \sum_{s = t + 1}^{T}\left(X_s - \tilde{X}_{T - t}
 #'       \right)^2\right)}
 #'
@@ -29,9 +29,10 @@
 #'
 #' @param x A numeric vector for the data set
 #' @param k The potential change point at which the data set is split
+#' @import stats
 #' @return The estimated change-consistent variance
 #' @examples
-#' cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
+#' CPAT:::cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
 cpt_consistent_var <- function(x, k) {
   n <- length(x)
   if (n < k | k < 0) {stop("k must be an integer between 1 and length(x)")}
@@ -44,6 +45,80 @@ cpt_consistent_var <- function(x, k) {
   sse2 <- sum((x2 - mu2)^2)
 
   (sse1 + sse2)/n
+}
+
+#' Weights for Long-Run Variance
+#'
+#' Compute some weights for long-run variance. This code comes directly from the
+#' source code of \pkg{cointReg}; see \code{\link[cointReg]{getLongRunWeights}}.
+#'
+#' @param n Length of weights' vector
+#' @param bandwidth A number for the bandwidth
+#' @param kernel The kernel function; see \code{\link[cointReg]{getLongRunVar}}
+#'        for possible values
+#' @return List with components \code{w} containing the vector of weights and
+#'         \code{upper}, the index of the largest non-zero entry in \code{w}
+#' @examples
+#' CPAT:::getLongRunWeights(10, 1)
+getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
+  w <- numeric(n - 1)
+  bw<- bandwidth
+  if (kernel == "tr") {
+    w <- w + 1
+    upper <- min(bw, n - 1)
+  }
+  else if (kernel == "ba") {
+    upper <- ceiling(bw) - 1
+    if (upper > 0) {
+        j <- 1:upper
+    }
+    else {
+        j <- 1
+    }
+    w[j] <- 1 - j/bw
+  }
+  else if (kernel == "pa") {
+    upper1 <- floor(bw/2)
+    if (upper1 > 0) {
+        j <- 1:upper1
+    }
+    else {
+        j <- 1
+    }
+    jj <- j/bw
+    w[j] <- 1 - 6 * jj^2 + 6 * jj^3
+    j2 <- (floor(bw/2) + 1):bw
+    jj2 <- j2/bw
+    w[j2] <- 2 * (1 - jj2)^3
+    upper <- ceiling(bw) - 1
+  }
+  else if (kernel == "bo") {
+    upper <- ceiling(bw) - 1
+    if (upper > 0) {
+        j <- 1:upper
+    }
+    else {
+        j <- 1
+    }
+    jj <- j/bw
+    w[j] <- (1 - jj) * cos(pi * jj) + sin(pi * jj)/pi
+  }
+  else if (kernel == "da") {
+    upper <- n - 1
+    j <- 1:upper
+    w[j] <- sin(pi * j/bw)/(pi * j/bw)
+  }
+  else if (kernel == "qs") {
+    sc <- 1.2 * pi
+    upper <- n - 1
+    j <- 1:upper
+    jj <- j/bw
+    w[j] <- 25/(12 * pi^2 * jj^2) * (sin(sc * jj)/(sc * jj) - 
+        cos(sc * jj))
+  }
+  if (upper <= 0) 
+    upper <- 1
+  list(w = w, upper = upper)
 }
 
 #' Long-Run Variance Estimation With Possible Change Points
@@ -72,8 +147,8 @@ cpt_consistent_var <- function(x, k) {
 #'  \insertAllCited{}
 #' @examples
 #' x <- rnorm(1000)
-#' get_lrv_vec(x)
-#' get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
+#' CPAT:::get_lrv_vec(x)
+#' CPAT:::get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
 get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
   has_cointreg <- requireNamespace("cointReg", quietly = TRUE)
 
@@ -90,7 +165,7 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
       } else {
          kervar = "ba"
       }
-      h <- cointReg:::getBandwidth(dat, bandwidth = bandwidth, kernel = kervar)
+      h <- cointReg::getBandwidth(dat, bandwidth = bandwidth, kernel = kervar)
     }
   } else if (is.numeric(bandwidth)) {
     if (bandwidth <= 0) {
@@ -106,14 +181,8 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
   }
 
   if (is.character(kernel)) {
-    if (!has_cointreg) {
-      warning("cointReg is not installed! Defaulting to Bartlett kernel.")
-      kernel <- function(z) {ifelse(abs(z) < 1, 1 - abs(z), 0)}
-      kern_vals <- sapply(1:(n - 1)/h, kernel)
-    } else {
-      kern_vals <- c(1, cointReg:::getLongRunWeights(n, kernel = kernel,
-                                                     bandwidth = h)$w[-n])
-    }
+    kern_vals <- c(1, getLongRunWeights(n, kernel = kernel,
+                                        bandwidth = h)$w[-n])
   } else if (!is.function(kernel)) {
     stop("kernel must be a function or a valid character string.")
   } else {
@@ -206,7 +275,7 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #'                       variance estimation (typically used when the data is
 #'                       believed to be correlated); if \code{FALSE}, then the
 #'                       long-run variance is estimated using
-#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 #'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 #'                       \sum_{s = t + 1}^{T}\left(X_s -
 #'                       \tilde{X}_{T - t}\right)^2\right)}, where
@@ -233,9 +302,9 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' stat_Vn(rnorm(1000))
-#' stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
-#' stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_Vn(rnorm(1000))
+#' CPAT:::stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
+#' CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
                    use_kernel_var = FALSE, kernel = "ba", bandwidth = "and",
                    get_all_vals = FALSE) {
@@ -273,7 +342,7 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #'
 #' This function computes the Darling-Erdös statistic.
 #'
-#' If \eqn{\bazar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
+#' If \eqn{\bar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
 #' with weighting parameter \eqn{\tau} and trimming parameter \eqn{t_T} (see
 #' \code{\link{stat_Vn}}), then the Darling-Erdös statistic is
 #'
@@ -298,7 +367,7 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #'                       variance estimation (typically used when the data is
 #'                       believed to be correlated); if \code{FALSE}, then the
 #'                       long-run variance is estimated using
-#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 #'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 #'                       \sum_{s = t + 1}^{T}\left(X_s -
 #'                       \tilde{X}_{T - t}\right)^2\right)}, where
@@ -325,8 +394,8 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' stat_DE(rnorm(1000))
-#' stat_DE(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_de(rnorm(1000))
+#' CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_de <- function(dat, a = log, b = log, estimate = FALSE,
                     use_kernel_var = FALSE, kernel = "ba", bandwidth = "and",
                     get_all_vals = FALSE) {
@@ -357,18 +426,18 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'
 #' For a data set \eqn{x_t} with \eqn{n} observations, the test statistic is
 #'
-#' \deqn{(\max_{1 \leq s \leq n - 1} \mathscr{LM}(s) - B_n)/A_n}
+#' \deqn{\max_{1 \leq s \leq n - 1} 	(\mathcal{LM}(s) - B_n)/A_n}
 #'
 #' where \eqn{\hat{u}_t = x_t - \bar{x}} (\eqn{\bar{x}} is the sample mean),
 #' \eqn{a_n = (2 \log \log n)^{1/2}}, \eqn{b_n = a_n^2 - \frac{1}{2} \log \log
 #' \log n - \log \Gamma (1/2)}, \eqn{A_n = b_n / a_n^2}, \eqn{B_n =
 #' b_n^2/a_n^2}, \eqn{\hat{\Delta} = \hat{\sigma}^2 = n^{-1} \sum_{t = 1}^{n}
-#' \hat{u}_t^2}, and \eqn{\mathscr{LM}(s) = n (n - s)^{-1} s^{-1}
+#' \hat{u}_t^2}, and \eqn{\mathcal{LM}(s) = n (n - s)^{-1} s^{-1}
 #' \hat{\Delta}^{-1} \left( \sum_{t = 1}^{s} \hat{u}_t\right)^2}.
 #'
 #' If \code{corr} is \code{FALSE}, then the residuals are assumed to be
 #' uncorrelated. Otherwise, the residuals are assumed to be correlated and
-#' \eqn{\hat{\Delta} = \hat{gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
+#' \eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
 #' \rfloor} (1 - \frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j)
 #' = \frac{1}{n}\sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}.
 #'
@@ -421,8 +490,8 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' stat_hs(rnorm(1000))
-#' stat_hs(rnorm(1000), corr = FALSE)
+#' CPAT:::stat_hs(rnorm(1000))
+#' CPAT:::stat_hs(rnorm(1000), corr = FALSE)
 stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
                     custom_var = NULL, use_kernel_var = FALSE, kernel = "ba",
                     bandwidth = "and") {
@@ -489,7 +558,9 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 
   stat <- (max(la_mu) - B_n)/A_n
   est <- which.max(la_mu)
-  res <- list(stat, est, (la_mu - B_n)/A_n)
+  res <- list("statistic" = stat,
+              "estimate" = est,
+              "stat_vals" = (la_mu - B_n)/A_n)
 
   if (!estimate & !get_all_vals) {
     return(res[[1]])
@@ -506,7 +577,7 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 #' a description of the test.
 #'
 #' @param x Vector of the data to test
-#' @param m Numeric index of the location of the first potential change point
+#' @param M Numeric index of the location of the first potential change point
 #' @param pval If \code{TRUE}, return a p-value
 #' @param stat If \code{TRUE}, return a test statistic
 #' @return If both \code{pval} and \code{stat} are \code{TRUE}, a list
@@ -515,11 +586,11 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' andrews_test(rnorm(1000), m = 900)
-andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
+#' CPAT:::andrews_test(rnorm(1000), M = 900)
+andrews_test <- function(x, M, pval = TRUE, stat = TRUE) {
   mu <- mean(x)
   u <- x - mu
-  m <- length(x) - m  # Deriving m and n as described in Andrews (2003)
+  m <- length(x) - M  # Deriving m and n as described in Andrews (2003)
   n <- length(x) - m
 
   Sigma <- Reduce("+", lapply(1:(n + 1), function(j)
@@ -568,7 +639,7 @@ andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
 #'                       variance estimation (typically used when the data is
 #'                       believed to be correlated); if \code{FALSE}, then the
 #'                       long-run variance is estimated using
-#'                       \eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+#'                       \eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 #'                       \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 #'                       \sum_{s = t + 1}^{T}\left(X_s -
 #'                       \tilde{X}_{T - t}\right)^2\right)}, where
@@ -603,9 +674,9 @@ andrews_test <- function(x, m, pval = TRUE, stat = TRUE) {
 #'         the test statistic is in the first position and the estimated change
 #'         point in the second)
 #' @examples
-#' stat_Zn(rnorm(1000))
-#' stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
-#' stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_Zn(rnorm(1000))
+#' CPAT:::stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
+#' CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
                     use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
                     bandwidth = "and", get_all_vals = false) {
@@ -613,6 +684,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
   if (use_kernel_var) {
     lrv <- get_lrv_vec(dat, kernel, bandwidth)
   } else if (!is.null(custom_var)) {
+    use_kernel_var <- TRUE  # Otherwise stat_Zn_cpp() will ignore lrv
     if (is.function(custom_var)) {
       # This may seem silly, but this is so that error codes refer to
       # custom_var, and we don't want recursion either
@@ -675,15 +747,17 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' andrews_test_reg(y ~ x, data = df, m = 900)
-andrews_test_reg <- function(formula, data, m, pval = TRUE, stat = TRUE) {
+#' CPAT:::andrews_test_reg(y ~ x, data = df, M = 900)
+andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
+  if (!is(formula, "formula")) stop("Bad formula passed to argument" %s%
+                                    "\"formula\"")
   fit <- lm(formula = formula, data = data)
   beta <- coefficients(fit)
   d <- length(beta)
   X <- model.matrix(fit)
   u <- residuals(fit)
   y <- fit$model[[1]]
-  m <- nrow(X) - m  # Deriving m and n as described in Andrews (2003)
+  m <- nrow(X) - M  # Deriving m and n as described in Andrews (2003)
   n <- nrow(X) - m
 
   Sigma <- Reduce("+", lapply(1:(n + 1), function(j)
@@ -953,23 +1027,23 @@ HS.test <- function(x, corr = TRUE, stat_plot = FALSE) {
 #' @references
 #'  \insertAllCited{}
 #' @examples
-#' Andrews.test(rnorm(1000), m = 900)
+#' Andrews.test(rnorm(1000), M = 900)
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' Andrews.test(df, y ~ x, m = 900)
+#' Andrews.test(df, y ~ x, M = 900)
 #' @export
-Andrews.test <- function(x, m, formula = NULL) {
+Andrews.test <- function(x, M, formula = NULL) {
   testobj <- list()
   testobj$method <- "Andrews' Test for Structural Change"
   testobj$data.name <- deparse(substitute(x))
 
   if (is.numeric(x)) {
-    mchange <- length(x) - m
-    res <- andrews_test(x, m, pval = TRUE, stat = TRUE)
+    mchange <- length(x) - M
+    res <- andrews_test(x, M, pval = TRUE, stat = TRUE)
   } else if (is.data.frame(x)) {
-    mchange <- nrow(x) - m
-    res <- andrews_test_reg(formula, x, m, pval = TRUE, stat = TRUE)
+    mchange <- nrow(x) - M
+    res <- andrews_test_reg(formula, x, M, pval = TRUE, stat = TRUE)
   } else {
     stop("x must be vector-like or a data frame")
   }

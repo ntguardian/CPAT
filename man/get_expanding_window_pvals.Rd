@@ -22,6 +22,6 @@ Rényi-type tests when applied to an expanding window of data.
 }
 \examples{
 if (require("foreach") & require("doParallel")) {
-  get_expanding_window_pvals(rnorm(1000), m = 900)
+  CPAT:::get_expanding_window_pvals(rnorm(1000), m = 900)
 }
 }

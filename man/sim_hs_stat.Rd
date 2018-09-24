@@ -5,7 +5,8 @@
 \title{Hidalgo-Seo Statistic Simulation}
 \usage{
 sim_hs_stat(size, corr = TRUE, gen_func = rnorm, args = NULL,
-  n = 500, parallel = FALSE)
+  n = 500, parallel = FALSE, use_kernel_var = FALSE, kernel = "ba",
+  bandwidth = "and")
 }
 \arguments{
 \item{size}{Number of realizations to simulate}
@@ -26,14 +27,15 @@ initialized in the global namespace before use)}
 
 \item{use_kernel_var}{Set to \code{TRUE} to use kernel-based long-run
 variance estimation (\code{FALSE} means this is not
-employed)}
+employed); \emph{TODO: NOT CURRENTLY IMPLEMENTED}}
 
 \item{kernel}{If character, the identifier of the kernel function as used in
 the \pkg{cointReg} (see documentation for
 \code{cointReg::getLongRunVar}); if function, the kernel
 function to be used for long-run variance estimation (default
 is the Bartlett kernel in \pkg{cointReg}); this parameter
-has no effect if \code{use_kernel_var} is \code{FALSE}}
+has no effect if \code{use_kernel_var} is \code{FALSE};
+\emph{TODO: NOT CURRENTLY IMPLEMENTED}}
 
 \item{bandwidth}{If character, the identifier of how to compute the bandwidth
 as defined in the \pkg{cointReg} package (see
@@ -42,7 +44,8 @@ function, a function to use for computing the bandwidth; if
 numeric, the bandwidth to use (the default behavior is to
 use the \insertCite{andrews91b;textual}{CPAT} method, as
 used in \pkg{cointReg}); this parameter has no effect if
-\code{use_kernel_var} is \code{FALSE}}
+\code{use_kernel_var} is \code{FALSE}; \emph{TODO: NOT
+CURRENTLY IMPLEMENTED}}
 }
 \value{
 A vector of simulated realizations of the Hidalgo-Seo statistic
@@ -58,9 +61,9 @@ for more details. Otherwise, the sample variance is the estimate for the
 long-run variance, as described in \insertCite{hidalgoseo13;textual}{CPAT}.
 }
 \examples{
-sim_hs_stat(100)
-sim_hs_stat(100, gen_func = rchangepoint, args = list(changepoint = 250,
-                                                      mean2 = 1))
+CPAT:::sim_hs_stat(100)
+CPAT:::sim_hs_stat(100, gen_func = CPAT:::rchangepoint, 
+                   args = list(changepoint = 250, mean2 = 1))
 }
 \references{
 \insertAllCited{}

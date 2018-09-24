@@ -17,5 +17,5 @@ If \eqn{Z} is the random variable following the limiting
 CDF of the limiting distribution of the Hidalgo-Seo statistic
 }
 \examples{
-phidalgo_seo(0.1)
+CPAT:::phidalgo_seo(0.1)
 }

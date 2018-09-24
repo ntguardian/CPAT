@@ -20,5 +20,5 @@ If \eqn{Z} is the random variable following the Kolmogorov
 CDF of the Kolmogorov distribution.
 }
 \examples{
-pkolmogorov(0.1)
+CPAT:::pkolmogorov(0.1)
 }

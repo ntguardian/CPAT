@@ -25,7 +25,7 @@ change point}
 variance estimation (typically used when the data is
 believed to be correlated); if \code{FALSE}, then the
 long-run variance is estimated using
-\eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+\eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 \sum_{s = t + 1}^{T}\left(X_s -
 \tilde{X}_{T - t}\right)^2\right)}, where
@@ -78,9 +78,9 @@ the parameter \code{tau} corresponds to \eqn{\tau}.
 See \insertCite{horvathricemiller19}{CPAT} for more details.
 }
 \examples{
-stat_Vn(rnorm(1000))
-stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
-stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_Vn(rnorm(1000))
+CPAT:::stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
+CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 }
 \references{
 \insertAllCited{}

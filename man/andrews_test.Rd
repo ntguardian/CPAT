@@ -4,12 +4,12 @@
 \alias{andrews_test}
 \title{Univariate Andrews Test for End-of-Sample Structural Change}
 \usage{
-andrews_test(x, m, pval = TRUE, stat = TRUE)
+andrews_test(x, M, pval = TRUE, stat = TRUE)
 }
 \arguments{
 \item{x}{Vector of the data to test}
 
-\item{m}{Numeric index of the location of the first potential change point}
+\item{M}{Numeric index of the location of the first potential change point}
 
 \item{pval}{If \code{TRUE}, return a p-value}
 
@@ -27,7 +27,7 @@ change in univariate data. See \insertCite{andrews03}{CPAT} for
 a description of the test.
 }
 \examples{
-andrews_test(rnorm(1000), m = 900)
+CPAT:::andrews_test(rnorm(1000), M = 900)
 }
 \references{
 \insertAllCited{}

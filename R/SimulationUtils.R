@@ -36,7 +36,7 @@
 #'                       "c4rt" = list(
 #'                         "d_0" = c(1.551, 1.276, 1.348, 1.982, 1.423)
 #' )))))
-#' power_sim_Zn_to_df(saveobj, qZn(.95))
+#' CPAT:::power_sim_Zn_to_df(saveobj, CPAT:::qZn(.95))
 power_sim_Zn_to_df <- function(obj, crit) {
   # Formerly known as powerSim_Zn_to_df()
 
@@ -101,7 +101,7 @@ power_sim_Zn_to_df <- function(obj, crit) {
 #'                     "c4rt" = list(
 #'                       "d_0" = c(1.551, 1.276, 1.348, 1.982, 1.423)
 #' ))))
-#' power_sim_Vn_to_df(saveobj, qkolmogorov(.95))
+#' CPAT:::power_sim_Vn_to_df(saveobj, CPAT:::qkolmogorov(.95))
 power_sim_Vn_to_df <- function(obj, crit) {
   # Formerly known as powerSim_Vn_to_df()
 
@@ -156,7 +156,9 @@ power_sim_Vn_to_df <- function(obj, crit) {
 #'               to those names, in case the files are not in the working
 #'               directory and there is no desire to edit \code{file_meta}'s
 #'               data
+#' @param alpha Numeric for level of significance used in power calculations
 #' @return A data frame containing the power simulation data
+#' @import utils
 #' @examples
 #' \dontrun{
 #' power_sim_stat_df_creator("FileStatMeta.csv", "StatMeta.csv")
@@ -266,7 +268,7 @@ bind_power_sim_objs <- function(files, crit_value, conv_func, stat_name) {
 #'         each statistic
 #' @examples
 #' if (require("foreach") & require("doParallel")) {
-#'   get_expanding_window_pvals(rnorm(1000), m = 900)
+#'   CPAT:::get_expanding_window_pvals(rnorm(1000), m = 900)
 #' }
 get_expanding_window_pvals <- function(dat, m = Inf) {
   has_parallel <- requireNamespace("foreach", quietly = TRUE) &&
@@ -287,7 +289,7 @@ get_expanding_window_pvals <- function(dat, m = Inf) {
       hs_ker <- HS.test(dat[1:n], corr = TRUE)
 
       if (n > m) {
-        andrew <- Andrews.test(dat[1:n], m = m)$p.value[[1]]
+        andrew <- Andrews.test(dat[1:n], M = m)$p.value[[1]]
       } else {
         andrew <- NA
       }
@@ -330,7 +332,7 @@ get_expanding_window_pvals <- function(dat, m = Inf) {
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' if (require("foreach") & require("doParallel")) {
-#'   get_expanding_window_pvals_reg(y ~ x, data = df, min_n = 4, m = 900)
+#'   CPAT:::get_expanding_window_pvals_reg(y ~ x, data = df, min_n = 4, m = 900)
 #' }
 get_expanding_window_pvals_reg <- function(formula, data, min_n = 3, m = Inf,
                                            verbose = FALSE) {
@@ -365,7 +367,7 @@ get_expanding_window_pvals_reg <- function(formula, data, min_n = 3, m = Inf,
     
     if (n > m) {
       andrew <- tryCatch(Andrews.test(x = data[1:n,], formula = formula,
-                                      m = m)$p.value[[1]],
+                                      M = m)$p.value[[1]],
                          error = function(e) {return(NA)})
     } else {
       andrew <- NA

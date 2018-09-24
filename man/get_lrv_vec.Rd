@@ -35,8 +35,8 @@ sample size.
 }
 \examples{
 x <- rnorm(1000)
-get_lrv_vec(x)
-get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
+CPAT:::get_lrv_vec(x)
+CPAT:::get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
 }
 \references{
 \insertAllCited{}

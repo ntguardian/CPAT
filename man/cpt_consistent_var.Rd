@@ -21,7 +21,7 @@ that is consistent when the mean changes at a known point.
 \details{
 This is the estimator
 
-\deqn{\hat{sigma}^2_{T,t} = T^{-1}\left(\sum_{s = 1}^t \left(X_s -
+\deqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(\sum_{s = 1}^t \left(X_s -
       \bar{X}_t\right)^2 + \sum_{s = t + 1}^{T}\left(X_s - \tilde{X}_{T - t}
       \right)^2\right)}
 
@@ -31,5 +31,5 @@ computed automatically as \code{length(x)} and \code{k} corresponds to
 \eqn{t}, a potential change point.
 }
 \examples{
-cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
+CPAT:::cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
 }

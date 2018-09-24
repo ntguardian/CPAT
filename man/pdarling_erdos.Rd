@@ -17,5 +17,5 @@ If \eqn{Z} is the random variable with this distribution, the
 CDF for the limiting distribution of the Darling-Erdös statistic.
 }
 \examples{
-pdarling_erdos(0.1)
+CPAT:::pdarling_erdos(0.1)
 }

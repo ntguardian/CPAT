@@ -30,7 +30,8 @@ Simulates multiple realizations of the Rènyi-type statistic when the long-run
 variance of the data is known.
 }
 \examples{
-sim_Zn(100, kn = function(n) {floor(log(n))})
-sim_Zn(100, kn = function(n) {floor(log(n))}, gen_func = rchangepoint,
-       args = list(changepoint = 250, mean2 = 1))
+CPAT:::sim_Zn(100, kn = function(n) {floor(log(n))})
+CPAT:::sim_Zn(100, kn = function(n) {floor(log(n))},
+              gen_func = CPAT:::rchangepoint, args = list(changepoint = 250,
+                                                          mean2 = 1))
 }

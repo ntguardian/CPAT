@@ -25,7 +25,7 @@ change point}
 variance estimation (typically used when the data is
 believed to be correlated); if \code{FALSE}, then the
 long-run variance is estimated using
-\eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+\eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 \sum_{s = t + 1}^{T}\left(X_s -
 \tilde{X}_{T - t}\right)^2\right)}, where
@@ -59,7 +59,7 @@ If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
 This function computes the Darling-Erdös statistic.
 }
 \details{
-If \eqn{\bazar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
+If \eqn{\bar{A}_T(\tau, t_T)} is the weighted and trimmed CUSUM statistic
 with weighting parameter \eqn{\tau} and trimming parameter \eqn{t_T} (see
 \code{\link{stat_Vn}}), then the Darling-Erdös statistic is
 
@@ -73,8 +73,8 @@ with \eqn{l(x) = \sqrt{2 \log x}} and \eqn{u(x) = 2 \log x + \frac{1}{2} \log
 See \insertCite{horvathricemiller19}{CPAT} to learn more.
 }
 \examples{
-stat_DE(rnorm(1000))
-stat_DE(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_de(rnorm(1000))
+CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 }
 \references{
 \insertAllCited{}

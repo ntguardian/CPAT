@@ -68,9 +68,10 @@ long-run variance estimation using kernel methods. These parameters will be
 passed directly to \code{\link{stat_de}}.
 }
 \examples{
-sim_de_stat(100)
-sim_de_stat(100, use_kernel_var = TRUE, gen_func = rchangepoint,
-            args = list(changepoint = 250, mean2 = 1))
+CPAT:::sim_de_stat(100)
+CPAT:::sim_de_stat(100, use_kernel_var = TRUE,
+                   gen_func = CPAT:::rchangepoint,
+                   args = list(changepoint = 250, mean2 = 1))
 }
 \references{
 \insertAllCited{}

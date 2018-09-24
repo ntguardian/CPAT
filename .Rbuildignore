@@ -5,7 +5,7 @@
 ^STYLE\.pdf$
 XOUT.*$
 ^\.gitignore$
-^packrat/
 ^\.Rprofile$
 ^Makefile$
 ^package$
+^data-raw/

@@ -4,13 +4,13 @@
 \alias{Andrews.test}
 \title{Andrews' Test for End-of-Sample Structural Change}
 \usage{
-Andrews.test(x, m, formula = NULL)
+Andrews.test(x, M, formula = NULL)
 }
 \arguments{
 \item{x}{Data to test for change in mean (either a vector or
 \code{data.frame})}
 
-\item{m}{Numeric index of the location of the first potential change point}
+\item{M}{Numeric index of the location of the first potential change point}
 
 \item{formula}{The regression formula, which will be passed to
 \code{\link[stats]{lm}}}
@@ -27,11 +27,11 @@ multivariate data depending on the nature of \code{x} and whether
 documentation of those functions for more details.
 }
 \examples{
-Andrews.test(rnorm(1000), m = 900)
+Andrews.test(rnorm(1000), M = 900)
 x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
-Andrews.test(df, y ~ x, m = 900)
+Andrews.test(df, y ~ x, M = 900)
 }
 \references{
 \insertAllCited{}

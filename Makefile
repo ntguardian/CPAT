@@ -6,20 +6,20 @@ SMALLREPLICATIONS=20
 LEVEL=0.05
 POWERPLOTPREFIX=inst/plots/PowerPlot
 POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
-POWERDAT=data/PowerSimStat95Data.csv
+POWERDAT=inst/extdata/PowerSimStat95Data.csv
 POWERREPLICATIONS=5000
 POWERSEED=20180910
 POWERSIMPREFIX=data/XOUTPowerSimulations_
-POWERSIMFILEMETA=data/PowerSimulationFileMetadata.csv
-POWERSIMTEMPFILEMETAPREFIX=data/PowerSimulationsMetadataDist
+POWERSIMFILEMETA=inst/extdata/PowerSimulationFileMetadata.csv
+POWERSIMTEMPFILEMETAPREFIX=inst/extdata/PowerSimulationsMetadataDist
 POWERSIMPARAMSUFF=PowerSimulationParameters.R
 POWERSIMMETARDASUFF=PowerSimulationParameters.Rda
 POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
-POWERSIMTEMPFILEMETA:= \
+POWERSIMTEMPFILEMETA::= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
-POWERSIMMETARDA:= \
+POWERSIMMETARDA::= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=data/%$(POWERSIMMETARDASUFF))
-POWERSIMSTATMETA=data/PowerSimulationStatsMetadata.csv
+POWERSIMSTATMETA=inst/extdata/PowerSimulationStatsMetadata.csv
 
 LRVPLOTPREFIX=inst/plots/LRVEstPlot
 LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)
@@ -35,8 +35,8 @@ ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)
 
 CAPMPLOT=inst/plots/BankCAPMChange.pdf
 CAPMDAT=data/BankCAPMPValues.Rda
-FFFILE=data/FF_factors.csv
-BANKFILE=data/Portfolios.csv
+FFFILE=data/ff.rda
+BANKFILE=data/banks.rda
 
 .PHONY : all
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
@@ -64,6 +64,7 @@ $(POWERDAT) : $(POWERSIMFILEMETA) $(POWERSIMSTATMETA) \
 
 $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	make package
+	-mkdir $(dir POWERPLOTPREFIX)
 	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 	mv $(notdir $(POWERPLOTPREFIX))*.pdf $(dir $(POWERPLOTPREFIX))
 
@@ -73,6 +74,7 @@ $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 
 $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	make package
+	-mkdir $(dir LRVPLOTPREFIX)
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 	mv $(notdir $(basename $(LRVPLOTPREFIX)))*.pdf $(dir $(LRVPLOTPREFIX))
 
@@ -82,6 +84,7 @@ $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 
 $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package
+	-mkdir $(dir ZNCONVPLOT)
 	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 	mv $(notdir $(basename $(ZNCONVPLOTPREFIX)))*.pdf $(dir $(ZNCONVPLOTPREFIX))
 
@@ -89,10 +92,11 @@ $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
              R/SimulationUtils.R
 	make package
-	$(RSCRIPT) $< -f $(FFFILE) -b $(BANKFILE) -o $@
+	$(RSCRIPT) $< -o $@
 
 $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	make package
+	-mkdir $(dir CAPMPLOT)
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 	mv $(notdir $(basename $@).pdf) $@
 
@@ -105,7 +109,7 @@ inst/Makefile : Makefile
 inst/package : package
 	cp $< $@
 
-package : R/*.R
+package : R/*.R src/*.cpp $(FFFILE) $(BANKFILE)
 	$(RSCRIPT) exec/RemakePackage.R
 	touch package
 
@@ -141,14 +145,18 @@ init :
 
 .PHONY : initpower
 initpower :
+	-mkdir $(dir $(POWERPLOTPREFIX))
+	-mkdir $(dir $(POWERSIMSTATMETA))
 	echo "Empty power plot" > $(POWERPLOTPREFIX)_norm_n50_log_c4rt.pdf
 
 .PHONY : initlrv
 initlrv :
+	-mkdir $(dir $(LRVPLOTPREFIX))
 	echo "Empty LRV plot" > $(LRVPLOTPREFIX)_bartlett_garch_50.pdf
 
 .PHONY : initconv
 initconv :
+	-mkdir $(dir $(ZNCONVPLOTPREFIX))
 	echo "Empty dist. conv. plot" > $(ZNCONVPLOTPREFIX)_norm_n50_log.pdf
 
 .PHONY : small
@@ -157,6 +165,6 @@ small :
 		LRVREPLICATIONS=$(SMALLREPLICATIONS) \
 		ZNSIMREP=$(SMALLREPLICATIONS)
 
-.PHONY : packs
-packs :
+.PHONY : dependencies
+dependencies :
 	$(RSCRIPT) exec/GetPackages.R

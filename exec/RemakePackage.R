@@ -33,8 +33,6 @@ main <- function(help = FALSE) {
   if (basename(getwd()) != pack_name) stop("I can't go back to the base" %s%
                                            "directory of the package" %s% 
                                            pack_name)
-  devtools::document()
-  # devtools::build()
   devtools::install()
 }
 

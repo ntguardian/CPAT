@@ -27,5 +27,5 @@ and many of the the accepted parameters are arguments for that function; see
 its documentation for more details.
 }
 \examples{
-qkolmogorov(0.5)
+CPAT:::qkolmogorov(0.5)
 }

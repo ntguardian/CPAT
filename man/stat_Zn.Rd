@@ -21,7 +21,7 @@ change point}
 variance estimation (typically used when the data is
 believed to be correlated); if \code{FALSE}, then the
 long-run variance is estimated using
-\eqn{\hat{sigma}^2_{T,t} = T^{-1}\left(
+\eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
 \sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
 \sum_{s = t + 1}^{T}\left(X_s -
 \tilde{X}_{T - t}\right)^2\right)}, where
@@ -75,7 +75,7 @@ The definition of the statistic is
 The parameter \code{kn} corresponds to the trimming parameter \eqn{t_T}.
 }
 \examples{
-stat_Zn(rnorm(1000))
-stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
-stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_Zn(rnorm(1000))
+CPAT:::stat_Zn(rnorm(1000), kn = function(n) {floor(log(n))})
+CPAT:::stat_Zn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
 }
