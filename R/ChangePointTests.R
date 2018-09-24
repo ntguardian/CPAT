@@ -527,7 +527,9 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
 
   stat <- (max(la_mu) - B_n)/A_n
   est <- which.max(la_mu)
-  res <- list(stat, est, (la_mu - B_n)/A_n)
+  res <- list("statistic" = stat,
+              "estimate" = est,
+              "stat_vals" = (la_mu - B_n)/A_n)
 
   if (!estimate & !get_all_vals) {
     return(res[[1]])

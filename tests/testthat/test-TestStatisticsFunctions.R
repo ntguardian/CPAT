@@ -169,7 +169,7 @@ test_that("andrews_test() functions properly", {
                list(pval = 0.3125, stat = 7.94772816422427))
   expect_equal(CPAT:::andrews_test(c(dat, c(1, 3, 2, 3, 2)), 20, pval = FALSE),
                7.94772816422427)
-  expect_equal(CPAT:::andrews_test(c(dat, c(1, 3, 2, 3, 2)), 20, pval = FALSE),
+  expect_equal(CPAT:::andrews_test(c(dat, c(1, 3, 2, 3, 2)), 20, stat = FALSE),
                0.3125)
 })
 
@@ -218,7 +218,7 @@ test_that("CUSUM.test() functions properly", {
   expect_s3_class(CUSUM.test(dat), "htest")
   expect_equal(CUSUM.test(dat)$data.name, "dat")
   expect_equal(CUSUM.test(dat)$p.value, 0.409099915842597)
-  expect_equal(CUSUM.test(dat)$estimate, 10)
+  expect_equal(CUSUM.test(dat)$estimate, c(`t*` = 10))
   expect_equal(CUSUM.test(dat)$statistic, c(A = 0.888290332296761))
   expect_equal(CUSUM.test(dat, use_kernel_var = TRUE)$p.value,
                0.409673316747916)
@@ -228,7 +228,7 @@ test_that("HR.test() functions properly", {
   expect_s3_class(HR.test(dat), "htest")
   expect_equal(HR.test(dat)$data.name, "dat")
   expect_equal(HR.test(dat)$p.value, 0.00194727161751529)
-  expect_equal(HR.test(dat)$estimate, 2)
+  expect_equal(HR.test(dat)$estimate, c(`t*` = 2))
   expect_equal(HR.test(dat)$statistic, c(D = 3.48777644674448))
   expect_equal(HR.test(dat)$parameters, c(`log(T)` = 2.99573227355399))
   expect_equal(HR.test(dat, use_kernel_var = TRUE)$p.value,
@@ -239,10 +239,10 @@ test_that("DE.test() functions properly", {
   expect_s3_class(DE.test(dat), "htest")
   expect_equal(DE.test(dat)$data.name, "dat")
   expect_equal(DE.test(dat)$p.value, 0.335048134286715)
-  expect_equal(DE.test(dat)$estimate, 10)
+  expect_equal(DE.test(dat)$estimate, c(`t*` = 10))
   expect_equal(DE.test(dat)$statistic, c(A = 1.58953572310406))
-  expect_equal(DE.test(dat)$parameters, c(`a(log(T))` = 1.4813431070248, 
-                                          `b(log(T))` = 1.66838804851426))
+  expect_equal(DE.test(dat)$parameter, c(`a(log(T))` = 1.4813431070248, 
+                                         `b(log(T))` = 1.66838804851426))
   expect_equal(DE.test(dat, use_kernel_var = TRUE)$p.value,
                0.335268000418675)
 })
@@ -251,12 +251,12 @@ test_that("HS.test() functions properly", {
   expect_s3_class(HS.test(dat), "htest")
   expect_equal(HS.test(dat)$data.name, "dat")
   expect_equal(HS.test(dat)$p.value, 0.663825560827292)
-  expect_equal(HS.test(dat)$statistic, c(A = 1.58953572310406))
+  expect_equal(HS.test(dat)$statistic, c(A = 1.21370945972696))
   expect_equal(HS.test(dat, corr = FALSE)$p.value, 0.81061923831157)
 })
 
 test_that("Andrews.test() functions properly", {
-  expect_error(Andrews.test(dat), "Argument \"M\" is missing")
+  expect_error(Andrews.test(dat), "argument \"M\" is missing")
   expect_s3_class(Andrews.test(dat, M = 15), "htest")
   expect_equal(Andrews.test(dat, M = 15)$data.name, "dat")
   expect_equal(Andrews.test(dat, M = 15)$p.value, 1)

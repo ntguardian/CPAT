@@ -4,7 +4,7 @@
 \alias{andrews_test_reg}
 \title{Multivariate Andrews' Test for End-of-Sample Structural Change}
 \usage{
-andrews_test_reg(formula, data, m, pval = TRUE, stat = TRUE)
+andrews_test_reg(formula, data, M, pval = TRUE, stat = TRUE)
 }
 \arguments{
 \item{formula}{The regression formula, which will be passed to
@@ -12,7 +12,7 @@ andrews_test_reg(formula, data, m, pval = TRUE, stat = TRUE)
 
 \item{data}{\code{data.frame} containing the data}
 
-\item{m}{Numeric index of the location of the first potential change point}
+\item{M}{Numeric index of the location of the first potential change point}
 
 \item{pval}{If \code{TRUE}, return a p-value}
 
@@ -33,7 +33,7 @@ change in multivarate data, aso originally described. See
 x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
-CPAT:::andrews_test_reg(y ~ x, data = df, m = 900)
+CPAT:::andrews_test_reg(y ~ x, data = df, M = 900)
 }
 \references{
 \insertAllCited{}
