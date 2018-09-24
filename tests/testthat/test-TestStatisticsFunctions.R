@@ -147,8 +147,8 @@ test_that("stat_hs() functions properly", {
                  -2.244864368803760, -2.22744398880951, -2.09014950652634,
                  -1.954438886999530))
 
-  # expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE, kernel = ker_func,
-  #                             bandwidth = sqrt), )
+  expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE, kernel = ker_func,
+      bandwidth = sqrt), 3.99463145080931)
   expect_equal(CPAT:::stat_hs(dat, custom_var = function(x, k) {
                  var(x[1:(min(k + 1, length(x)))])
                }), 2.46376948017636)
@@ -156,9 +156,9 @@ test_that("stat_hs() functions properly", {
                0.236019124621259)
   expect_equal(CPAT:::stat_hs(dat, corr = TRUE), 1.21370945972696)
 
-  # check_cointReg()
+  check_cointReg()
 
-  # expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE), 1.58872558212097)
+  expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE), 0.78115982765937)
 })
 
 test_that("andrews_test() functions properly", {
