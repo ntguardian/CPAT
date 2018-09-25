@@ -80,7 +80,7 @@ $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
-	$(RSCRIPT) $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP)
+	$(RSCRIPT) $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP) -v
 
 $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package

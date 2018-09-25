@@ -103,7 +103,7 @@ main <- function(file, help = FALSE) {
     "arma22_0.6_-0.05_0.5_-0.06" = list(
         mean1 = 0,
         dist = function(n, mu) {return(as.vector(arima.sim(
-                 list(order = c(2,0,2), ar = c(0.6, -0.05), ma = c(0.5, -0.06)),
+                 list(order = c(2,0,2), ar = c(0.4, -0.03), ma = c(0.5, -0.06)),
                  n.start = 200, n = n)) + mu)},
         meanparam = "mu"
     )

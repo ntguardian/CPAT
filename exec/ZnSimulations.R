@@ -20,7 +20,7 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 ################################################################################
 
 main <- function(file, replications = 100000, seed = 20180906,
-                 seedless = FALSE, help = FALSE) {
+                 seedless = FALSE, verbose = FALSE, help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work.
   # See definition of cl_args for parameter descriptions.
@@ -61,6 +61,7 @@ main <- function(file, replications = 100000, seed = 20180906,
                                    rt4 = list(),
                                    rt16 = list()))
 
+  if (verbose) {cat("Simulations for norm")}
   Zn_simulations$norm$log$n50 <- sim_Zn(replications, log, n = 50)
   Zn_simulations$norm$sqrt$n50 <- sim_Zn(replications, sqrt, n = 50)
   Zn_simulations$norm$rt4$n50 <- sim_Zn(replications,
@@ -98,6 +99,7 @@ main <- function(file, replications = 100000, seed = 20180906,
                               n = 1000)
 
   # Alternate distribution: +/- 1
+  if (verbose) {cat("Simulations for plusminusflip")}
   Zn_simulations$plusminusflip$log$n50 <- sim_Zn(replications, log,
                                     gen_func = plusminusflip, n = 50)
   Zn_simulations$plusminusflip$sqrt$n50 <- sim_Zn(replications,sqrt,
@@ -148,6 +150,7 @@ main <- function(file, replications = 100000, seed = 20180906,
                               gen_func = plusminusflip)
 
   # Alternate distribution: exponential
+  if (verbose) {cat("Simulations for exp")}
   Zn_simulations$exp$log$n50 <- sim_Zn(replications, log,
                                     gen_func = rexp, n = 50)
   Zn_simulations$exp$sqrt$n50 <- sim_Zn(replications,sqrt,
@@ -199,6 +202,7 @@ main <- function(file, replications = 100000, seed = 20180906,
                               gen_func = rexp)
 
   # Alternate distribution: gamma
+  if (verbose) {cat("Simulations for gamma")}
   Zn_simulations$gamma$log$n50 <- sim_Zn(replications, log,
                                     gen_func = rgamma,
                                     args = list(shape = 1), n = 50)
@@ -267,6 +271,7 @@ main <- function(file, replications = 100000, seed = 20180906,
 
 
   # Alternate distribution: double exponential
+  if (verbose) {cat("Simulations for doubleexp")}
   Zn_simulations$doubleexp$log$n50 <- sim_Zn(replications, log,
                                     gen_func = rdoublex,
                                     sd = 1/sqrt(2), n = 50)
@@ -334,6 +339,7 @@ main <- function(file, replications = 100000, seed = 20180906,
 
 
   # Alternate distribution: t(3)
+  if (verbose) {cat("Simulations for t3")}
   Zn_simulations$t3$log$n50 <- sim_Zn(replications, log,
                                     gen_func = rt,
                                     args = list(df = 3),
@@ -435,6 +441,8 @@ if (sys.nframe() == 0) {
                       help = "Seed for RNG"),
           make_option(c("--seedless", "-R"), action = "store_true",
                       help = "Don't set a seed for random number generation"),
+          make_option(c("--verbose", "-v"), action = "store_true",
+                      help = "Messages during simulations"),
           make_option(c("--replications", "-r"), type = "integer",
                       default = 100000,
                       help = "Number of simulation replications")

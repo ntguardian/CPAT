@@ -2,7 +2,6 @@
 output:
   md_document:
     variant: markdown_github
-bibliography: inst/REFERENCES.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -14,16 +13,16 @@ bibliography: inst/REFERENCES.bib
 **CPAT** is a package implementing some statistical tests for detecting
 structural change in a series of data. The tests made publicly available are:
 
-* The CUSUM test, via `CUSUM.test()` [see @auehorvath13]
+* The CUSUM test, via `CUSUM.test()`
 * The Darling-Erdös test, via `DE.test()`
-* The Hidalgo-Seo test, via `HS.test()`, as described in [@hidalgoseo13]
-* Andrews test, via `Andrews.test()`, as described in [@andrews03]
-* The Rényi-type test as described by Horváth, Rice and Miller in
-  [-@horvathricemiller19], via `HR.test()`
+* The Hidalgo-Seo test, via `HS.test()`
+* Andrews test, via `Andrews.test()`
+* The Rényi-type test via `HR.test()`
 
 This package was written to facilitate the simulations performed in
-[@horvathricemiller19] and thus is geared to change point tests capable of
-detecting early/late changes in a sample. That said, it is general purpose.
+a paper by Horváth, Rice and Miller (see the documentation for `HR.test()` for a
+citation) and thus is geared to change point tests capable of detecting
+early/late changes in a sample. That said, it is general purpose.
 
 ## Change Point Testing
 
@@ -68,11 +67,9 @@ model are stable over time or not.
 
 All of the tests included in this package are asymptotic tests; the test
 performs better for large $T$ and one should be cautious when using these tests
-for small $T$. Simulation studies comparing these tests (except for Andrews'
-test) are presented in [@horvathricemiller19]. In short, the Rényi-type test
-seems to perform best when a change occurs near the ends of a sample. In
-unreported simulations studies, the CUSUM test seemed to perform best when the
-change occured mid-sample.
+for small $T$. Simulations studies suggest that the Rényi-type test seems to
+perform best when a change occurs near the ends of a sample, while the CUSUM
+test seemed to perform best when the change occured mid-sample.
 
 ## Example
 
@@ -157,5 +154,3 @@ Andrews.test(df, M = 250, formula = y ~ x)
 #> data:  df
 #> S = 6.3494, m = 50, p-value < 2.2e-16
 ```
-
-## References
