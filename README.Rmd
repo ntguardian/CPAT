@@ -115,4 +115,4 @@ Andrews.test(df, M = 250, formula = y ~ x)
   sample. `Andrews.test()` should support these types of tests.
 * We could include more tests, including those mentioned in the paper by [Aue and
   Horváth (2013)](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9892.2012.00819.x)
-  and [Horváth and Rice (http://www.math.utah.edu/~rice/HorvathRice(2014)change.pdf)].
+  and [Horváth and Rice](http://www.math.utah.edu/~rice/HorvathRice(2014)change.pdf).
