@@ -154,3 +154,12 @@ Andrews.test(df, M = 250, formula = y ~ x)
 #> data:  df
 #> S = 6.3494, m = 50, p-value < 2.2e-16
 ```
+
+## Planned Future Features
+
+* Currently, `Andrews.test()` only works for late changes, but Andrews' paper
+  allows for tests for instability in both the beginning and middle of the
+  sample. `Andrews.test()` should support these types of tests.
+* We could include more tests, including those mentioned in the paper by [Aue and
+  Horváth (2013)](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9892.2012.00819.x)
+  and [Horváth and Rice (http://www.math.utah.edu/~rice/HorvathRice(2014)change.pdf)].
