@@ -207,4 +207,4 @@ conventions, etc.
     commented. This is so that others who are not necessarily familiar with
     `make` can read these variables and possibly change their values in the
     command line intelligently (like `make LEVEL=0.01`).
-* Except for variable definitions, comments should be avoided in `Makefile`
+* Except for variable definitions, comments should be avoided in `Makefile`.
