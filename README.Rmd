@@ -108,6 +108,79 @@ df <- data.frame(x = x, y = 1 + 2 * x + c(rnorm(250), rnorm(50) + 1))
 Andrews.test(df, M = 250, formula = y ~ x)
 ```
 
+## Project Replication
+
+The source of this package does more than make the package available to R. It
+also includes all code necessary to recreate the simulations performed in the
+paper by Horvath, Miller and Rice ("A new class of change point test statistics
+of Rényi type", ????). Some versions of the source may even include the files
+containing the simulation studies already created.
+
+While the `R/` directory contains definitions for functions useful both for
+implementing these tests and performing our simulations, the `exec/` directory
+contains the scripts (executable from the command line at least on UNIX-like
+systems) that perform the simulations and the file `Makefile` in the root
+directory uses GNU `make` to manage the structure of the project. Together these
+allow for simulations to be replicated.
+
+We recommend learning how to use GNU `make` to fully appreciate the contents of
+`Makefile` (the
+[manual](https://www.gnu.org/software/make/manual/make.html#Overview), when read
+according to the authors' recommendations, is a good introduction), but one can
+get started without fully appreciating `make`'s intricacies. Below I assume GNU
+`make` is installed and the base directory of the project is the working
+directory:
+
+* The command `make clean` will remove every file associated with the
+  simulations studies; this represents a clean build. Beware, though, that some
+  simulations can take days to complete even on a supercomputer, so don't `make
+  clean` without careful consideration. The command `make mostlyclean` will
+  clean up many of the files associated with the project but does not remove
+  files generated from extensive simulations studies.
+* `make` will automatically update all files that are out of date, based on the
+  timestamps of the files in question. All dependencies are tracked in
+  `Makefile`.
+* If the project is clean, running `make` may not create all simulations since
+  the files that would contain the results of plots don't exist, causing `make`
+  to decide that they don't need to be updated. The command `make init` will
+  create dummy versions of some of these files, which will certainly have newer
+  time stamps than their dependencies. (These are three dummy PDF files that
+  aren't even binary files; beware that this will overwrite those files if they
+  already exist.) Running `make` immediately after `make init` should rebuild
+  the project.
+* Since the simulations take a long time to perform with the full sample sizes,
+  the command `make small` will do the same as `make` but with much fewer
+  replications (by default, 20 replications per simulation). This is good for
+  testing to see if a setup works.
+* A number of parameters are defined in `make` variables defined at the
+  beginning of `Makefile`, and these variables can be overridden in the command
+  line. For example, `make LEVEL=0.01` will remake the project but with the
+  tests involved in the power simulations using a significance level of 0.01
+  rather than 0.05 (this will remake the simulations only if the relevant files,
+  specifically the CSV metadata files, are out of date). `make small
+  SMALLREPLICATIONS=50` is like `make small` but performs 50 replications rather
+  than the default 20. See `Makefile` for all variables used.
+
+We once used the R package **packrat** to manage package dependencies but
+unfortunately this would not work with critical systems for performing the
+simulations. There's also no tracking of system dependencies. We tracked the
+packages we needed in the file `exec/GetPackages.R`, which can be executed from
+the command line using either the command `Rscript exec/GetPackages.R` or
+`exec/GetPackages.R` directly (depending on whether the file is marked as
+executable). If executed, R will attempt to download and install all project
+dependencies we are aware of. As for system dependencies, a sufficiently recent
+version of R and `Rscript` are needed, and LaTeX with the **tikz** package
+should be available and accessible to the **tikzDevice** package. Additionally,
+**CPAT** itself should be installed; the scripts in `exec/` not only use
+**CPAT** but use private **CPAT** functions (accessed via `:::`). If the source
+has been uncompressed, running the R command `devtools::install()` to install
+the package should be sufficient.
+
+We do not guarantee that once the simulations are run with `make` the result
+will be a valid R package (let alone CRAN-compliant), but we have never had
+issues yet running simulations then using `devtools::install()` in the base
+directory of the source of the package to install **CPAT**.
+
 ## Planned Future Features
 
 * Currently, `Andrews.test()` only works for late changes, but Andrews' paper
