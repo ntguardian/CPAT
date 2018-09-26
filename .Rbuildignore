@@ -12,3 +12,4 @@ XOUT.*$
 ^MANUAL.pdf$
 ^README\.Rmd$
 ^README-.*\.png$
+^svgs/
