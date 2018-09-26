@@ -3,40 +3,43 @@ RSCRIPT=Rscript
 
 SMALLREPLICATIONS=20
 
-LEVEL=0.05
-POWERPLOTPREFIX=inst/plots/PowerPlot
-POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
-POWERDAT=inst/extdata/PowerSimStat95Data.csv
-POWERREPLICATIONS=5000
-POWERSEED=20180910
-POWERSIMPREFIX=data/XOUTPowerSimulations_
+LEVEL=0.05    # Level of test
+POWERPLOTPREFIX=inst/plots/PowerPlot    # Prefix to files containing power plots
+POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)    # All power plot files
+POWERDAT=inst/extdata/PowerSimStat95Data.csv    # Power data file
+POWERREPLICATIONS=5000    # Number of replications for each power experiment
+POWERSEED=20180910    # Seed for power simulation experiments
+POWERSIMPREFIX=data/XOUTPowerSimulations_    # Prefix for simulation files
+# Power plot file metadata
 POWERSIMFILEMETA=inst/extdata/PowerSimulationFileMetadata.csv
+# Prefix for files that hold only some file metadata
 POWERSIMTEMPFILEMETAPREFIX=inst/extdata/PowerSimulationsMetadataDist
-POWERSIMPARAMSUFF=PowerSimulationParameters.R
-POWERSIMMETARDASUFF=PowerSimulationParameters.Rda
-POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
-POWERSIMTEMPFILEMETA::= \
+POWERSIMPARAMSUFF=PowerSimulationParameters.R    # Suffix for parameter R files
+POWERSIMMETARDASUFF=PowerSimulationParameters.Rda    # Suffix for param. Rda
+POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))    # All R param. files
+POWERSIMTEMPFILEMETA::= \    # Name of CSV files holding only some file meta.
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
-POWERSIMMETARDA::= \
+POWERSIMMETARDA::= \    # Name of all Rda files holding simulation metadata
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=data/%$(POWERSIMMETARDASUFF))
+# Power simulation statistic metadata
 POWERSIMSTATMETA=inst/extdata/PowerSimulationStatsMetadata.csv
 
-LRVPLOTPREFIX=inst/plots/LRVEstPlot
-LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)
-LRVREPLICATIONS=10000
-LRVSEED=20180912
-LRVDAT=data/LRVSimulations.Rda
+LRVPLOTPREFIX=inst/plots/LRVEstPlot    # Prefix for LRV simulation plots
+LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)    # All LRV plot files
+LRVREPLICATIONS=10000    # Number of replications for each LRV experiment
+LRVSEED=20180912    # Seed for LRV simulations
+LRVDAT=data/LRVSimulations.Rda    # File holding LRV simulations
 
-ZNDAT=data/ZnSimulations.Rda
-ZNSIMSEED=20180911
-ZNSIMREP=100000
-ZNCONVPLOTPREFIX=inst/plots/DistConv
-ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)
+ZNDAT=data/ZnSimulations.Rda    # File holding Rényi-type convergence simulation
+ZNSIMSEED=20180911    # Seed for convergence simulations
+ZNSIMREP=100000    # Number of replications for each convergence experiment
+ZNCONVPLOTPREFIX=inst/plots/DistConv    # Prefix for convergence plot files
+ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)    # All convergence sim. plots
 
-CAPMPLOT=inst/plots/BankCAPMChange.pdf
-CAPMDAT=data/BankCAPMPValues.Rda
-FFFILE=data/ff.rda
-BANKFILE=data/banks.rda
+CAPMPLOT=inst/plots/BankCAPMChange.pdf    # File name for CAPM example plot
+CAPMDAT=data/BankCAPMPValues.Rda    # Rda file containing CAPM test results
+FFFILE=data/ff.rda    # rda file containing Fama-French 5-factor data
+BANKFILE=data/banks.rda    # rda file containing bank portfolio data
 
 .PHONY : all
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
