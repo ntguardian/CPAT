@@ -9,3 +9,6 @@ XOUT.*$
 ^Makefile$
 ^package$
 ^data-raw/
+^MANUAL.pdf$
+^README\.Rmd$
+^README-.*\.png$
