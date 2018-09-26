@@ -27,29 +27,29 @@ early/late changes in a sample. That said, it is general purpose.
 ## Change Point Testing
 
 Change point testing is performed on sequential data (such as time series) to
-determine whether the data shares a common structure. In particular, let <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/7dc84c89f1e5da273e175b2e993d7568.svg?invert_in_darkmode" align=middle width=88.74605684999997pt height=22.465723500000017pt/> where <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/cbf94b0a9fb4d880661a1ab1549ca813.svg?invert_in_darkmode" align=middle width=11.638184249999991pt height=14.15524440000002pt/> is a random noise process, with <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/362d8e4d972dd3d1b39e5ac702ccb065.svg?invert_in_darkmode" align=middle width=69.87988259999999pt height=22.465723500000017pt/>. With the exception of Andrews' test, the tests mentioned above can be
+determine whether the data shares a common structure. In particular, let <img src="/svgs/7dc84c89f1e5da273e175b2e993d7568.svg?invert_in_darkmode" align=middle width=88.74605684999997pt height=22.465723500000017pt/> where <img src="/svgs/cbf94b0a9fb4d880661a1ab1549ca813.svg?invert_in_darkmode" align=middle width=11.638184249999991pt height=14.15524440000002pt/> is a random noise process, with <img src="/svgs/362d8e4d972dd3d1b39e5ac702ccb065.svg?invert_in_darkmode" align=middle width=69.87988259999999pt height=22.465723500000017pt/>. With the exception of Andrews' test, the tests mentioned above can be
 used to decide between the hypotheses:
 
-<p align="center"><img src="https://rawgit.com/ntguardian/CPAT/None/svgs/5947ee678ee7dcfdf936bcf342c61eaa.svg?invert_in_darkmode" align=middle width=147.93501855pt height=14.42921205pt/></p>
+<p align="center"><img src="/svgs/5947ee678ee7dcfdf936bcf342c61eaa.svg?invert_in_darkmode" align=middle width=147.93501855pt height=14.42921205pt/></p>
 
-<p align="center"><img src="https://rawgit.com/ntguardian/CPAT/None/svgs/42e55b067318cf60970880f6368161f3.svg?invert_in_darkmode" align=middle width=265.5109809pt height=15.251136449999997pt/></p>
+<p align="center"><img src="/svgs/42e55b067318cf60970880f6368161f3.svg?invert_in_darkmode" align=middle width=265.5109809pt height=15.251136449999997pt/></p>
 
-<img src="https://rawgit.com/ntguardian/CPAT/None/svgs/c3463d14e48df82e1f401d74ed6f6b50.svg?invert_in_darkmode" align=middle width=12.671292149999989pt height=22.63846199999998pt/> is an integer satisfying <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/054bbcd93c6d19b7495a124b86d4466c.svg?invert_in_darkmode" align=middle width=77.43697004999999pt height=22.63846199999998pt/>. Critically, <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/c3463d14e48df82e1f401d74ed6f6b50.svg?invert_in_darkmode" align=middle width=12.671292149999989pt height=22.63846199999998pt/> is
+<img src="/svgs/c3463d14e48df82e1f401d74ed6f6b50.svg?invert_in_darkmode" align=middle width=12.671292149999989pt height=22.63846199999998pt/> is an integer satisfying <img src="/svgs/054bbcd93c6d19b7495a124b86d4466c.svg?invert_in_darkmode" align=middle width=77.43697004999999pt height=22.63846199999998pt/>. Critically, <img src="/svgs/c3463d14e48df82e1f401d74ed6f6b50.svg?invert_in_darkmode" align=middle width=12.671292149999989pt height=22.63846199999998pt/> is
 not assumed to be known, so the alternative hypothesis states that the change
 occurs at an unknown location in the sample.
 
 Andrews' test is an exception; his test assumes some information about where the
-change occured. Suppose <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/b291ae2f55b6bd72678ff4286e2fc88b.svg?invert_in_darkmode" align=middle width=47.51516714999999pt height=14.15524440000002pt/> for <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/f04a51c20f8126acde9a35f5e4fa10d5.svg?invert_in_darkmode" align=middle width=73.50434024999998pt height=30.984656999999984pt/> with <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/7806dba05980d14c3275f87bb652fb06.svg?invert_in_darkmode" align=middle width=50.96455154999999pt height=30.984656999999984pt/>
-and <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/1887f66d89e5fde468bb8a6490974674.svg?invert_in_darkmode" align=middle width=15.513771899999991pt height=30.984656999999984pt/> known. His test decides between the hypotheses:
+change occured. Suppose <img src="/svgs/b291ae2f55b6bd72678ff4286e2fc88b.svg?invert_in_darkmode" align=middle width=47.51516714999999pt height=14.15524440000002pt/> for <img src="/svgs/f04a51c20f8126acde9a35f5e4fa10d5.svg?invert_in_darkmode" align=middle width=73.50434024999998pt height=30.984656999999984pt/> with <img src="/svgs/7806dba05980d14c3275f87bb652fb06.svg?invert_in_darkmode" align=middle width=50.96455154999999pt height=30.984656999999984pt/>
+and <img src="/svgs/1887f66d89e5fde468bb8a6490974674.svg?invert_in_darkmode" align=middle width=15.513771899999991pt height=30.984656999999984pt/> known. His test decides between the hypotheses:
 
-<p align="center"><img src="https://rawgit.com/ntguardian/CPAT/None/svgs/2835f000219bbd489cae4a79c89e6a67.svg?invert_in_darkmode" align=middle width=159.3619005pt height=17.214641399999998pt/></p>
+<p align="center"><img src="/svgs/2835f000219bbd489cae4a79c89e6a67.svg?invert_in_darkmode" align=middle width=159.3619005pt height=17.214641399999998pt/></p>
 
-<p align="center"><img src="https://rawgit.com/ntguardian/CPAT/None/svgs/665b619b9fc96823328615a4749219e8.svg?invert_in_darkmode" align=middle width=309.58229115pt height=17.39730795pt/></p>
+<p align="center"><img src="/svgs/665b619b9fc96823328615a4749219e8.svg?invert_in_darkmode" align=middle width=309.58229115pt height=17.39730795pt/></p>
 
-In this case, <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/1481b0ec8b302954a5be1ea5b6482352.svg?invert_in_darkmode" align=middle width=86.37536819999998pt height=30.984656999999984pt/>.
+In this case, <img src="/svgs/1481b0ec8b302954a5be1ea5b6482352.svg?invert_in_darkmode" align=middle width=86.37536819999998pt height=30.984656999999984pt/>.
 
 Change point testing traces its roots to quality control procedures; if one
-imagines <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/a918cf04cd0ac7535e7626be634cfb9e.svg?invert_in_darkmode" align=middle width=18.58454399999999pt height=22.465723500000017pt/> being some measurement of a part produced by an machine, <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/30074edb23bec8e7c47c584ff885e5b5.svg?invert_in_darkmode" align=middle width=20.21695004999999pt height=22.465723500000017pt/>
+imagines <img src="/svgs/a918cf04cd0ac7535e7626be634cfb9e.svg?invert_in_darkmode" align=middle width=18.58454399999999pt height=22.465723500000017pt/> being some measurement of a part produced by an machine, <img src="/svgs/30074edb23bec8e7c47c584ff885e5b5.svg?invert_in_darkmode" align=middle width=20.21695004999999pt height=22.465723500000017pt/>
 states that the machine was always calibrated while the alternative hypothesis
 claimes that the machine became uncalibrated at some unknown porint in time.
 Another view of a change point test is that it's yet another test to check if a
@@ -58,13 +58,13 @@ involving time series.
 
 While the above formulation describes a test primarily concerned about the mean
 of a process, these tests, even in this form, can make statements about
-structural change other than the mean. For instance, if <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/a918cf04cd0ac7535e7626be634cfb9e.svg?invert_in_darkmode" align=middle width=18.58454399999999pt height=22.465723500000017pt/> represents the
+structural change other than the mean. For instance, if <img src="/svgs/a918cf04cd0ac7535e7626be634cfb9e.svg?invert_in_darkmode" align=middle width=18.58454399999999pt height=22.465723500000017pt/> represents the
 residuals of a regression model, the test checks whether the parameters of the
 model are stable over time or not.
 
 All of the tests included in this package are asymptotic tests; the test
-performs better for large <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/> and one should be cautious when using these tests
-for small <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/>. Simulations studies suggest that the Rényi-type test seems to
+performs better for large <img src="/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/> and one should be cautious when using these tests
+for small <img src="/svgs/2f118ee06d05f3c2d98361d9c30e38ce.svg?invert_in_darkmode" align=middle width=11.889314249999991pt height=22.465723500000017pt/>. Simulations studies suggest that the Rényi-type test seems to
 perform best when a change occurs near the ends of a sample, while the CUSUM
 test seemed to perform best when the change occured mid-sample.
 
@@ -133,7 +133,7 @@ Andrews.test(x, M = 250)
 #> S = 52.63, m = 50, p-value = 0.2388
 ```
 
-Often these tests return a test statistic, a <img src="https://rawgit.com/ntguardian/CPAT/None/svgs/2ec6e630f199f589a2402fdf3e0289d5.svg?invert_in_darkmode" align=middle width=8.270567249999992pt height=14.15524440000002pt/>-value, and the estimated
+Often these tests return a test statistic, a <img src="/svgs/2ec6e630f199f589a2402fdf3e0289d5.svg?invert_in_darkmode" align=middle width=8.270567249999992pt height=14.15524440000002pt/>-value, and the estimated
 location of the change. This latter quantity is the arg-max of the terms the
 test statistics maximize. (There is theory supporting this estimator for the
 CUSUM test, but no theory for the Rényi-type test.)
