@@ -50,10 +50,10 @@ Andrews' test is an exception; his test assumes some information about where the
 change occured. Suppose $\mu_t = \mu$ for $1 \leq t \leq T^{'}$ with $T^{'} < T$
 and $T^{'}$ known. His test decides between the hypotheses:
 
-$$H_0: \mu_{T^{'} + 1} = \ldots = \mu_{T}$$
+$$H_0: \mu = \mu_{T^{'} + 1} = \ldots = \mu_{T}$$
 
-$$H_A: \mu_{T^{'} + 1} = \ldots = \mu_{t^{*} - 1} \neq \mu_{t^{*}} = \ldots =
-\mu_{T}$$
+$$H_A: \mu = \mu_{T^{'} + 1} = \ldots = \mu_{t^{*} - 1} \neq \mu_{t^{*}} =
+\ldots = \mu_{T}$$
 
 In this case, $T^{'} \leq t^{*} \leq T$.
 
