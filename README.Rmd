@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 
 # CPAT
 
+*Version `r packageVersion("CPAT")`*
+
 **CPAT** is a package implementing some statistical tests for detecting
 structural change in a series of data. The tests made publicly available are:
 
@@ -29,6 +31,11 @@ This package was written to facilitate the simulations performed in
 a paper by Horváth, Rice and Miller (see the documentation for `HR.test()` for a
 citation) and thus is geared to change point tests capable of detecting
 early/late changes in a sample. That said, it is general purpose.
+
+## Installation
+
+**CPAT** is not presently available on CRAN. You can download **CPAT** from
+GitHub via the R command `devtools::install_github("ntguardian/CPAT@public")`.
 
 ## Change Point Testing
 
