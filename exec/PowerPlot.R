@@ -23,7 +23,7 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 
 main <- function(file, outfile = "power_sim", by_stat = FALSE, verbose = FALSE, 
                  statlines = "c('Zn' = 'solid', 'Vn' = 'longdash'," %s%
-                             "'de' = 'dotdash', 'hs' = 'F24242')",
+                             "'de' = 'dotdash', 'hs' = 'F2121212')",
                  help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
@@ -97,7 +97,7 @@ if (sys.nframe() == 0) {
                       help = "Print progress reports"),
           make_option(c("--statlines", "-t"), type = "character",
                       default = "c('Zn' = 'solid', 'Vn' = 'longdash'," %s%
-                                "'de' = 'dotdash', 'hs' = 'F24242')",
+                                "'de' = 'dotdash', 'hs' = 'F2121212')",
                       help = "An R-parseable string creating a named" %s%
                              "character vector where names are labels for" %s%
                              "statistics and values are identifiers for" %s%
