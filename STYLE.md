@@ -197,14 +197,3 @@ conventions, etc.
     # TODO: user: WHAT NEEDS TO BE DONE -- Mon 31 Dec 2099 11:59:59 PM GMT
     ```
 
-# Makefile
-
-* Variable names in `Makefile` should be in all caps and one word, like
-    `POWERPLOT`.
-* Target names in `Makefile` should be in lowercase and one word, like
-    `mostlyclean`.
-* Variables should be defined at the beginning of the file and should be
-    commented. This is so that others who are not necessarily familiar with
-    `make` can read these variables and possibly change their values in the
-    command line intelligently (like `make LEVEL=0.01`).
-* Except for variable definitions, comments should be avoided in `Makefile`.

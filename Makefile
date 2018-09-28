@@ -3,43 +3,40 @@ RSCRIPT=Rscript
 
 SMALLREPLICATIONS=20
 
-LEVEL=0.05    # Level of test
-POWERPLOTPREFIX=inst/plots/PowerPlot    # Prefix to files containing power plots
-POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)    # All power plot files
-POWERDAT=inst/extdata/PowerSimStat95Data.csv    # Power data file
-POWERREPLICATIONS=5000    # Number of replications for each power experiment
-POWERSEED=20180910    # Seed for power simulation experiments
-POWERSIMPREFIX=data/XOUTPowerSimulations_    # Prefix for simulation files
-# Power plot file metadata
+LEVEL=0.05
+POWERPLOTPREFIX=inst/plots/PowerPlot
+POWERPLOT=$(wildcard $(POWERPLOTPREFIX)_*.pdf)
+POWERDAT=inst/extdata/PowerSimStat95Data.csv
+POWERREPLICATIONS=5000
+POWERSEED=20180910
+POWERSIMPREFIX=data/XOUTPowerSimulations_
 POWERSIMFILEMETA=inst/extdata/PowerSimulationFileMetadata.csv
-# Prefix for files that hold only some file metadata
 POWERSIMTEMPFILEMETAPREFIX=inst/extdata/PowerSimulationsMetadataDist
-POWERSIMPARAMSUFF=PowerSimulationParameters.R    # Suffix for parameter R files
-POWERSIMMETARDASUFF=PowerSimulationParameters.Rda    # Suffix for param. Rda
-POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))    # All R param. files
-POWERSIMTEMPFILEMETA::= \    # Name of CSV files holding only some file meta.
+POWERSIMPARAMSUFF=PowerSimulationParameters.R
+POWERSIMMETARDASUFF=PowerSimulationParameters.Rda
+POWERSIMPARAM=$(wildcard exec/*$(POWERSIMPARAMSUFF))
+POWERSIMTEMPFILEMETA::= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=$(POWERSIMTEMPFILEMETAPREFIX)%.csv)
-POWERSIMMETARDA::= \    # Name of all Rda files holding simulation metadata
+POWERSIMMETARDA::= \
   $(POWERSIMPARAM:exec/%$(POWERSIMPARAMSUFF)=data/%$(POWERSIMMETARDASUFF))
-# Power simulation statistic metadata
 POWERSIMSTATMETA=inst/extdata/PowerSimulationStatsMetadata.csv
 
-LRVPLOTPREFIX=inst/plots/LRVEstPlot    # Prefix for LRV simulation plots
-LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)    # All LRV plot files
-LRVREPLICATIONS=10000    # Number of replications for each LRV experiment
-LRVSEED=20180912    # Seed for LRV simulations
-LRVDAT=data/LRVSimulations.Rda    # File holding LRV simulations
+LRVPLOTPREFIX=inst/plots/LRVEstPlot
+LRVPLOT=$(wildcard $(LRVPLOTPREFIX)*.pdf)
+LRVREPLICATIONS=10000
+LRVSEED=20180912
+LRVDAT=data/LRVSimulations.Rda
 
-ZNDAT=data/ZnSimulations.Rda    # File holding Rényi-type convergence simulation
-ZNSIMSEED=20180911    # Seed for convergence simulations
-ZNSIMREP=100000    # Number of replications for each convergence experiment
-ZNCONVPLOTPREFIX=inst/plots/DistConv    # Prefix for convergence plot files
-ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)    # All convergence sim. plots
+ZNDAT=data/ZnSimulations.Rda
+ZNSIMSEED=20180911
+ZNSIMREP=100000
+ZNCONVPLOTPREFIX=inst/plots/DistConv
+ZNCONVPLOT=$(wildcard $(ZNCONVPLOTPREFIX)*.pdf)
 
-CAPMPLOT=inst/plots/BankCAPMChange.pdf    # File name for CAPM example plot
-CAPMDAT=data/BankCAPMPValues.Rda    # Rda file containing CAPM test results
-FFFILE=data/ff.rda    # rda file containing Fama-French 5-factor data
-BANKFILE=data/banks.rda    # rda file containing bank portfolio data
+CAPMPLOT=inst/plots/BankCAPMChange.pdf
+CAPMDAT=data/BankCAPMPValues.Rda
+FFFILE=data/ff.rda
+BANKFILE=data/banks.rda
 
 .PHONY : all
 all : $(POWERPLOT) $(LRVPLOT) $(ZNCONVPLOT) $(CAPMPLOT) inst/Makefile \
@@ -70,6 +67,7 @@ $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	-mkdir $(dir POWERPLOTPREFIX)
 	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 	mv $(notdir $(POWERPLOTPREFIX))*.pdf $(dir $(POWERPLOTPREFIX))
+	-rm $(dir $(POWERPLOTPREFIX))*.tex
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 	make package
@@ -80,6 +78,7 @@ $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	-mkdir $(dir LRVPLOTPREFIX)
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 	mv $(notdir $(basename $(LRVPLOTPREFIX)))*.pdf $(dir $(LRVPLOTPREFIX))
+	-rm $(dir $(LRVPLOTPREFIX))*.tex
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
@@ -90,6 +89,7 @@ $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	-mkdir $(dir ZNCONVPLOT)
 	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 	mv $(notdir $(basename $(ZNCONVPLOTPREFIX)))*.pdf $(dir $(ZNCONVPLOTPREFIX))
+	-rm $(dir $(ZNCONVPLOTPREFIX))*.tex
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
@@ -102,6 +102,7 @@ $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	-mkdir $(dir CAPMPLOT)
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 	mv $(notdir $(basename $@).pdf) $@
+	-rm $(dir $@)*.tex
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
