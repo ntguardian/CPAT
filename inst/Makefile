@@ -67,6 +67,7 @@ $(POWERPLOT) : $(POWERDAT) exec/PowerPlot.R R/Plotting.R
 	-mkdir $(dir POWERPLOTPREFIX)
 	$(RSCRIPT) exec/PowerPlot.R -f $< -o $(POWERPLOTPREFIX) -v
 	mv $(notdir $(POWERPLOTPREFIX))*.pdf $(dir $(POWERPLOTPREFIX))
+	-rm $(dir $(POWERPLOTPREFIX))*.tex
 
 $(LRVDAT) : exec/LRVEstAnalysisParallel.R R/ChangePointTests.R
 	make package
@@ -77,16 +78,18 @@ $(LRVPLOT) : $(LRVDAT) exec/LRVPlot.R R/Plotting.R
 	-mkdir $(dir LRVPLOTPREFIX)
 	$(RSCRIPT) exec/LRVPlot.R -f $< -o $(LRVPLOTPREFIX) -v
 	mv $(notdir $(basename $(LRVPLOTPREFIX)))*.pdf $(dir $(LRVPLOTPREFIX))
+	-rm $(dir $(LRVPLOTPREFIX))*.tex
 
 $(ZNDAT) : exec/ZnSimulations.R R/ProbabilityFunctions.R
 	make package
-	$(RSCRIPT) $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP)
+	$(RSCRIPT) $< -f $@ -s $(ZNSIMSEED) -r $(ZNSIMREP) -v
 
 $(ZNCONVPLOT) : $(ZNDAT) exec/DistConvPlot.R R/Plotting.R
 	make package
 	-mkdir $(dir ZNCONVPLOT)
 	$(RSCRIPT) exec/DistConvPlot.R -f $< -o $(ZNCONVPLOTPREFIX) -v
 	mv $(notdir $(basename $(ZNCONVPLOTPREFIX)))*.pdf $(dir $(ZNCONVPLOTPREFIX))
+	-rm $(dir $(ZNCONVPLOTPREFIX))*.tex
 
 $(CAPMDAT) : exec/BankTestPvalComputeEW.R $(FFFILE) $(BANKFILE) \
              R/ChangePointTests.R R/ProbabilityFunctions.R \
@@ -99,6 +102,7 @@ $(CAPMPLOT) : $(CAPMDAT) exec/CAPMExamplePlot.R R/Plotting.R
 	-mkdir $(dir CAPMPLOT)
 	$(RSCRIPT) exec/CAPMExamplePlot.R -f $< -o $(basename $@) -v
 	mv $(notdir $(basename $@).pdf) $@
+	-rm $(dir $@)*.tex
 
 R/ChangePointTests.R : src/ChangePointTests.cpp
 	touch $@
