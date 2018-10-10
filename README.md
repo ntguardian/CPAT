@@ -25,6 +25,12 @@ early/late changes in a sample. That said, it is general purpose.
 **CPAT** is not presently available on CRAN. You can download **CPAT** from
 GitHub via the R command `devtools::install_github("ntguardian/CPAT@public")`.
 
+It is possible that you have uncompressed the archive containing not only the
+source code of the package but also the source code of the project, including
+data files, plots, etc. If that's the case, start an R session while in the base
+directory of the project then run the command `devtools::install()`. This should
+install the project.
+
 ## Change Point Testing
 
 Change point testing is performed on sequential data (such as time series) to
