@@ -398,7 +398,7 @@ sim_Vn_stat <- function(size, kn = function(n) {1}, tau = 0,
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    foreach(i = 1:size, .combine = 'c') %dopar% Vn_realization()
+    foreach::foreach(i = 1:size, .combine = 'c') %dopar% Vn_realization()
   } else {
     sapply(1:size, function(throwaway) Vn_realization())
   }
@@ -486,7 +486,7 @@ sim_Zn_stat <- function(size, kn = function(n) {floor(sqrt(n))},
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    foreach(i = 1:size, .combine = 'c') %dopar% Zn_realization()
+    foreach::foreach(i = 1:size, .combine = 'c') %dopar% Zn_realization()
   } else {
     sapply(1:size, function(throwaway) Zn_realization())
   }
@@ -572,7 +572,7 @@ sim_de_stat <- function(size, a = log, b = log, use_kernel_var = FALSE,
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    foreach(i = 1:size, .combine = 'c') %dopar% de_realization()
+    foreach::foreach(i = 1:size, .combine = 'c') %dopar% de_realization()
   } else {
     sapply(1:size, function(throwaway) de_realization())
   }
@@ -651,7 +651,7 @@ sim_hs_stat <- function(size, corr = TRUE, gen_func = rnorm, args = NULL,
     `%dopar%` <- foreach::`%dopar%`
   }
   if (parallel) {
-    foreach(i = 1:size, .combine = 'c') %dopar% hs_realization()
+    foreach::foreach(i = 1:size, .combine = 'c') %dopar% hs_realization()
   } else {
     sapply(1:size, function(throwaway) hs_realization())
   }

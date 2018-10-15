@@ -793,8 +793,8 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' df <- data.frame(x, y)
 #' CPAT:::andrews_test_reg(y ~ x, data = df, M = 900)
 andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
-  if (!is(formula, "formula")) stop("Bad formula passed to argument" %s%
-                                    "\"formula\"")
+  if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
+                                    "argument \"formula\"")
   fit <- lm(formula = formula, data = data)
   beta <- coefficients(fit)
   d <- length(beta)

@@ -9,6 +9,7 @@ XOUT.*$
 ^Makefile$
 ^README.md$
 ^README.Rmd$
+^MANUAL.pdf$
 ^package$
 ^data-raw/
 ^svgs/
