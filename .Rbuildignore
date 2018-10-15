@@ -7,6 +7,8 @@ XOUT.*$
 ^\.gitignore$
 ^\.Rprofile$
 ^Makefile$
+^README.md$
+^README.Rmd$
 ^package$
 ^data-raw/
 ^svgs/
