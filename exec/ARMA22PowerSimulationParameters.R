@@ -35,7 +35,7 @@ main <- function(file, help = FALSE) {
 
   power_simulations <- list(
     Vn = list(
-      "arma22_0.6_-0.05_0.5_-0.06" = list(
+      "arma22_0.4_-0.03_0.5_-0.06" = list(
         n50 = list(
           c4rt = list()
         )
@@ -63,21 +63,21 @@ main <- function(file, help = FALSE) {
     #   )
     # ),
     de = list(
-      "arma22_0.6_-0.05_0.5_-0.06" = list(
+      "arma22_0.4_-0.03_0.5_-0.06" = list(
         n50 = list(
           c4rt = list()
         )
       )
     ),
     hs = list(
-      "arma22_0.6_-0.05_0.5_-0.06" = list(
+      "arma22_0.4_-0.03_0.5_-0.06" = list(
         n50 = list(
           c4rt = list()
         )
       )
     ),
     Zn = list(
-      "arma22_0.6_-0.05_0.5_-0.06" = list(
+      "arma22_0.4_-0.03_0.5_-0.06" = list(
         log = list(
           n50 = list(
             c4rt = list()
@@ -100,7 +100,7 @@ main <- function(file, help = FALSE) {
   #     AR(1)
   #     ARMA(1,1)
   distfunc <- list(
-    "arma22_0.6_-0.05_0.5_-0.06" = list(
+    "arma22_0.4_-0.03_0.5_-0.06" = list(
         mean1 = 0,
         dist = function(n, mu) {return(as.vector(arima.sim(
                  list(order = c(2,0,2), ar = c(0.4, -0.03), ma = c(0.5, -0.06)),
@@ -111,7 +111,7 @@ main <- function(file, help = FALSE) {
 
   # Specifies whether long-run variance estimation should be used
   use_lrv <- c(
-    "arma22_0.6_-0.05_0.5_-0.06" = TRUE
+    "arma22_0.4_-0.03_0.5_-0.06" = TRUE
   )
 
   # Alternative k_n considered:
