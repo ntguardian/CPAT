@@ -13,5 +13,6 @@ XOUT.*$
 ^package$
 ^data-raw/
 ^svgs/
+^exec/
 ^R/Plotting.R$
 ^R/SimulationUtils.R$
