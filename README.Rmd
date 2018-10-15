@@ -18,6 +18,12 @@ knitr::opts_chunk$set(
 
 *Version `r packageVersion("CPAT")`*
 
+[![GitHub issues](https://img.shields.io/github/issues/ntguardian/CPAT.svg)](https://github.com/ntguardian/CPAT/issues)
+[![GitHub forks](https://img.shields.io/github/forks/ntguardian/CPAT.svg)](https://github.com/ntguardian/CPAT/network)
+[![GitHub stars](https://img.shields.io/github/stars/ntguardian/CPAT.svg)](https://github.com/ntguardian/CPAT/stargazers)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Github All Releases](https://img.shields.io/github/downloads/ntguardian/CPAT/total.svg)](https://github.com/ntguardian/CPAT)
+
 **CPAT** is a package implementing some statistical tests for detecting
 structural change in a series of data. The tests made publicly available are:
 
