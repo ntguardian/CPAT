@@ -16,6 +16,8 @@
 - Created `ff`, a data set containing Fama-French five factor data
 - Created `banks`, a data set containing the returns of a portfolio of banking
     sector stocks, as compiled by K. French
+- Files and functions related to simulations done for the accompanying paper
+    were removed
 
 ## Version 0.0.0.9000
 ---
