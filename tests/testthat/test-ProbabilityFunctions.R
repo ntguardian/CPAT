@@ -116,7 +116,7 @@ test_that("Simulation functions work", {
     library(doParallel)
     library(doRNG)
 
-    registerDoParallel(max(detectCores() - 1, min(detectCores(), 2)))
+    registerDoParallel(1)
     registerDoRNG(20180924)
   }
 
@@ -163,7 +163,7 @@ test_that("rchangepoint() works", {
     library(doParallel)
     library(doRNG)
 
-    registerDoParallel(max(detectCores() - 1, min(detectCores(), 2)))
+    registerDoParallel(1)
     registerDoRNG(20180924)
   }
 
