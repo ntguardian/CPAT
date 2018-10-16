@@ -10,6 +10,7 @@ Depends:
 Suggests:
     cointReg (>= 0.2),
     foreach (>= 1.4),
+    doRNG (>= 1.7),
     doParallel (>= 1.0),
     ggplot2 (>= 2.2),
     dplyr (>= 0.7),
