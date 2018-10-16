@@ -4,7 +4,7 @@
 
 # CPAT
 
-*Version 0.1.0*
+*Version 0.2.0.9000*
 
 [![GitHub issues](https://img.shields.io/github/issues/ntguardian/CPAT.svg)](https://github.com/ntguardian/CPAT/issues)
 [![GitHub forks](https://img.shields.io/github/forks/ntguardian/CPAT.svg)](https://github.com/ntguardian/CPAT/network)
