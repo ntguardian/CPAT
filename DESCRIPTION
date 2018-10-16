@@ -3,6 +3,7 @@ Title: Change Point Analysis Tests
 Version: 0.1.0
 Date: 2018-10-16
 Authors@R: person("Curtis", "Miller", email = "cmiller@math.utah.edu", role = c("aut", "cre"))
+Maintainer: Curtis Miller <cmiller@math.utah.edu>
 Description: Implements several statistical tests for structural change in R.
 Depends:
     R (>= 3.2)
