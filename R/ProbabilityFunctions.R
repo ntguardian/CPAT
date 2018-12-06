@@ -49,6 +49,22 @@ dZn <- Vectorize(dZn, "x")
 # CDF FUNCTIONS
 ################################################################################
 
+#' CDF of First Hitting Time of Bessel Process
+#'
+#' CDF of the distribution of the first time a Bessel process with parameter
+#' \eqn{\nu > -1} hits \eqn{b > 0}.
+#'
+#' @param q Quantile input to CDF
+#' @param b Point in space Bessel process hits
+#' @param nu The parameter \eqn{\nu > -1} of the Bessel process
+#' @param summands Number of summands to use in summation
+#' @return If \eqn{T} is the random variable as described, \eqn{P(T \leq q)}
+#' @examples
+#' CPAT:::pBst(1, 1)
+pBst <- function(q, b, nu = -1/2, summands = 500) {
+  # TODO: curtis: FUNCTION BODY -- Thu 06 Dec 2018 04:02:12 PM MST
+}
+
 #' Kolmogorov CDF
 #'
 #' CDF of the Kolmogorov distribution.
