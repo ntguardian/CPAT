@@ -8,6 +8,62 @@
 ################################################################################
 
 ################################################################################
+# RANDOM NUMBER GENERATION
+################################################################################
+
+#' Memoised Random Variable Generation
+#'
+#' Creates a function that generates random numbers with memoization
+#'
+#' This is a function generator, with the returned function being one that can
+#' handle a set seed and will remember if it needs to regenerate a new set of
+#' random numbers. This allows both for control over random number generation
+#' and for faster performance.
+#'
+#' @param r The random number generator
+#' @param seed The seed value, to be passed to \code{\link[base]{set.seed}}
+#' @return A function that generates random numbers with a set seed and with
+#'         memoization; accepts \code{seed} and all other arguments that could
+#'         be passed to the original random number generator
+#' @examples
+#' memo_runif <- MCHT:::gen_memo_rng(runif)
+#' memo_runif(10)
+gen_memo_rng <- function(r, seed = NULL) {
+  force(r)
+  force(seed)
+  old_seed <- NULL
+  out <- NULL
+  old_args <- NULL
+  
+  f <- function(...) {
+    args <- list(...)
+    if (!exists(".Random.seed")) {
+      stats::runif(1)  # Call a random number that won't be used; initiates RNG
+    }
+    if (!is.null(seed)) {
+      old_seed <<- .Random.seed
+      set.seed(seed)
+    }
+    # Check for change in random state or whether function's been called or
+    # whether call itself has changed
+    if (is.null(out) | any(.Random.seed != old_seed) |
+        !identical(args, old_args)) {
+      # Regenerate random data
+      out <<- do.call(r, args)
+      old_args <<- args
+      # Enables memoization even if seed not set
+      if (is.null(seed) | is.null(old_seed)) {
+        old_seed <<- .Random.seed
+      }
+    }
+    if (!is.null(seed)) {
+      .Random.seed <<- old_seed
+    }
+    out
+  }
+}
+
+################################################################################
 # DENSITY FUNCTIONS
 ################################################################################
 
@@ -116,6 +172,44 @@ pZn <- function(q, summands = NULL) {
           (8 * x^2))))^2})
 }
 pZn <- Vectorize(pZn, "q")
+
+#' Multivariate Rènyi-Type Statistic CDF
+#'
+#' CDF for the limiting distribution of the multivariate Rènyi-type statistic.
+#'
+#' The limiting distribution of the multivariate Rènyi-type statistic is the
+#' random variable
+#'
+#' \deqn{\max_{0 \leq t \leq 1} \| W(t) \|}
+#'
+#' where \eqn{W(t)} is a \eqn{d}-dimensional (standard) Wiener process. There is
+#' no other expression for this quantity and it must be computed via simulation.
+#'
+#' By default the number of simulations are chosen so that the probability the
+#' empirical CDF is accurate to the second decimal place over its entire range
+#' is 99%, which, after applying the DKW inequality
+#' \insertCite{dvoretzkykieferwolfowitz56}{CPAT}, works out to 52,984 samples.
+#' Of course one can change parameters to obtain a different level of accuracy.
+#' One empirical distribution function is estimated, which is then used to
+#' extract all requested quantities.
+#'
+#' By default, no seed is specified, but for consistent results one can set a
+#' seed.
+#'
+#' @param q Quantile input to CDF
+#' @param d Dimension of the Wiener process
+#' @param tol The desired (maximal) error tolerance
+#' @param alpha The probability the tolerance level is violated
+#' @param n Number of simulated quantities for the empirical CDF (if set
+#'          manually, \code{tol} and \code{alpha} are ignored)
+#' @param seed The seed of the RNG
+#' @return If \eqn{Z} is the random variable following the limiting
+#'         distribution, the quantity \eqn{P(Z \leq q)}
+#' @examples
+#' pZn_multivar()  # TODO: EXAMPLE
+pZn_multivar <- function(q, d = 1, tol = 10e-2, seed = NULL) {
+  # TODO: curtis: FUNCTION BODY -- Thu 06 Dec 2018 01:32:09 PM MST
+}
 
 #' Hidalgo-Seo Statistic CDF
 #'
@@ -705,3 +799,4 @@ rchangepoint <- function(n, changepoint = NULL, mean1 = 0, mean2 = 0,
 
   c(datavec1, datavec2)
 }
+
