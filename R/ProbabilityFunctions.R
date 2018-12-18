@@ -54,15 +54,55 @@ dZn <- Vectorize(dZn, "x")
 #' CDF of the distribution of the first time a Bessel process with parameter
 #' \eqn{\nu > -1} hits \eqn{b > 0}.
 #'
+#' Let \eqn{\tau_b^{(\nu)}} be the first time a Bessel process with parameter
+#' \eqn{\nu} hits \eqn{b > 0}. Let \eqn{J_{\nu}(x)} be the Bessel function
+#' (of the first kind) with order \eqn{\nu}, and let \eqn{j_{\nu, k}} be the
+#' \eqn{k}th zero of \eqn{J_{\nu}(x)}. Let \eqn{\Gamma(x)} be the gamma
+#' function. Then the CDF of \eqn{\tau_b^{(\nu)}} is
+#'
+#' \deqn{1 - \frac{1}{2^{\nu - 1} \Gamma(\nu + 1)} \sum_{k = 1}^{\infty}
+#' \frac{j_{\nu, k}^{\nu - 1}}{J_{\nu + 1}(j_{\nu, k})} e^{-\frac{j_{\nu,
+#' k}^2}{2b^2} t}}
+#'
+#' (This was obtained in \insertCite{kent80}{CPAT}, but the formula above was
+#' given in \insertCite{hamanamatsumoto13}{CPAT}.)
+#'
 #' @param q Quantile input to CDF
 #' @param b Point in space Bessel process hits
 #' @param nu The parameter \eqn{\nu > -1} of the Bessel process
 #' @param summands Number of summands to use in summation
 #' @return If \eqn{T} is the random variable as described, \eqn{P(T \leq q)}
+#' @references
+#'   \insertAllCited{}
 #' @examples
 #' CPAT:::pBst(1, 1)
-pBst <- function(q, b, nu = -1/2, summands = 500) {
-  # TODO: curtis: FUNCTION BODY -- Thu 06 Dec 2018 04:02:12 PM MST
+pBst <- function(q, b, nu = -1/2,
+                 summands = NULL) {
+  if (is.null(summands)) {
+    summands <- tryCatch({
+      pBst_summand_solver(q = q, b = b, nu = nu)
+    }, error = function(e) {
+      warning("Solver to determine number of summands failed; defaulting to" %s%
+              "500")
+      500
+    })
+  }
+  if (nu <= -1) {stop("Function valid only for nu > -1")}
+  # Trivial cases
+  if (b < 0) {
+    return(0)
+  } else if ((b == 0) & (q >= 0)) {
+    return(1)
+  }
+  if (q < 0) {
+    return(0)
+  }
+
+  jnk <- besselJ_zeros(summands, nu = nu)
+  terms <- jnk^(nu - 1)/(besselJ(jnk, nu = nu + 1)) * exp(-jnk^2/(2 * b^2) * q)
+  K <- (2^(nu - 1) * gamma(nu + 1))^(-1)
+
+  return(1 - K * sum(terms))
 }
 
 #' Kolmogorov CDF

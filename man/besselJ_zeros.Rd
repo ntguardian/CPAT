@@ -25,6 +25,9 @@ This function is an interface to the function \code{besselJ_zeros_cpp}, a
 function written in C++ and serves effectively as an interface to a Boost C++
 function \code{cyl_bessel_j_zero}. Thus this function does nothing other than
 make the Boost function available to R.
+
+See the references of \code{\link[base]{besselJ}} for more about bessel
+functions.
 }
 \examples{
 CPAT:::besselJ_zeros(4)

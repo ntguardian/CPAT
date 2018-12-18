@@ -4,7 +4,7 @@
 \alias{pBst}
 \title{CDF of First Hitting Time of Bessel Process}
 \usage{
-pBst(q, b, nu = -1/2, summands = 500)
+pBst(q, b, nu = -1/2, summands = NULL)
 }
 \arguments{
 \item{q}{Quantile input to CDF}
@@ -22,6 +22,23 @@ If \eqn{T} is the random variable as described, \eqn{P(T \leq q)}
 CDF of the distribution of the first time a Bessel process with parameter
 \eqn{\nu > -1} hits \eqn{b > 0}.
 }
+\details{
+Let \eqn{\tau_b^{(\nu)}} be the first time a Bessel process with parameter
+\eqn{\nu} hits \eqn{b > 0}. Let \eqn{J_{\nu}(x)} be the Bessel function
+(of the first kind) with order \eqn{\nu}, and let \eqn{j_{\nu, k}} be the
+\eqn{k}th zero of \eqn{J_{\nu}(x)}. Let \eqn{\Gamma(x)} be the gamma
+function. Then the CDF of \eqn{\tau_b^{(\nu)}} is
+
+\deqn{1 - \frac{1}{2^{\nu - 1} \Gamma(\nu + 1)} \sum_{k = 1}^{\infty}
+\frac{j_{\nu, k}^{\nu - 1}}{J_{\nu + 1}(j_{\nu, k})} e^{-\frac{j_{\nu,
+k}^2}{2b^2} t}}
+
+(This was obtained in \insertCite{kent80}{CPAT}, but the formula above was
+given in \insertCite{hamanamatsumoto13}{CPAT}.)
+}
 \examples{
 CPAT:::pBst(1, 1)
+}
+\references{
+\insertAllCited{}
 }

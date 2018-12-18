@@ -1,0 +1,44 @@
+################################################################################
+# test-MathFunctions.R
+################################################################################
+# 2018-12-18
+# Curtis Miller
+################################################################################
+# Tests for math functions of CPAT.
+################################################################################
+
+################################################################################
+# SCAFFOLDING
+################################################################################
+
+context("Math functions")
+library(CPAT)
+
+################################################################################
+# MATHEMATICS FUNCTIONS TESTS
+################################################################################
+
+test_that("besselJ_zeros works", {
+  expect_equal(CPAT:::besselJ_zeros(4), c(3.83170597020751, 7.01558666981562,
+                                          10.1734681350627, 13.3236919363142))
+  expect_equal(CPAT:::besselJ_zeros(a = 3, b = 10, nu = 3.5),
+               c(13.6980231532492, 16.9236212852138, 20.1218061744538,
+                 23.3042469889397, 26.4767636645391, 29.6426045403158, 
+                 32.8037323851961, 35.961405804709))
+  expect_error(CPAT:::besselJ_zeros(b = -1), "Must have a <= b")
+  expect_error(CPAT:::besselJ_zeros(a = -1, b = 1), "Must have a >= 1")
+})
+
+################################################################################
+# MATH UTILITIES TESTS
+################################################################################
+
+test_that("pBst_summand_solver works", {
+  expect_equal(CPAT:::pBst_summand_solver(1, 1), 3)
+  expect_equal(CPAT:::pBst_summand_solver(-1, 1), 1)
+  expect_equal(CPAT:::pBst_summand_solver(1, -1), 1)
+  expect_equal(CPAT:::pBst_summand_solver(3, 30, nu = 10, upper = 1000), 69)
+  expect_equal(CPAT:::pBst_summand_solver(1, 2, nu = 5, upper = 2), 2)
+  expect_error(CPAT:::pBst_summand_solver(1, 1, lower = 10, upper = 9),
+               "Must have lower < upper")
+})

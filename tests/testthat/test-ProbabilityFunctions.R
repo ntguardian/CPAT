@@ -103,6 +103,12 @@ test_that("hidalgo_seo family of probability functions work", {
                                                            Inf))
 })
 
+test_that("Bst family of probability functions work", {
+  expect_equal(CPAT:::pBst(1, 1), 0.629222570200476)
+  expect_equal(CPAT:::pBst(1, 1, summands = 1), 0.629216177493589)
+  expect_equal(CPAT:::pBst(2, 2, nu = 0), 0.623164897296514)
+})
+
 ################################################################################
 # SIMULATION FUNCTIONS
 ################################################################################
