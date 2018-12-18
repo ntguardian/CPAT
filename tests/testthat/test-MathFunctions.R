@@ -34,11 +34,6 @@ test_that("besselJ_zeros works", {
 ################################################################################
 
 test_that("pBst_summand_solver works", {
-  expect_equal(CPAT:::pBst_summand_solver(1, 1), 3)
-  expect_equal(CPAT:::pBst_summand_solver(-1, 1), 1)
-  expect_equal(CPAT:::pBst_summand_solver(1, -1), 1)
-  expect_equal(CPAT:::pBst_summand_solver(3, 30, nu = 10, upper = 1000), 69)
-  expect_equal(CPAT:::pBst_summand_solver(1, 2, nu = 5, upper = 2), 2)
-  expect_error(CPAT:::pBst_summand_solver(1, 1, lower = 10, upper = 9),
-               "Must have lower < upper")
+  expect_equal(pBst_summand_solver(1, 1), 5)
+  expect_equal(pBst_summand_solver(-1, 1), 1)
 })

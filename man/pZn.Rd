@@ -4,13 +4,18 @@
 \alias{pZn}
 \title{Rènyi-Type Statistic CDF}
 \usage{
-pZn(q, summands = NULL)
+pZn(q, d = 1, summands = NULL)
 }
 \arguments{
 \item{q}{Quantile input to CDF}
 
+\item{d}{Dimension parameter}
+
 \item{summands}{Number of summands for infinite sum; if \code{NULL},
-automatically determined}
+automatically determined using
+\code{\link{pBst_summand_solver}} (which isn't necessarily
+fast, so consider picking a fixed number if speed is
+important)}
 }
 \value{
 If \eqn{Z} is the random variable following the limiting

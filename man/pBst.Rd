@@ -13,7 +13,10 @@ pBst(q, b, nu = -1/2, summands = NULL)
 
 \item{nu}{The parameter \eqn{\nu > -1} of the Bessel process}
 
-\item{summands}{Number of summands to use in summation}
+\item{summands}{Number of summands to use in summation; default is to pick
+the number of summands with
+\code{\link{pBst_summand_solver}} (it could be slow, so for
+performance it may be best to pick a fixed number)}
 }
 \value{
 If \eqn{T} is the random variable as described, \eqn{P(T \leq q)}

@@ -70,14 +70,16 @@ dZn <- Vectorize(dZn, "x")
 #' @param q Quantile input to CDF
 #' @param b Point in space Bessel process hits
 #' @param nu The parameter \eqn{\nu > -1} of the Bessel process
-#' @param summands Number of summands to use in summation
+#' @param summands Number of summands to use in summation; default is to pick
+#'                 the number of summands with
+#'                 \code{\link{pBst_summand_solver}} (it could be slow, so for
+#'                 performance it may be best to pick a fixed number)
 #' @return If \eqn{T} is the random variable as described, \eqn{P(T \leq q)}
 #' @references
 #'   \insertAllCited{}
 #' @examples
 #' CPAT:::pBst(1, 1)
-pBst <- function(q, b, nu = -1/2,
-                 summands = NULL) {
+pBst <- function(q, b, nu = -1/2, summands = NULL) {
   if (is.null(summands)) {
     summands <- tryCatch({
       pBst_summand_solver(q = q, b = b, nu = nu)
@@ -104,6 +106,7 @@ pBst <- function(q, b, nu = -1/2,
 
   return(1 - K * sum(terms))
 }
+pBst <- Vectorize(pBst, "q")
 
 #' Kolmogorov CDF
 #'
@@ -146,30 +149,19 @@ pdarling_erdos <- Vectorize(pdarling_erdos, "q")
 #' CDF for the limiting distribution of the Rènyi-type statistic.
 #'
 #' @param q Quantile input to CDF
+#' @param d Dimension parameter
 #' @param summands Number of summands for infinite sum; if \code{NULL},
-#'        automatically determined
+#'                 automatically determined using
+#'                 \code{\link{pBst_summand_solver}} (which isn't necessarily
+#'                 fast, so consider picking a fixed number if speed is
+#'                 important)
 #' @return If \eqn{Z} is the random variable following the limiting
 #'         distribution, the quantity \eqn{P(Z \leq q)}
 #' @examples
 #' CPAT:::pZn(0.1)
-pZn <- function(q, summands = NULL) {
-  if (!is.numeric(summands)) {
-    if (q > 6) {
-      return(1)
-    } else if (q <= 0) {
-      return(0)
-    } else {
-      # Used some rootfinding procedures to find the proper number of summands
-      # to guarantee machine-level accuracy, thus yielding these numbers
-      best_summands <- c(5, 9, 14, 18, 23, 27, 32)
-      summands <- best_summands[ceiling(q)]
-    }
-  }
-
-  if (q > 100) return(1)
-  sapply(q, function(x) {(4/pi * sum((-1)^(0:summands)/(2*(0:summands) + 1) *
-        exp(-pi^2 * (2 * (0:summands) + 1)^2/
-          (8 * x^2))))^2})
+pZn <- function(q, d = 1, summands = NULL) {
+  if (q <= 0) {return(0)}
+  (1 - pBst(q = 1, b = q, nu = d/2 - 1, summands = summands))^2
 }
 pZn <- Vectorize(pZn, "q")
 

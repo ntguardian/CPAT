@@ -45,6 +45,9 @@ test_that("Zn family of probability functions work", {
                                                         8.38504711667728e-05,
                                                         0.0201739742171177,
                                                         0.137475902448741))
+  expect_equal(CPAT:::pZn(seq(2, 4, length.out = 5), d = 2),
+               c(0.568474084396518, 0.842201728572724, 0.958090156178724,
+                 0.991580230154838, 0.998696268110686))
   expect_equal(CPAT:::pZn(-1), 0)
   expect_equal(CPAT:::qZn(1), Inf)
   expect_equal(CPAT:::qZn(0), 0)

@@ -49,26 +49,21 @@ besselJ_zeros <- function(b, a = 1, nu = 1) {
 #' Find the number of summands needed to achieve numerical accuracy of the sum
 #' involved in \code{\link{pBst}}.
 #'
-#' The number of summands needed is found by using the root finder
-#' \code{\link[stats]{uniroot}} to determine when one of the summands involed in
-#' the infinite sum that partly describes the CDF computed by
-#' \code{\link{pBst}} is equal to numerical accuracy.
+#' The number of summands needed is determined by using a loop that runs over
+#' the summands until it encounters a summand that is not greater than the
+#' specified level of numerical accuracy. The index of that last summand is then
+#' returned.
 #'
 #' @param q Quantile input to CDF
 #' @param b Point in space Bessel process hits
 #' @param nu The parameter \eqn{\nu > -1} of the Bessel process
 #' @param error The desired numerical error of the sum
-#' @param lower Lower end point to search; will be the first entry of the
-#'              \code{interval} vector passed to \code{\link[stats]{uniroot}}
-#' @param upper Upper end point to search; will be the second entry of the
-#'              \code{interval} vector passed to \code{\link[stats]{uniroot}}
 #' @return Integer for number of summands
+#' @export
 #' @examples
-#' CPAT:::pBst_summand_solver(1, 1)
+#' pBst_summand_solver(1, 1)
 pBst_summand_solver <- function(q, b, nu = -1/2,
-                                error = .Machine$double.eps,
-                                lower = 1, upper = 1000) {
-  if (upper <= lower) {stop("Must have lower < upper")}
+                                error = .Machine$double.eps) {
   if ((q <= 0) || (b <= 0)) {
     return(1)
   }
@@ -78,5 +73,10 @@ pBst_summand_solver <- function(q, b, nu = -1/2,
     jnk^(nu - 1)/(besselJ(jnk, nu = nu + 1)) * exp(-jnk^2/(2 * b^2) * q) - error
   }
 
-  ceiling(uniroot(f, c(lower, upper))$root)
+  k <- 1
+  while (abs(f(k)) > error) {
+    k <- k + 1
+  }
+
+  k
 }

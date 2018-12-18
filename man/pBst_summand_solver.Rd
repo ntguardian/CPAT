@@ -4,8 +4,7 @@
 \alias{pBst_summand_solver}
 \title{Find Number of Summands Needed for Numerical Accuracy of \code{pBst}}
 \usage{
-pBst_summand_solver(q, b, nu = -1/2, error = .Machine$double.eps,
-  lower = 1, upper = 1000)
+pBst_summand_solver(q, b, nu = -1/2, error = .Machine$double.eps)
 }
 \arguments{
 \item{q}{Quantile input to CDF}
@@ -15,12 +14,6 @@ pBst_summand_solver(q, b, nu = -1/2, error = .Machine$double.eps,
 \item{nu}{The parameter \eqn{\nu > -1} of the Bessel process}
 
 \item{error}{The desired numerical error of the sum}
-
-\item{lower}{Lower end point to search; will be the first entry of the
-\code{interval} vector passed to \code{\link[stats]{uniroot}}}
-
-\item{upper}{Upper end point to search; will be the second entry of the
-\code{interval} vector passed to \code{\link[stats]{uniroot}}}
 }
 \value{
 Integer for number of summands
@@ -30,11 +23,11 @@ Find the number of summands needed to achieve numerical accuracy of the sum
 involved in \code{\link{pBst}}.
 }
 \details{
-The number of summands needed is found by using the root finder
-\code{\link[stats]{uniroot}} to determine when one of the summands involed in
-the infinite sum that partly describes the CDF computed by
-\code{\link{pBst}} is equal to numerical accuracy.
+The number of summands needed is determined by using a loop that runs over
+the summands until it encounters a summand that is not greater than the
+specified level of numerical accuracy. The index of that last summand is then
+returned.
 }
 \examples{
-CPAT:::pBst_summand_solver(1, 1)
+pBst_summand_solver(1, 1)
 }
