@@ -6,6 +6,19 @@
 
 using namespace Rcpp;
 
+// besselJ_zeros_cpp
+NumericVector besselJ_zeros_cpp(const double& nu, const unsigned& a, const unsigned& b);
+RcppExport SEXP _CPAT_besselJ_zeros_cpp(SEXP nuSEXP, SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< const unsigned& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const unsigned& >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(besselJ_zeros_cpp(nu, a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
 // stat_Vn_cpp
 List stat_Vn_cpp(NumericVector dat, double kn, double tau, bool use_kernel_var, NumericVector lrv_est, bool get_all_vals);
 RcppExport SEXP _CPAT_stat_Vn_cpp(SEXP datSEXP, SEXP knSEXP, SEXP tauSEXP, SEXP use_kernel_varSEXP, SEXP lrv_estSEXP, SEXP get_all_valsSEXP) {
@@ -68,6 +81,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_CPAT_besselJ_zeros_cpp", (DL_FUNC) &_CPAT_besselJ_zeros_cpp, 3},
     {"_CPAT_stat_Vn_cpp", (DL_FUNC) &_CPAT_stat_Vn_cpp, 6},
     {"_CPAT_stat_Zn_cpp", (DL_FUNC) &_CPAT_stat_Zn_cpp, 5},
     {"_CPAT_get_lrv_vec_cpp", (DL_FUNC) &_CPAT_get_lrv_vec_cpp, 3},

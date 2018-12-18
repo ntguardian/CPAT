@@ -23,7 +23,8 @@ Imports:
     Rdpack (>= 0.9),
     methods (>= 3.2),
     Rcpp (>= 0.12),
-    purrr (>= 0.2)
+    purrr (>= 0.2),
+    BH (>= 1.66)
 RdMacros:
     Rdpack
 SystemRequirements:
