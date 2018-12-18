@@ -4,7 +4,7 @@
 \alias{qZn}
 \title{Rènyi-Type Statistic Quantile Function}
 \usage{
-qZn(p, summands = 500, interval = c(0, 100),
+qZn(p, d = 1, summands = 500, interval = c(0, 100),
   tol = .Machine$double.eps, ...)
 }
 \arguments{

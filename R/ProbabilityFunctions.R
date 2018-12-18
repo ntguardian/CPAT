@@ -11,10 +11,67 @@
 # DENSITY FUNCTIONS
 ################################################################################
 
+#' Density Function of the First Hitting Time of a Bessel Process
+#'
+#' Density function of the distribution of the first time a Bessel process with
+#' parameter \eqn{\nu > 1} hits \eqn{b > 0}.
+#'
+#' Let \eqn{\tau_b^{(\nu)}} be the first time a Bessel process with parameter
+#' \eqn{\nu} hits \eqn{b > 0}. Let \eqn{J_{\nu}(x)} be the Bessel function
+#' (of the first kind) with order \eqn{\nu}, and let \eqn{j_{\nu, k}} be the
+#' \eqn{k}th zero of \eqn{J_{\nu}(x)}. Let \eqn{\Gamma(x)} be the gamma
+#' function. Then the density function of \eqn{\tau_b^{(\nu)}} is
+#'
+#' \deqn{\frac{1}{2^\nu b^2 \Gamma(\nu + 1)} \sum_{k = 1}^{\infty} \frac{j_{\nu,
+#' k}^{\nu + 1}}{J_{\nu + 1}(j_{\nu, k})} e^{-\frac{j_{\nu, k}^2}{2b^2}t}}
+#'
+#' This was found by differentiating the CDF computed by \code{\link{pBst}}.
+#'
+#' @param x Points at which to evaluate the density function
+#' @param summands Number of summands to use in summation; default is to pick
+#'                 the number of summands with
+#'                 \code{\link{dBst_summand_solver}} (it could be slow, so for
+#'                 performance it may be best to pick a fixed number)
+#' @inheritParams pBst
+#' @return The value of the density function at \code{x}
+#' @examples
+#' dBst(0.1, 1)
+dBst <- function(x, b, nu = -1/2, summands = NULL) {
+  if (is.null(summands)) {
+    summands <- tryCatch({
+      dBst_summand_solver(x = x, b = b, nu = nu)
+    }, error = function(e) {
+      warning("Solver to determine number of summands failed; defaulting to" %s%
+              "500")
+      500
+    })
+  }
+  if (nu <= -1) {stop("Function valid only for nu > -1")}
+  # Trivial cases
+  if (b < 0) {
+    return(0)
+  } else if ((b == 0) & (x >= 0)) {
+    return(0)
+  }
+  if (x < 0) {
+    return(0)
+  }
+
+  jnk <- besselJ_zeros(summands, nu = nu)
+  terms <- jnk^(nu + 1)/(besselJ(jnk, nu = nu + 1)) * exp(-jnk^2/(2 * b^2) * x)
+  K <- (2^(nu) * gamma(nu + 1) * b^2)^(-1)
+
+  return(K * sum(terms))
+}
+dBst <- Vectorize(dBst, "x")
+
 #' Rényi-Type Statistic Limiting Distribution Density Function
 #'
 #' Function for computing the value of the density function of the limiting
 #' distribution of the Rényi-type statistic.
+#'
+#' The density function was found by differentiating the CDF, as described by
+#' \code{\eqn{pZn}}.
 #'
 #' @param x Point at which to evaluate the density function (note that this
 #'          parameter is not vectorized)
@@ -23,25 +80,28 @@
 #' @return Value of the density function at \eqn{x}
 #' @examples
 #' CPAT:::dZn(1)
-dZn <- function(x, summands = NULL) {
-  if (!is.numeric(summands)) {
-    if (x > 6) {
-      return(1)
-    } else if (x <= 0) {
-      return(0)
-    } else {
-      # Used some rootfinding procedures to find the proper number of summands
-      # to guarantee machine-level accuracy, thus yielding these numbers
-      best_summands <- c(5, 9, 14, 18, 23, 27, 32)
-      summands <- best_summands[ceiling(x)]
-    }
+dZn <- function(x, d = 1, summands = NULL) {
+  nu <- d/2 - 1
+  if (is.null(summands)) {
+    summands <- tryCatch({
+      dBst_summand_solver(x = 1, b = x, nu = nu)
+    }, error = function(e) {
+      warning("Solver to determine number of summands failed; defaulting to" %s%
+              "500")
+      500
+    })
   }
 
-  if (x <= 0) return(0)
-  
-  2 * pi * sqrt(pZn(x, summands = summands)) * sum((-1)^(0:summands) * 
-    (2 * (0:summands) + 1)/x^3 * exp(-pi^2*(2*(0:summands)+1)^2/
-      (8*x^2)))
+  if (d < 1) {stop("Invalid input to d")}
+  if (x <= 0) {
+    return(0)
+  }
+
+  jnk <- besselJ_zeros(summands, nu = nu)
+  terms <- jnk^(nu + 1)/(besselJ(jnk, nu = nu + 1)) * exp(-jnk^2/(2 * x^2))
+
+  2 * (1 - pBst(q = 1, b = x, nu = nu, summands = summands)) * (2^(nu - 1) * 
+    gamma(nu + 1) * x^3)^(-1) * sum(terms)
 }
 dZn <- Vectorize(dZn, "x")
   
@@ -148,6 +208,16 @@ pdarling_erdos <- Vectorize(pdarling_erdos, "q")
 #'
 #' CDF for the limiting distribution of the Rènyi-type statistic.
 #'
+#' If \eqn{G_{\nu, b}(x)} is the CDF of the first time a Bessel process with
+#' parameter \eqn{\nu} hits \eqn{b > 0} (as described by \code{\link{pBst}})
+#' then the CDF of the Rényi-type statistic when the null hypothesis is true is
+#' \eqn{F(x) = (1 - G_{d/2 - 1, x}(1))^2}, where \eqn{d} is the dimensionality
+#' parameter of the statistic. (This comes from combining the limiting
+#' distribution of the statistic described in
+#' \insertCite{horvathricemiller19}{CPAT} with the expression for the CDF of the
+#' hitting time of the Bessel process described in
+#' \insertCite{hamanamatsumoto13}{CPAT}.)
+#'
 #' @param q Quantile input to CDF
 #' @param d Dimension parameter
 #' @param summands Number of summands for infinite sum; if \code{NULL},
@@ -157,9 +227,12 @@ pdarling_erdos <- Vectorize(pdarling_erdos, "q")
 #'                 important)
 #' @return If \eqn{Z} is the random variable following the limiting
 #'         distribution, the quantity \eqn{P(Z \leq q)}
+#' @references
+#'   \insertAllCited{}
 #' @examples
 #' CPAT:::pZn(0.1)
 pZn <- function(q, d = 1, summands = NULL) {
+  if (d < 1) {stop("Invalid input to d")}
   if (q <= 0) {return(0)}
   (1 - pBst(q = 1, b = q, nu = d/2 - 1, summands = summands))^2
 }
@@ -182,6 +255,37 @@ phidalgo_seo <- function(q) {
 ################################################################################
 # QUANTILE FUNCTIONS
 ################################################################################
+
+#' Bessel Process First Hitting Time Quantile Function
+#'
+#' Quantile function of the distribution of the first time a Bessel process with
+#' parameter \eqn{\nu > -1} hits \eqn{b > 0}.
+#'
+#' This function uses \code{\link[stats]{uniroot}} for finding this quantity,
+#' and many of the the accepted parameters are arguments for that function; see
+#' its documentation for more details.
+#'
+#' @param p The probability associated with the desired quantile
+#' @param interval,tol,... Arguments to be passed to
+#'        \code{\link[stats]{uniroot}}
+#' @inheritParams pBst
+#' @return The quantile associated with \code{p}
+#' @examples
+#' CPAT:::qBst(0.5)
+qBst <- function(p, b, nu = -1/2, summands = NULL, interval = c(0, 100),
+                 tol = .Machine$double.eps, ...) {
+  if (p == 1) return(Inf)
+  if (p == 0) return(0)
+  if (p < 0 | p > 1) return(NaN)
+  objective <- function(q) {pBst(q, b = b, nu = nu, summands = summands) - p}
+  # Set up arguments for uniroot()
+  args <- list(...); args$tol <- tol; args$interval <- interval
+  args$f <- objective
+  res <- do.call(uniroot, args)
+
+  res$root
+}
+qBst <- Vectorize(qBst, "p")
 
 #' Darling-Erdös Statistic Limiting Distribution Quantile Function
 #'
@@ -226,12 +330,12 @@ qhidalgo_seo <- function(p) {
 #' @return The quantile associated with \code{p}
 #' @examples
 #' CPAT:::qZn(0.5)
-qZn <- function(p, summands = 500, interval = c(0, 100),
+qZn <- function(p, d = 1, summands = 500, interval = c(0, 100),
                 tol = .Machine$double.eps, ...) {
   if (p == 1) return(Inf)
   if (p == 0) return(0)
   if (p < 0 | p > 1) return(NaN)
-  objective <- function(q) {pZn(q, summands = summands) - p}
+  objective <- function(q) {pZn(q, d = d, summands = summands) - p}
   # Set up arguments for uniroot()
   args <- list(...); args$tol <- tol; args$interval <- interval
   args$f <- objective

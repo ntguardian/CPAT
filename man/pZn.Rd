@@ -24,6 +24,20 @@ If \eqn{Z} is the random variable following the limiting
 \description{
 CDF for the limiting distribution of the Rènyi-type statistic.
 }
+\details{
+If \eqn{G_{\nu, b}(x)} is the CDF of the first time a Bessel process with
+parameter \eqn{\nu} hits \eqn{b > 0} (as described by \code{\link{pBst}})
+then the CDF of the Rényi-type statistic when the null hypothesis is true is
+\eqn{F(x) = (1 - G_{d/2 - 1, x}(1))^2}, where \eqn{d} is the dimensionality
+parameter of the statistic. (This comes from combining the limiting
+distribution of the statistic described in
+\insertCite{horvathricemiller19}{CPAT} with the expression for the CDF of the
+hitting time of the Bessel process described in
+\insertCite{hamanamatsumoto13}{CPAT}.)
+}
 \examples{
 CPAT:::pZn(0.1)
+}
+\references{
+\insertAllCited{}
 }

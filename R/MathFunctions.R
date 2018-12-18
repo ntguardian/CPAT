@@ -80,3 +80,40 @@ pBst_summand_solver <- function(q, b, nu = -1/2,
 
   k
 }
+
+#' Find Number of Summands Needed for Numerical Accuracy of \code{dBst}
+#'
+#' Find the number of summands needed to achieve numerical accuracy of the sum
+#' involved in \code{\link{dBst}}.
+#'
+#' The number of summands needed is determined by using a loop that runs over
+#' the summands until it encounters a summand that is not greater than the
+#' specified level of numerical accuracy. The index of that last summand is then
+#' returned.
+#'
+#' @param x Quantile input to PDF
+#' @param b Point in space Bessel process hits
+#' @param nu The parameter \eqn{\nu > -1} of the Bessel process
+#' @param error The desired numerical error of the sum
+#' @return Integer for number of summands
+#' @export
+#' @examples
+#' dBst_summand_solver(1, 1)
+dBst_summand_solver <- function(x, b, nu = -1/2,
+                                error = .Machine$double.eps) {
+  if ((x <= 0) || (b <= 0)) {
+    return(1)
+  }
+
+  f <- function(k) {
+    jnk <- besselJ_zeros(k, k, nu = nu)
+    jnk^(nu + 1)/(besselJ(jnk, nu = nu + 1)) * exp(-jnk^2/(2 * b^2) * x) - error
+  }
+
+  k <- 1
+  while (abs(f(k)) > error) {
+    k <- k + 1
+  }
+
+  k
+}

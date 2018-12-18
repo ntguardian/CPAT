@@ -40,6 +40,7 @@ test_that("Zn family of probability functions work", {
                                                        0.235981193466446,
                                                        0.678322811360897))
   expect_equal(CPAT:::dZn(-1), 0)
+  expect_equal(CPAT:::dZn(0.5, d = 2), 2.13390675627844e-08)
   expect_equal(CPAT:::pZn(seq(0, 1, length.out = 5)), c(0,
                                                         1.16027602231288e-17,
                                                         8.38504711667728e-05,
@@ -58,6 +59,7 @@ test_that("Zn family of probability functions work", {
                                                   1.58615736751008,
                                                   1.93666414996252,
                                                   Inf))
+  expect_equal(CPAT:::qZn(0.5, d = 2), 1.90678136839105)
 })
 
 test_that("kolmogorov family of probability functions work", {
@@ -107,9 +109,23 @@ test_that("hidalgo_seo family of probability functions work", {
 })
 
 test_that("Bst family of probability functions work", {
+  expect_equal(CPAT:::dBst(1, 1), 0.45736522563392)
+  expect_equal(CPAT:::dBst(-1, 1), 0)
+  expect_equal(CPAT:::dBst(1, -1), 0)
+  expect_equal(CPAT:::dBst(1, 1, nu = 0), 0.257029702469125)
+  expect_equal(CPAT:::dBst(c(-1, 1), 1), c(0, 0.45736522563392))
   expect_equal(CPAT:::pBst(1, 1), 0.629222570200476)
   expect_equal(CPAT:::pBst(1, 1, summands = 1), 0.629216177493589)
   expect_equal(CPAT:::pBst(2, 2, nu = 0), 0.623164897296514)
+  expect_equal(CPAT:::pBst(c(1, 2), 1), c(0.629222570200476, 0.892022955555891))
+  expect_equal(CPAT:::qBst(0.5, 1), 0.757495676542791)
+  expect_equal(CPAT:::qBst(0, 1), 0)
+  expect_equal(CPAT:::qBst(1, 1), Inf)
+  expect_equal(CPAT:::qBst(0.5, 2), 3.02998270617117)
+  expect_equal(CPAT:::qBst(0.5, 1, nu = 0), 0.401048162820061)
+  expect_equal(CPAT:::qBst(c(0, 1), 1), c(0, Inf))
+  expect_equal(CPAT:::qBst(-1, 1), NaN)
+  expect_equal(CPAT:::qBst(2, 1), NaN)
 })
 
 ################################################################################

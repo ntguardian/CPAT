@@ -4,7 +4,7 @@
 \alias{dZn}
 \title{Rényi-Type Statistic Limiting Distribution Density Function}
 \usage{
-dZn(x, summands = NULL)
+dZn(x, d = 1, summands = NULL)
 }
 \arguments{
 \item{x}{Point at which to evaluate the density function (note that this
@@ -19,6 +19,10 @@ Value of the density function at \eqn{x}
 \description{
 Function for computing the value of the density function of the limiting
 distribution of the Rényi-type statistic.
+}
+\details{
+The density function was found by differentiating the CDF, as described by
+\code{\eqn{pZn}}.
 }
 \examples{
 CPAT:::dZn(1)

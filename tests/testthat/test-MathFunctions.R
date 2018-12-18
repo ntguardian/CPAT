@@ -37,3 +37,8 @@ test_that("pBst_summand_solver works", {
   expect_equal(pBst_summand_solver(1, 1), 5)
   expect_equal(pBst_summand_solver(-1, 1), 1)
 })
+
+test_that("dBst_summand_solver words", {
+  expect_equal(dBst_summand_solver(1, 1), 5)
+  expect_equal(dBst_summand_solver(-1, 1), 1)
+})
