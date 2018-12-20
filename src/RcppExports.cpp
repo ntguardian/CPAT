@@ -20,45 +20,45 @@ BEGIN_RCPP
 END_RCPP
 }
 // stat_Vn_cpp
-List stat_Vn_cpp(NumericVector dat, double kn, double tau, bool use_kernel_var, NumericVector lrv_est, bool get_all_vals);
+List stat_Vn_cpp(const NumericVector& dat, const double& kn, const double& tau, const bool& use_kernel_var, const NumericVector& lrv_est, const bool& get_all_vals);
 RcppExport SEXP _CPAT_stat_Vn_cpp(SEXP datSEXP, SEXP knSEXP, SEXP tauSEXP, SEXP use_kernel_varSEXP, SEXP lrv_estSEXP, SEXP get_all_valsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type dat(datSEXP);
-    Rcpp::traits::input_parameter< double >::type kn(knSEXP);
-    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
-    Rcpp::traits::input_parameter< bool >::type use_kernel_var(use_kernel_varSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lrv_est(lrv_estSEXP);
-    Rcpp::traits::input_parameter< bool >::type get_all_vals(get_all_valsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type dat(datSEXP);
+    Rcpp::traits::input_parameter< const double& >::type kn(knSEXP);
+    Rcpp::traits::input_parameter< const double& >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type use_kernel_var(use_kernel_varSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type lrv_est(lrv_estSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type get_all_vals(get_all_valsSEXP);
     rcpp_result_gen = Rcpp::wrap(stat_Vn_cpp(dat, kn, tau, use_kernel_var, lrv_est, get_all_vals));
     return rcpp_result_gen;
 END_RCPP
 }
 // stat_Zn_cpp
-List stat_Zn_cpp(NumericVector dat, double kn, bool use_kernel_var, NumericVector lrv_est, bool get_all_vals);
+List stat_Zn_cpp(const NumericVector& dat, const double& kn, const bool& use_kernel_var, const NumericVector& lrv_est, const bool& get_all_vals);
 RcppExport SEXP _CPAT_stat_Zn_cpp(SEXP datSEXP, SEXP knSEXP, SEXP use_kernel_varSEXP, SEXP lrv_estSEXP, SEXP get_all_valsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type dat(datSEXP);
-    Rcpp::traits::input_parameter< double >::type kn(knSEXP);
-    Rcpp::traits::input_parameter< bool >::type use_kernel_var(use_kernel_varSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lrv_est(lrv_estSEXP);
-    Rcpp::traits::input_parameter< bool >::type get_all_vals(get_all_valsSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type dat(datSEXP);
+    Rcpp::traits::input_parameter< const double& >::type kn(knSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type use_kernel_var(use_kernel_varSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type lrv_est(lrv_estSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type get_all_vals(get_all_valsSEXP);
     rcpp_result_gen = Rcpp::wrap(stat_Zn_cpp(dat, kn, use_kernel_var, lrv_est, get_all_vals));
     return rcpp_result_gen;
 END_RCPP
 }
 // get_lrv_vec_cpp
-NumericVector get_lrv_vec_cpp(NumericMatrix Y, NumericVector kern, int max_l);
+NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern, const int& max_l);
 RcppExport SEXP _CPAT_get_lrv_vec_cpp(SEXP YSEXP, SEXP kernSEXP, SEXP max_lSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type kern(kernSEXP);
-    Rcpp::traits::input_parameter< int >::type max_l(max_lSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type kern(kernSEXP);
+    Rcpp::traits::input_parameter< const int& >::type max_l(max_lSEXP);
     rcpp_result_gen = Rcpp::wrap(get_lrv_vec_cpp(Y, kern, max_l));
     return rcpp_result_gen;
 END_RCPP

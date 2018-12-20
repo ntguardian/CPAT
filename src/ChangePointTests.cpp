@@ -13,8 +13,9 @@ using namespace Rcpp;
 /* Function to be wrapped; to be used only in stat_Vn(); see a description
  * there. */
 // [[Rcpp::export]]
-List stat_Vn_cpp(NumericVector dat, double kn, double tau, bool use_kernel_var,
-                 NumericVector lrv_est, bool get_all_vals) {
+List stat_Vn_cpp(const NumericVector& dat, const double& kn, const double& tau,
+                 const bool& use_kernel_var, const NumericVector& lrv_est,
+                 const bool& get_all_vals) {
     double n = dat.size();
     // Get total sum and sum of squares; this will be the "upper sum"
     // (i.e. the sum above k)
@@ -86,8 +87,9 @@ List stat_Vn_cpp(NumericVector dat, double kn, double tau, bool use_kernel_var,
 /* Function to be wrapped; to be used only in stat_Zn(); see a description
  * there. */
 // [[Rcpp::export]]
-List stat_Zn_cpp(NumericVector dat, double kn, bool use_kernel_var,
-                 NumericVector lrv_est, bool get_all_vals) {
+List stat_Zn_cpp(const NumericVector& dat, const double& kn,
+                 const bool& use_kernel_var, const NumericVector& lrv_est,
+                 const bool& get_all_vals) {
     double n = dat.size();
     // Get total sum and sum of squares; this will be the "upper sum"
     // (i.e. the sum above k)
@@ -158,7 +160,8 @@ List stat_Zn_cpp(NumericVector dat, double kn, bool use_kernel_var,
 
 // Function used for computing long-run variance; see R function get_lrv_vec()
 // [[Rcpp::export]]
-NumericVector get_lrv_vec_cpp(NumericMatrix Y, NumericVector kern, int max_l) {
+NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
+                              const int& max_l) {
     // Number of data points, inferred from Y
     double n = Y.nrow();
     /* Vector that will contain estimated variances at points t; 2 <= t <= n - 2
