@@ -23,9 +23,11 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-List cond_var_gradient_hessian_cpp(NumericVector var, NumericVector eps,
-                                   double omega, double alpha, double beta,
-                                   NumericVector init_vals) {
+List cond_var_gradient_hessian_cpp(const NumericVector& var,
+                                   const NumericVector& eps,
+                                   const double& omega, const double& alpha,
+                                   const double& beta,
+                                   const NumericVector& init_vals) {
   int n = var.size();
   NumericVector gradient = NumericVector(Dimension(3,n));  /* 3xn for three
                                                               parameters and n
