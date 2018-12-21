@@ -7,8 +7,11 @@
 * C++ functions accompanying functions in R/ChangePointTests.R.
 *******************************************************************************/
 
-#include <Rcpp.h>
+// #include <Rcpp.h>
+#include <RcppArmadillo.h>
 using namespace Rcpp;
+
+// [[Rcpp::depends(RcppArmadillo)]]
 
 /* Function to be wrapped; to be used only in stat_Vn(); see a description
  * there. */
@@ -157,6 +160,73 @@ List stat_Zn_cpp(const NumericVector& dat, const double& kn,
                         Named("stat_vals") = all_vals);
 }
 
+/* Short and unsafe function; won't check that x and A have proper dimensions.
+ * But we get better speed when we can make that assumption. */
+inline double norm_A_square(arma::vec x, arma::mat A) {
+    arma::mat prod_mat = x.t() * A * x;
+    return prod_mat(0,0);
+}
+
+inline double norm_A(arma::vec x, arma::mat A) {
+    return sqrt(norm_A_square(x, A));
+}
+
+/* XXX: This may be the faster function but it will also be numerically
+ * unstable since it uses the normal equations for finding least-squares
+ * solutions. Perhaps should consider creating a function that is slower but
+ * values numerical accuracy more. */
+// [[Rcpp::export]]
+List stat_Zn_lm_cpp(const NumericMatrix& X_input, const NumericMatrix& y_input,
+                    const double& kn, const List& lrv_est,
+                    const bool& get_all_vals) {
+    unsigned int n = X_input.rows();
+    unsigned int d = X_input.cols();
+    if (y_input.rows() != n) {
+        throw std::range_error("Bad y passed; must have one column and same "
+                               "number of rows as data matrix X")
+    }
+
+    // Create Armadillo matrices
+    const arma::mat X(X_input.begin(), n, d, false);
+    const arma::vec y(y_input.begin(), n, false);
+
+    /* Call X the data matrix and X' its transpose (I usually don't do this);
+     * then X'X and X'y are sums. I want sums; these will be "upper sums" (i.e.
+     * the sum above k). */
+    arma::mat sxx_upper(d, d, arma::fill::zeros);
+    arma::mat sxy_upper(d, 1, arma::fill::zeros);
+    // The "lower sums" (i.e. those below k)
+    arma::mat sxx_lower(d, d, arma::fill::zeros);
+    arma::mat sxy_lower(d, 1, arma::fill::zeros);
+    /* Get lower sums; go to kn - 1 to prevent double-counting in main loop */
+    for (int i = 0; i < kn - 1; ++i) {
+        sxx_lower += X.row(i).t() * X.row(i);
+        sxy_lower += X.row(i).t() * y(i);
+    }
+    // Get upper sum
+    for (int i = kn - 1; i < n; ++i) {
+        sxx_upper += X.row(i).t() * X.row(i);
+        sxy_upper += X.row(i).t() * y(i);
+    }
+
+    // The maximum, which will be returned
+    double M = 0;
+    // A candidate for the new maximum, used in a loop
+    double M_candidate;
+    // Estimate for change location
+    int est = n;
+    /* A vector that will contain the value of the statistic at each n checked;
+     * relevant only if get_all_vals == TRUE */
+    NumericVector all_vals = NumericVector::create();
+
+    // Compute the test statistic
+    for (int k = kn; k <= (n - kn); ++k) {
+        sxx_lower += X.row(k).t() * X.row(k);
+        sxy_lower += X.row(k).t() * y(i);
+        sxx_upper -= X.row(k).t() * X.row(k);
+        sxy_upper -= X.row(k).t() * y(i);
+    }
+}
 
 // Function used for computing long-run variance; see R function get_lrv_vec()
 // [[Rcpp::export]]
