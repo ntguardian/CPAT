@@ -201,8 +201,7 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     // Create Armadillo objects
     const arma::mat X = as<arma::mat>(X_input);
     const arma::vec y = as<arma::vec>(y_input);
-    const arma::cube lrv_est_cube(lrv_est.begin(), d, d, (n - 2 * kn + 1),
-                                  false);
+    const arma::cube lrv_est_cube(lrv_est.begin(), d, d, n, false);
 
     /* Call X the data matrix and X' its transpose (I usually don't do this);
      * then X'X and X'y are sums. I want sums; these will be "upper sums" (i.e.

@@ -796,7 +796,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' stat_Zn_reg()  # TODO: EXAMPLE
 stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                         estimate = FALSE, use_kernel_var = FALSE,
-                        custom_var = FALSE, kernel = "ba", bandwidth = "and",
+                        custom_var = NULL, kernel = "ba", bandwidth = "and",
                         get_all_vals = FALSE, fast = FALSE) {
   y <- model.frame(formula, data = data)[[1]]
   X <- model.matrix(formula, data = data)
@@ -807,7 +807,7 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
     use_kernel_var <- TRUE
     if (is.function(custom_var)) {
       custom_var_temp <- custom_var
-      custom_var <- purrr::partial(custom_var_temp, x = dat, .lazy = FALSE)
+      custom_var <- purrr::partial(custom_var_temp, x = data, .lazy = FALSE)
       custom_var_array <- vapply(1:nrow(data), custom_var,
                                  FUN.VALUE = matrix(numeric(1), nrow = d,
                                                     ncol = d))
