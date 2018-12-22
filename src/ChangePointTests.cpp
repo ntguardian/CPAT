@@ -182,8 +182,9 @@ inline double norm_inv_A(arma::vec x, arma::mat A) {
 
 // [[Rcpp::export]]
 List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
-                     const double& kn, NumericVector lrv_est,
-                     const bool& get_all_vals, const bool& fast = false) {
+                     const double& kn, const bool& use_kernel_var,
+                     NumericVector lrv_est, const bool& get_all_vals,
+                     const bool& fast = false) {
     unsigned int n = X_input.rows();
     unsigned int d = X_input.cols();
     if (y_input.size() != n) {

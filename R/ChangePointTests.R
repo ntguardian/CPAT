@@ -771,6 +771,81 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
   #             mean(dat[(k+1):n]))^2))/n))))
 }
 
+#' Compute the Rényi-Type Statistic for Stability in Linear Regression Models
+#'
+#' This function computes the Rényi-type statistic for detecting structural
+#' change in linear regression models.
+#'
+#' TODO: EXTENDED DESCRIPTION
+#'
+#' TODO: THIS FUNCTION DOES NOT WORK AS MARKETED BECAUSE WE'RE STILL WORKING ON
+#' THE THEORY; \code{use_kernel_var}, \code{kernel}, AND \code{bandwidth} ARE
+#' IGNORED AND \code{custom_var} SHOULD NOT BE NULL, BUT CREATE A MATRIX THE
+#' SAME DIMENSION AS THE REGRESSION MODEL.
+#'
+#' @param formula The regression formula, which will be passed to
+#'        \code{\link[stats]{lm}}
+#' @param data \code{data.frame} containing the data
+#' @param fast If \code{TRUE}, the test statistic is computed quickly but at a
+#'             potential loss of numerical accuracy (by solving the normal
+#'             equations); otherwise, use slower but more numerically stable
+#'             solution techniques
+#' @inheritParams stat_Zn
+#' @return TODO: RETURN VALUE DESCRIPTION
+#' @examples
+#' stat_Zn_reg()  # TODO: EXAMPLE
+stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
+                        estimate = FALSE, use_kernel_var = FALSE,
+                        custom_var = FALSE, kernel = "ba", bandwidth = "and",
+                        get_all_vals = FALSE, fast = FALSE) {
+  y <- model.frame(formula, data = data)[[1]]
+  X <- model.matrix(formula, data = data)
+  d <- ncol(X)
+  if (use_kernel_var) {
+    stop("That functionality is not yet implemented")
+  } else if (!is.null(custom_var)) {
+    use_kernel_var <- TRUE
+    if (is.function(custom_var)) {
+      custom_var_temp <- custom_var
+      custom_var <- purrr::partial(custom_var_temp, x = dat, .lazy = FALSE)
+      custom_var_array <- vapply(1:nrow(data), custom_var,
+                                 FUN.VALUE = matrix(numeric(1), nrow = d,
+                                                    ncol = d))
+    } else if (is.array(custom_var)) {
+      if (any(dim(custom_var) != c(d, d, nrow(data))) |
+          !is.numeric(custom_var[1, 1, 1])) {
+        stop("custom var must be a numeric array with same number of" %s%
+             "rows/columns as number of regressors (" %s0% d %s0% ") and" %s%
+             "number of slabs equal to the length of the data set (" %s0%
+             nrow(data) %s0% ")")
+      }
+      custom_var_array <- custom_var
+    } else {
+      stop("Don't know how to handle custom_var of class" %s% class(custom_var))
+    }
+    custom_var_not_symmetric <- apply(custom_var_array, 3,
+                                      function(X) {any(X != t(X))})
+    if (any(custom_var_not_symmetric)) {stop("Not all matrices implied by" %s%
+                                             "custom_var are symmetric")}
+    custom_var_min_eig <- apply(custom_var_array, 3,
+                                function(X) {min(eigen(X)$values)})
+    if (any(custom_var_min_eig <= 0)) {stop("Not all matrices implied by" %s%
+                                            "custom_var are positive definite")}
+    lrv <- custom_var_array
+  } else {
+    stop("Feature not implemented; need custom_var to be set")
+  }
+
+  res <- stat_Zn_reg_cpp(X, y, kn(nrow(data)), use_kernel_var, lrv,
+                         get_all_vals, fast)
+  res[[2]] <- as.integer(res[[2]])
+  if (!estimate & !get_all_vals) {
+    return(res[[1]])
+  } else {
+    return(res[c(TRUE, estimate, get_all_vals)])
+  }
+}
+
 #' Multivariate Andrews' Test for End-of-Sample Structural Change
 #'
 #' This implements Andrews' test for end-of-sample change, as described by
