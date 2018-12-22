@@ -194,7 +194,7 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
 
     const IntegerVector lrv_est_dims = lrv_est.attr("dim");
     if ((lrv_est_dims[0] != d) || (lrv_est_dims[1] != d) ||
-        (lrv_est_dims[2] != (n - 2 * kn) + 1)) {
+        (lrv_est_dims[2] != n)) {
         throw std::range_error("Bad lrv_est passed");
     }
 
@@ -256,7 +256,7 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
         }
         
         M_candidate = norm_inv_A_square(beta_lower - beta_upper,
-                                        lrv_est_cube.slice(k - kn));
+                                        lrv_est_cube.slice(k - 1));
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
             all_vals.push_back(M_candidate * sqrt(kn));

@@ -51,18 +51,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // stat_Zn_reg_cpp
-List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input, const double& kn, NumericVector lrv_est, const bool& get_all_vals, const bool& fast);
-RcppExport SEXP _CPAT_stat_Zn_reg_cpp(SEXP X_inputSEXP, SEXP y_inputSEXP, SEXP knSEXP, SEXP lrv_estSEXP, SEXP get_all_valsSEXP, SEXP fastSEXP) {
+List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input, const double& kn, const bool& use_kernel_var, NumericVector lrv_est, const bool& get_all_vals, const bool& fast);
+RcppExport SEXP _CPAT_stat_Zn_reg_cpp(SEXP X_inputSEXP, SEXP y_inputSEXP, SEXP knSEXP, SEXP use_kernel_varSEXP, SEXP lrv_estSEXP, SEXP get_all_valsSEXP, SEXP fastSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericMatrix& >::type X_input(X_inputSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type y_input(y_inputSEXP);
     Rcpp::traits::input_parameter< const double& >::type kn(knSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type use_kernel_var(use_kernel_varSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lrv_est(lrv_estSEXP);
     Rcpp::traits::input_parameter< const bool& >::type get_all_vals(get_all_valsSEXP);
     Rcpp::traits::input_parameter< const bool& >::type fast(fastSEXP);
-    rcpp_result_gen = Rcpp::wrap(stat_Zn_reg_cpp(X_input, y_input, kn, lrv_est, get_all_vals, fast));
+    rcpp_result_gen = Rcpp::wrap(stat_Zn_reg_cpp(X_input, y_input, kn, use_kernel_var, lrv_est, get_all_vals, fast));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -100,7 +101,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_CPAT_besselJ_zeros_cpp", (DL_FUNC) &_CPAT_besselJ_zeros_cpp, 3},
     {"_CPAT_stat_Vn_cpp", (DL_FUNC) &_CPAT_stat_Vn_cpp, 6},
     {"_CPAT_stat_Zn_cpp", (DL_FUNC) &_CPAT_stat_Zn_cpp, 5},
-    {"_CPAT_stat_Zn_reg_cpp", (DL_FUNC) &_CPAT_stat_Zn_reg_cpp, 6},
+    {"_CPAT_stat_Zn_reg_cpp", (DL_FUNC) &_CPAT_stat_Zn_reg_cpp, 7},
     {"_CPAT_get_lrv_vec_cpp", (DL_FUNC) &_CPAT_get_lrv_vec_cpp, 3},
     {"_CPAT_cond_var_gradient_hessian_cpp", (DL_FUNC) &_CPAT_cond_var_gradient_hessian_cpp, 6},
     {NULL, NULL, 0}
