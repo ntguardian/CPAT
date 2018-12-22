@@ -13,6 +13,10 @@ stat_Zn_cpp <- function(dat, kn, use_kernel_var, lrv_est, get_all_vals) {
     .Call('_CPAT_stat_Zn_cpp', PACKAGE = 'CPAT', dat, kn, use_kernel_var, lrv_est, get_all_vals)
 }
 
+stat_Zn_lm_cpp <- function(X_input, y_input, kn, lrv_est, get_all_vals, fast = FALSE) {
+    .Call('_CPAT_stat_Zn_lm_cpp', PACKAGE = 'CPAT', X_input, y_input, kn, lrv_est, get_all_vals, fast)
+}
+
 get_lrv_vec_cpp <- function(Y, kern, max_l) {
     .Call('_CPAT_get_lrv_vec_cpp', PACKAGE = 'CPAT', Y, kern, max_l)
 }

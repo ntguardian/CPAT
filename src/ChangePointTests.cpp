@@ -9,9 +9,9 @@
 
 // #include <Rcpp.h>
 #include <RcppArmadillo.h>
-using namespace Rcpp;
-
 // [[Rcpp::depends(RcppArmadillo)]]
+
+using namespace Rcpp;
 
 /* Function to be wrapped; to be used only in stat_Vn(); see a description
  * there. */
