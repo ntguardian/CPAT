@@ -171,27 +171,37 @@ inline double norm_A(arma::vec x, arma::mat A) {
     return sqrt(norm_A_square(x, A));
 }
 
+inline double norm_inv_A_square(arma::vec x, arma::mat A) {
+    arma::mat prod_mat = x.t() * arma::solve(A, x);
+    return prod_mat(0, 0);
+}
+
+inline double norm_inv_A(arma::vec x, arma::mat A) {
+    return sqrt(norm_inv_A_square(x, A));
+}
+
 // [[Rcpp::export]]
-List stat_Zn_lm_cpp(const NumericMatrix& X_input, const NumericMatrix& y_input,
+List stat_Zn_lm_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                     const double& kn, NumericVector lrv_est,
                     const bool& get_all_vals, const bool& fast = false) {
     unsigned int n = X_input.rows();
     unsigned int d = X_input.cols();
-    if (y_input.rows() != n) {
+    if (y_input.size() != n) {
         throw std::range_error("Bad y passed; must have one column and same "
                                "number of rows as data matrix X");
     }
 
     const IntegerVector lrv_est_dims = lrv_est.attr("dim");
     if ((lrv_est_dims[0] != d) || (lrv_est_dims[1] != d) ||
-        (lrv_est_dims[2] != (n - 2 * kn))) {
+        (lrv_est_dims[2] != (n - 2 * kn) + 1)) {
         throw std::range_error("Bad lrv_est passed");
     }
 
     // Create Armadillo objects
     const arma::mat X = as<arma::mat>(X_input);
     const arma::vec y = as<arma::vec>(y_input);
-    const arma::cube lrv_est_cube(lrv_est.begin(), d, d, (n - 2 * kn), false);
+    const arma::cube lrv_est_cube(lrv_est.begin(), d, d, (n - 2 * kn + 1),
+                                  false);
 
     /* Call X the data matrix and X' its transpose (I usually don't do this);
      * then X'X and X'y are sums. I want sums; these will be "upper sums" (i.e.
@@ -244,8 +254,8 @@ List stat_Zn_lm_cpp(const NumericMatrix& X_input, const NumericMatrix& y_input,
             beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
         }
         
-        M_candidate = norm_A_square(beta_lower - beta_upper,
-                                    lrv_est_cube.slice(k - kn));
+        M_candidate = norm_inv_A_square(beta_lower - beta_upper,
+                                        lrv_est_cube.slice(k - kn));
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
             all_vals.push_back(M_candidate * sqrt(kn));
