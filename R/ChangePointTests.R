@@ -798,6 +798,9 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                         estimate = FALSE, use_kernel_var = FALSE,
                         custom_var = NULL, kernel = "ba", bandwidth = "and",
                         get_all_vals = FALSE, fast = FALSE) {
+  if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
+                                             "argument \"formula\"")
+
   y <- model.frame(formula, data = data)[[1]]
   X <- model.matrix(formula, data = data)
   d <- ncol(X)

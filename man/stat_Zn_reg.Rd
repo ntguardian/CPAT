@@ -5,7 +5,7 @@
 \title{Compute the Rényi-Type Statistic for Stability in Linear Regression Models}
 \usage{
 stat_Zn_reg(formula, data, kn = function(n) {     floor(sqrt(n)) },
-  estimate = FALSE, use_kernel_var = FALSE, custom_var = FALSE,
+  estimate = FALSE, use_kernel_var = FALSE, custom_var = NULL,
   kernel = "ba", bandwidth = "and", get_all_vals = FALSE,
   fast = FALSE)
 }

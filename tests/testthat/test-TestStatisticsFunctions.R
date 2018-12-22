@@ -76,6 +76,31 @@ test_that("stat_Zn() functions properly", {
   expect_equal(CPAT:::stat_Zn(dat, use_kernel_var = TRUE), 1.58829744129333)
 })
 
+test_that("stat_Zn_reg() functions properly", {
+  expect_error(CPAT:::stat_Zn_reg(dat), "Bad formula passed")
+  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
+                                  custom_var = function(x, k) {diag(2)}),
+               36.9250446805558)
+  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
+                                  custom_var = function(x, k) {diag(2)},
+                                  estimate = TRUE)$estimate, 15L)
+  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
+                                  custom_var = function(x, k) {diag(2)},
+                                  get_all_vals = TRUE)$stat_vals,
+               c( 21.1159408602941, 12.1744432908163,   5.37067526863372, 
+                  4.50388682677218, 3.34972742569482,   4.40727066758493,
+                 0.485861561065175,  2.7190934239874, 0.0433351582718952,
+                  4.18669523306354, 5.34125658908606,   36.9250446805558,
+                  16.4185459416089))
+  expect_is(CPAT:::stat_Zn_reg(y ~ x, data = df,
+                               custom_var = function(x, k) {diag(2)},
+                               get_all_vals = TRUE, estimate = TRUE), "list")
+  expect_equal(names(CPAT:::stat_Zn_reg(y ~ x, data = df,
+                                        custom_var = function(x, k) {diag(2)},
+                                        get_all_vals = TRUE, estimate = TRUE)),
+               c("statistic", "estimate", "stat_vals"))
+})
+
 test_that("stat_Vn() functions properly", {
   expect_equal(CPAT:::stat_Vn(dat), 0.888290332296761)
 
