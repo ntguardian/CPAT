@@ -185,19 +185,19 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                      const double& kn, const bool& use_kernel_var,
                      NumericVector lrv_est, const bool& get_all_vals,
                      const bool& fast = false) {
-    unsigned int n = X_input.rows();
-    unsigned int d = X_input.cols();
+    const unsigned int n = X_input.rows();
+    const unsigned int d = X_input.cols();
     if (y_input.size() != n) {
         throw std::range_error("Bad y passed; must have one column and same "
                                "number of rows as data matrix X");
     }
 
+    /* NOTE: lrv_est needs to be a 3D array */
     const IntegerVector lrv_est_dims = lrv_est.attr("dim");
     if ((lrv_est_dims[0] != d) || (lrv_est_dims[1] != d) ||
         (lrv_est_dims[2] != n)) {
         throw std::range_error("Bad lrv_est passed");
     }
-
     // Create Armadillo objects
     const arma::mat X = as<arma::mat>(X_input);
     const arma::vec y = as<arma::vec>(y_input);
@@ -213,7 +213,8 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     arma::mat sxy_lower(d, 1, arma::fill::zeros);
     if (fast) {
         // Normal equations will be used for fast computation
-        /* Get lower sums; go to kn - 1 to prevent double-counting in main loop */
+        /* Get lower sums; go to kn - 1 to prevent double-counting in main
+         * loop */
         for (int i = 0; i < kn - 1; ++i) {
             sxx_lower += X.row(i).t() * X.row(i);
             sxy_lower += X.row(i).t() * y(i);
@@ -275,6 +276,115 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                         Named("stat_vals") = all_vals);
 }
 
+// [[Rcpp::export]]
+List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
+                     const double& kn, const NumericVector& a_n,
+                     const NumericVector& b_n, const bool& get_all_vals,
+                     const bool& fast = false) {
+    const unsigned int n = X_input.rows();
+    const unsigned int d = X_input.cols();
+    if (y_input.size() != n) {
+        throw std::range_error("Bad y passed; must have one column and same "
+                               "number of rows as data matrix X");
+    }
+    // Create Armadillo objects
+    const arma::mat X = as<arma::mat>(X_input);
+    const arma::vec y = as<arma::vec>(y_input);
+    const arma::mat Sigma = X.t() * X;
+    
+    /* Call X the data matrix and X' its transpose; then X'X and X'y are sums. I
+     * want sums; these will be "upper sums" (i.e. the sum above k). */
+    arma::mat sxx_upper(d, d, arma::fill::zeros);
+    arma::mat sxy_upper(d, 1, arma::fill::zeros);
+    // The "lower sums" (i.e. those below k)
+    arma::mat sxx_lower(d, d, arma::fill::zeros);
+    arma::mat sxy_lower(d, 1, arma::fill::zeros);
+    if (fast) {
+        // Normal equations will be used for fast computation
+        /* Get lower sums; go to kn - 1 to prevent double-counting in main 
+         * loop */
+        for (int i = 0; i < kn - 1; ++i) {
+            sxx_lower += X.row(i).t() * X.row(i);
+            sxy_lower += X.row(i).t() * y(i);
+        }
+        // Get upper sum
+        for (int i = kn - 1; i < n; ++i) {
+            sxx_upper += X.row(i).t() * X.row(i);
+            sxy_upper += X.row(i).t() * X.row(i);
+        }
+    }
+
+    // The maximum, which will be returned
+    double M = 0;
+    // A candidate for the new maximum, used in a loop
+    double M_candidate;
+    // Estimate for change location
+    int est = n;
+    // Omega matrix involved in covariance estimator
+    arma::mat Omega(d, d, arma::fill::zeros);
+    /* A vector that will contain the value of the statistic at each n checked;
+     * relevant only if get_all_vals == TRUE */
+    NumericVector all_vals = NumericVector::create();
+
+    // Lower/upper coefficient estimates
+    arma::vec beta_lower(d, arma::fill::zeros);
+    arma::vec beta_upper(d, arma::fill::zeros);
+
+    double s2 = 0;  // Used in the loop (part of estimating Omega)
+
+    // Compute the test statistic
+    for (int k = kn; k <= (n - kn); ++k) {
+        if (fast) {
+            sxx_lower += X.row(k - 1).t() * X.row(k - 1);
+            sxy_lower += X.row(k - 1).t() * y(k - 1);
+            sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
+            sxx_upper -= X.row(k - 1).t() * y(k - 1);
+
+            beta_lower = arma::solve(sxx_lower, sxy_lower);
+            beta_upper = arma::solve(sxx_upper, sxy_upper);
+        } else {
+            beta_lower = arma::solve(X.head_rows(k), y.head(k));
+            beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
+        }
+
+        // TODO: curtis: IMPLEMENT REST OF LING TEST -- Wed 09 Jan 2019 03:01:43 PM MST
+
+        Omega *= 0;
+        for (int j = 0; j < n; ++j) {
+            if (j < k) {
+                s2 = y(j) - arma::dot(beta_lower, X.row(j));
+            } else {
+                s2 = y(j) - arma::dot(beta_upper, X.row(j));
+            }
+            s2 *= s2;   // Square it
+            Omega += s2 * (X.row(j).t() * X.row(j));
+        }
+
+        Omega *= 2;
+
+        // Compute candidate
+        M_candidate = norm_inv_A_square(Sigma * (beta_lower - beta_upper),
+                                        Omega);
+        M_candidate *= static_cast<double>(k * (n - k)) / (n * n);
+        M_candidate -= b_n[k - 1];
+        M_candidate /= a_n[k - 1];
+
+        // If we are getting all values, add another value to all_vals
+        if (get_all_vals) {
+            all_vals.push_back(M_candidate * sqrt(kn));
+        }
+        // Choose new maximum
+        if (M_candidate > M) {
+            M = M_candidate;
+            est = k;
+        }
+    }
+
+    return List::create(Named("statistic") = M,
+                        Named("estimate") = est,
+                        Named("stat_vals") = all_vals);
+}
+
 // Function used for computing long-run variance; see R function get_lrv_vec()
 // [[Rcpp::export]]
 NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
@@ -309,4 +419,73 @@ NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
     }
     
     return(sigma);
+}
+
+// [[Rcpp::export]]
+NumericVector get_reg_lrv_arr_cpp(const NumericMatrix& X_input,
+                                  const NumericVector& y_input,
+                                  const NumericVector& kern,
+                                  const int& max_l, const bool& fast = false) {
+    unsigned int n = X_input.rows();
+    unsigned int d = X_input.cols();
+    if (y_input.size() != n) {
+        throw std::range_error("Bad y passed; must have one column and same "
+                               "number of rows as data matrix X");
+    }
+
+    const arma::mat X = as<arma::mat>(X_input);
+    const arma::vec y = as<arma::vec>(y_input);
+    // n - 2 * d is because you need at least d observations to not be
+    // underdetermined
+    arma::cube lrv_est_cube(d, d, n - 2 * d, arma::fill::zeros);
+
+    /* Call X the data matrix and X' its transpose; then X'X and X'y are sums. I
+     * want sums; these will be "upper sums" (i.e. the sum above k). */
+    arma::mat sxx_upper(d, d, arma::fill::zeros);
+    arma::mat sxy_upper(d, 1, arma::fill::zeros);
+    // The "lower sums" (i.e. those below k)
+    arma::mat sxx_lower(d, d, arma::fill::zeros);
+    arma::mat sxy_lower(d, d, arma::fill::zeros);
+    if (fast) {
+        // Normal equations will be used for fast computation
+        /* Get lower sums; go to d - 1 to prevent double-counting in main
+         * loop */
+        for (int i = 0; i < d - 1; ++i) {
+            sxx_lower += X.row(i).t() * X.row(i);
+            sxy_lower += X.row(i).t() * y(i);
+        }
+        // Get upper sum
+        for (int i = d - 1; i < n; ++i) {
+            sxx_upper += X.row(i).t() * X.row(i);
+            sxy_upper += X.row(i).t() * y(i);
+        }
+    }
+
+    // Lower/upper coefficient estimates
+    arma::vec beta_lower(d, arma::fill::zeros);
+    arma::vec beta_upper(d, arma::fill::zeros);
+
+    // Estimated error vectors
+    arma::vec eps_lower(n, arma::fill::zeros);
+    arma::vec eps_upper(n, arma::fill::zeros);
+
+    for (int k = d; k <= (n - d); ++k) {
+        if (fast) {
+            sxx_lower += X.row(k - 1).t() * X.row(k - 1);
+            sxy_lower += X.row(k - 1).t() * y(k - 1);
+            sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
+            sxy_upper -= X.row(k - 1).t() * y(k - 1);
+
+            beta_lower = arma::solve(sxx_lower, sxy_lower);
+            beta_upper = arma::solve(sxx_upper, sxy_upper);
+        } else {
+            beta_lower = arma::solve(X.head_rows(k), y.head(k));
+            beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
+        }
+
+        eps_lower = y - arma::vec(X * beta_lower);
+        eps_upper = y - arma::vec(X * beta_upper);
+
+        // TODO: curtis: REST OF ALGORITHM -- Mon 07 Jan 2019 05:38:36 PM MST
+    }
 }

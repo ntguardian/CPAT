@@ -40,6 +40,47 @@ besselJ_zeros <- function(b, a = 1, nu = 1) {
   besselJ_zeros_cpp(nu, a, b)
 }
 
+#' Sequence \eqn{b_n} of the Darling-Erdös Law
+#'
+#' Generates a vector containing the sequence \eqn{b_n(m) = (2 \log \log (n) +
+#' (m \log \log \log n) / 2 - log(\Gamma(m/2)))^2/(2 \log \log n)}
+#'
+#' @param n The parameter \eqn{n}
+#' @return A vector containing the sequence \eqn{b_n(m)} for \eqn{m \in \{1,
+#'         \ldots, n\}}
+#' @examples
+#' b_n(5)
+b_n <- function(n) {
+  # Computing log(Γ(n/2)) basically by hand since the function gamma() will fail
+  # if n is too large
+  if (n %% 2 == 0) {
+    loggamma_n_over_2 <- sum(log(1:(n/2 - 1)))
+  } else {
+    loggamma_n_over_2 <- log(pi)/2 - (n + 1) * log(2)/2 +
+      sum(log((1:((n - 1)/2)) - 1))
+  }
+  x <- (2 * log(log(n)) + (1:n * log(log(log(n))))/2 - loggamma_n_over_2)^2 /
+    (2 * log(log(n)))
+  x <- ifelse(!is.finite(x), 0, x)
+  x
+}
+
+#' Sequence \eqn{a_n} of the Darling-Erdös Law
+#'
+#' Generates a vector containing the sequence \eqn{a_n(m) = \sqrt{b_n(m)/(2 \log
+#' \log n)}}, with \eqn{b_n(m)} as described by \code{\link{b_n}}.
+#'
+#' @param n The parameter \eqn{n}
+#' @return A vector containing the sequence \eqn{a_n(m)} for \eqn{m \in \{1,
+#'         \ldots, n\}}
+#' @examples
+#' a_n(5)
+a_n <- function(n) {
+  x <- sqrt(b_n(n)/(2 * log(log(n))))
+  x <- ifelse(!is.finite(x), 0, x)
+  x
+}
+
 ################################################################################
 # MATH UTILITIES
 ################################################################################
