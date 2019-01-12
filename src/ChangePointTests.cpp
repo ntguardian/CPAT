@@ -277,10 +277,11 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
 }
 
 // [[Rcpp::export]]
+// XXX: curtis: THIS CODE WORKS CORRECTLY BUT THE RESULTS ARE GARBAGE FROM A
+// STATISTICAL PERSPECTIVE -- Fri 11 Jan 2019 06:12:52 PM MST
 List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
-                     const double& kn, const NumericVector& a_n,
-                     const NumericVector& b_n, const bool& get_all_vals,
-                     const bool& fast = false) {
+                     const double& kn, const double& a_n, const double& b_n,
+                     const bool& get_all_vals, const bool& fast = false) {
     const unsigned int n = X_input.rows();
     const unsigned int d = X_input.cols();
     if (y_input.size() != n) {
@@ -310,12 +311,12 @@ List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
         // Get upper sum
         for (int i = kn - 1; i < n; ++i) {
             sxx_upper += X.row(i).t() * X.row(i);
-            sxy_upper += X.row(i).t() * X.row(i);
+            sxy_upper += X.row(i).t() * y(i);
         }
     }
 
     // The maximum, which will be returned
-    double M = 0;
+    double M;
     // A candidate for the new maximum, used in a loop
     double M_candidate;
     // Estimate for change location
@@ -333,12 +334,12 @@ List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     double s2 = 0;  // Used in the loop (part of estimating Omega)
 
     // Compute the test statistic
-    for (int k = kn; k <= (n - kn); ++k) {
+    for (int k = kn + 1; k < (n - kn); ++k) {
         if (fast) {
             sxx_lower += X.row(k - 1).t() * X.row(k - 1);
             sxy_lower += X.row(k - 1).t() * y(k - 1);
             sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
-            sxx_upper -= X.row(k - 1).t() * y(k - 1);
+            sxy_upper -= X.row(k - 1).t() * y(k - 1);
 
             beta_lower = arma::solve(sxx_lower, sxy_lower);
             beta_upper = arma::solve(sxx_upper, sxy_upper);
@@ -346,8 +347,6 @@ List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
             beta_lower = arma::solve(X.head_rows(k), y.head(k));
             beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
         }
-
-        // TODO: curtis: IMPLEMENT REST OF LING TEST -- Wed 09 Jan 2019 03:01:43 PM MST
 
         Omega *= 0;
         for (int j = 0; j < n; ++j) {
@@ -360,21 +359,20 @@ List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
             Omega += s2 * (X.row(j).t() * X.row(j));
         }
 
-        Omega *= 2;
-
         // Compute candidate
         M_candidate = norm_inv_A_square(Sigma * (beta_lower - beta_upper),
                                         Omega);
-        M_candidate *= static_cast<double>(k * (n - k)) / (n * n);
-        M_candidate -= b_n[k - 1];
-        M_candidate /= a_n[k - 1];
+        M_candidate *= static_cast<double>(k * (n - k)) /
+            static_cast<double>(n * n);
+        M_candidate -= b_n;
+        M_candidate /= a_n;
 
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
-            all_vals.push_back(M_candidate * sqrt(kn));
+            all_vals.push_back(M_candidate);
         }
         // Choose new maximum
-        if (M_candidate > M) {
+        if ((M_candidate > M) || (k == kn)) {
             M = M_candidate;
             est = k;
         }

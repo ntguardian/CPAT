@@ -42,24 +42,16 @@ besselJ_zeros <- function(b, a = 1, nu = 1) {
 
 #' Sequence \eqn{b_n} of the Darling-Erdös Law
 #'
-#' Generates a vector containing the sequence \eqn{b_n(m) = (2 \log \log (n) +
-#' (m \log \log \log n) / 2 - log(\Gamma(m/2)))^2/(2 \log \log n)}
+#' Computes \eqn{b_n(m) = (2 \log \log (n) + (m \log \log \log n) / 2 -
+#' \log(\Gamma(m/2)))^2/(2 \log \log n)}
 #'
 #' @param n The parameter \eqn{n}
-#' @return A vector containing the sequence \eqn{b_n(m)} for \eqn{m \in \{1,
-#'         \ldots, n\}}
+#' @param m The parameter \eqn{m}
+#' @return The number \eqn{b_n(m)}
 #' @examples
-#' b_n(5)
-b_n <- function(n) {
-  # Computing log(Γ(n/2)) basically by hand since the function gamma() will fail
-  # if n is too large
-  if (n %% 2 == 0) {
-    loggamma_n_over_2 <- sum(log(1:(n/2 - 1)))
-  } else {
-    loggamma_n_over_2 <- log(pi)/2 - (n + 1) * log(2)/2 +
-      sum(log((1:((n - 1)/2)) - 1))
-  }
-  x <- (2 * log(log(n)) + (1:n * log(log(log(n))))/2 - loggamma_n_over_2)^2 /
+#' b_n(5, 2)
+b_n <- function(n, m) {
+  x <- (2 * log(log(n)) + (m * log(log(log(n))))/2 - log(gamma(m/2)))^2 /
     (2 * log(log(n)))
   x <- ifelse(!is.finite(x), 0, x)
   x
@@ -67,16 +59,16 @@ b_n <- function(n) {
 
 #' Sequence \eqn{a_n} of the Darling-Erdös Law
 #'
-#' Generates a vector containing the sequence \eqn{a_n(m) = \sqrt{b_n(m)/(2 \log
-#' \log n)}}, with \eqn{b_n(m)} as described by \code{\link{b_n}}.
+#' Computes \eqn{a_n(m) = \sqrt{b_n(m)/(2 \log \log n)}}, with \eqn{b_n(m)} as
+#' described by \code{\link{b_n}}.
 #'
 #' @param n The parameter \eqn{n}
-#' @return A vector containing the sequence \eqn{a_n(m)} for \eqn{m \in \{1,
-#'         \ldots, n\}}
+#' @param m The parameter \eqn{m}
+#' @return The number \eqn{a_n(m)}
 #' @examples
-#' a_n(5)
-a_n <- function(n) {
-  x <- sqrt(b_n(n)/(2 * log(log(n))))
+#' a_n(5, 2)
+a_n <- function(n, m) {
+  x <- sqrt(b_n(n, m)/(2 * log(log(n))))
   x <- ifelse(!is.finite(x), 0, x)
   x
 }

@@ -247,7 +247,7 @@ pZn <- Vectorize(pZn, "q")
 #'         distribution, the quantity \eqn{P(Z \leq q)}
 #' @examples
 #' CPAT:::phidalgo_seo(0.1)
-phidalgo_seo <- function(q) {
+phidalgo_seo <- function(q)
   # Formerly called pHidalgoSeo
   pdarling_erdos(q/2)
 }

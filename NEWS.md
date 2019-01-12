@@ -1,5 +1,10 @@
 # CPAT News
 
+## Version 0.2.0
+---
+
+- **TODO: VARIOUS FUNCTIONS FOR LINEAR REGRESSION STRUCTURAL CHANGE TEST**
+
 ## Version 0.1.0
 ---
 
