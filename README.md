@@ -28,8 +28,10 @@ early/late changes in a sample. That said, it is general purpose.
 
 ## Installation
 
-**CPAT** is not presently available on CRAN. You can download **CPAT** from
-GitHub via the R command `devtools::install_github("ntguardian/CPAT")`.
+[**CPAT** is available on CRAN.](https://cran.r-project.org/package=CPAT) You
+should be able to install CPAT with the command `install.packages("CPAT")`.
+
+You can install **CPAT** from GitHub via the R command `devtools::install_github("ntguardian/CPAT")`.
 
 It is possible that you have uncompressed the archive containing not only the
 source code of the package but also the source code of the project, including
