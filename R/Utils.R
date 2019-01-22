@@ -41,3 +41,21 @@ NULL
 #' `%s0%` <- CPAT:::`%s0%`
 #' "Hello" %s0% "world"
 `%s0%` <- function(x, y) {paste0(x, y)}
+
+################################################################################
+# CLASS CHECKING
+################################################################################
+
+#' Check For Formulas
+#'
+#' Checks if an object is a formula.
+#'
+#' @param x Object to check
+#' @return \code{TRUE} if \code{x} is a \code{\link[stats]{formula}},
+#'         \code{FALSE} otherwise
+#' @examples
+#' CPAT:::is.formula(y ~ x)
+#' CPAT:::is.formula(2)
+is.formula <- function(x) {
+  is(x, "formula")
+}

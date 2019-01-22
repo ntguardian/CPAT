@@ -960,7 +960,7 @@ andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
 #' parameter \code{m}, which can be either numeric or a function that returns
 #' numeric values.
 #'
-#' @param formula A \code{\link[base]{formula}} that describes the regression
+#' @param formula A \code{\link[stats]{formula}} that describes the regression
 #'                model
 #' @param data A \code{\link[base]{data.frame}}-like object containing the data
 #'             set; should be able to be passed to the \code{data} argument of
@@ -1069,7 +1069,7 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
   if (is.numeric(x)) {
     testobj$method <- "CUSUM Test for Change in Mean"
   } else if (is.data.frame(x)) {
-    if (is.null(formula)) {stop("Formula needed for data.frame input")}
+    if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "CUSUM Test for Structural Change"
     fit <- lm(formula = formula, data = x)
     x <- residuals(fit)
@@ -1147,7 +1147,7 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
   if (is.numeric(x)) {
     testobj$method <- "Darling-Erd\u00F6s Test for Change in Mean"
   } else if (is.data.frame(x)) {
-    if (is.null(formula)) {stop("Formula needed for data.frame input")}
+    if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Darling-Erd\u00F6s Test for Structural Change"
     fit <- lm(formula = formula, data = x)
     x <- residuals(fit)
@@ -1296,7 +1296,7 @@ HS.test <- function(x, formula = NULL, m = sqrt, corr = TRUE,
     res <- stat_hs(x, m = m, estimate = TRUE, corr = corr,
                    get_all_vals = stat_plot)
   } else if (is.data.frame(x)) {
-    if (is.null(formula)) {stop("Formula needed for data.frame input")}
+    if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Hidalgo-Seo Test for Structural Change"
 
     res <- stat_hs_reg(formula = formula, data = x, estimate = TRUE, m = m,
@@ -1352,6 +1352,7 @@ Andrews.test <- function(x, M, formula = NULL) {
     mchange <- length(x) - M
     res <- andrews_test(x, M, pval = TRUE, stat = TRUE)
   } else if (is.data.frame(x)) {
+    if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     mchange <- nrow(x) - M
     res <- andrews_test_reg(formula, x, M, pval = TRUE, stat = TRUE)
   } else {

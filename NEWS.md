@@ -3,7 +3,20 @@
 ## Version 0.2.0
 ---
 
-- **TODO: VARIOUS FUNCTIONS FOR LINEAR REGRESSION STRUCTURAL CHANGE TEST**
+- Updated `DE.test()` to work with linear regression models (computes residuals
+    of model then applies test to them); added `formula` argument
+- Updated `HS.test()` to work with linear regression models (implements Hidalgo
+    and Seo's test when derived for linear regression models); added `formula`
+    argument
+- Added `m` argument to `HS.test()` that adds control for how many terms are
+    summed when estimating the long-run variance
+- Updated `CUSUM.test()` to work with linear regression models (computes
+    residuals of model then applies test to them); added `formula` argument
+- `Andrews.test()` now gives a different error message when data is not numeric
+    or if a regression setup was incorrectly specified
+- `DE.test()`, `HS.test()`, `CUSUM.test()`, and `Andrews.test()` now need
+    argument `x` to be either `numeric` or a `data.frame`, and will complain if
+    this is not the case
 
 ## Version 0.1.0
 ---
