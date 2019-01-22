@@ -19,5 +19,5 @@ Computes \eqn{b_n(m) = (2 \log \log (n) + (m \log \log \log n) / 2 -
 \log(\Gamma(m/2)))^2/(2 \log \log n)}
 }
 \examples{
-b_n(5, 2)
+CPAT:::b_n(5, 2)
 }

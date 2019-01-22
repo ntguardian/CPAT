@@ -2,11 +2,11 @@
 % Please edit documentation in R/ChangePointTests.R
 \name{stat_hs}
 \alias{stat_hs}
-\title{Compute the Hidalgo-Seo Statistic}
+\title{Compute the Univariate Hidalgo-Seo Statistic}
 \usage{
-stat_hs(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
-  custom_var = NULL, use_kernel_var = FALSE, kernel = "ba",
-  bandwidth = "and")
+stat_hs(dat, estimate = FALSE, corr = TRUE, m = sqrt,
+  get_all_vals = FALSE, custom_var = NULL, use_kernel_var = FALSE,
+  kernel = "ba", bandwidth = "and")
 }
 \arguments{
 \item{dat}{The data vector}
@@ -17,6 +17,9 @@ change point}
 \item{corr}{If \code{TRUE}, the long-run variance will be computed under the
 assumption of correlated residuals; ignored if \code{custom_var}
 is not \code{NULL} or \code{use_kernel_var} is \code{TRUE}}
+
+\item{m}{Either numeric or a function that returns numeric; corresponds to
+\eqn{m} used in computing the estimate of the long-run variance}
 
 \item{get_all_vals}{If \code{TRUE}, return all values for the statistic at
 every tested point in the data set}
@@ -80,9 +83,10 @@ b_n^2/a_n^2}, \eqn{\hat{\Delta} = \hat{\sigma}^2 = n^{-1} \sum_{t = 1}^{n}
 
 If \code{corr} is \code{FALSE}, then the residuals are assumed to be
 uncorrelated. Otherwise, the residuals are assumed to be correlated and
-\eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
-\rfloor} (1 - \frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j)
-= \frac{1}{n}\sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}.
+\eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor m \rfloor} (1 -
+\frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j) = \frac{1}{n}
+\sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}. \eqn{m} is controlled by the
+parameter \code{m}.
 
 This statistic was presented in \insertCite{hidalgoseo13}{CPAT}.
 }

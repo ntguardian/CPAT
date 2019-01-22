@@ -49,7 +49,7 @@ besselJ_zeros <- function(b, a = 1, nu = 1) {
 #' @param m The parameter \eqn{m}
 #' @return The number \eqn{b_n(m)}
 #' @examples
-#' b_n(5, 2)
+#' CPAT:::b_n(5, 2)
 b_n <- function(n, m) {
   x <- (2 * log(log(n)) + (m * log(log(log(n))))/2 - log(gamma(m/2)))^2 /
     (2 * log(log(n)))
@@ -66,7 +66,7 @@ b_n <- function(n, m) {
 #' @param m The parameter \eqn{m}
 #' @return The number \eqn{a_n(m)}
 #' @examples
-#' a_n(5, 2)
+#' CPAT:::a_n(5, 2)
 a_n <- function(n, m) {
   x <- sqrt(b_n(n, m)/(2 * log(log(n))))
   x <- ifelse(!is.finite(x), 0, x)

@@ -80,5 +80,5 @@ IGNORED AND \code{custom_var} SHOULD NOT BE NULL, BUT CREATE A MATRIX THE
 SAME DIMENSION AS THE REGRESSION MODEL.
 }
 \examples{
-stat_Zn_reg()  # TODO: EXAMPLE
+CPAT:::stat_Zn_reg()  # TODO: EXAMPLE
 }

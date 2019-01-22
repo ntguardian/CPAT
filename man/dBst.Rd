@@ -38,5 +38,5 @@ k}^{\nu + 1}}{J_{\nu + 1}(j_{\nu, k})} e^{-\frac{j_{\nu, k}^2}{2b^2}t}}
 This was found by differentiating the CDF computed by \code{\link{pBst}}.
 }
 \examples{
-dBst(0.1, 1)
+CPAT:::dBst(0.1, 1)
 }

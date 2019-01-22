@@ -10,6 +10,8 @@ dZn(x, d = 1, summands = NULL)
 \item{x}{Point at which to evaluate the density function (note that this
 parameter is not vectorized)}
 
+\item{d}{Dimension parameter}
+
 \item{summands}{Number of summands to use in summation (the default should be
 machine accurate)}
 }
@@ -22,7 +24,7 @@ distribution of the Rényi-type statistic.
 }
 \details{
 The density function was found by differentiating the CDF, as described by
-\code{\eqn{pZn}}.
+\code{\link{pZn}}.
 }
 \examples{
 CPAT:::dZn(1)

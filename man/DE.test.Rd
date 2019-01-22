@@ -4,11 +4,16 @@
 \alias{DE.test}
 \title{Darling-Erdös Test}
 \usage{
-DE.test(x, a = log, b = log, use_kernel_var = FALSE,
-  stat_plot = FALSE, kernel = "ba", bandwidth = "and")
+DE.test(x, formula = NULL, a = log, b = log,
+  use_kernel_var = FALSE, stat_plot = FALSE, kernel = "ba",
+  bandwidth = "and")
 }
 \arguments{
-\item{x}{Data to test for change in mean}
+\item{x}{Data to test for change in mean (either a
+\code{\link[base]{numeric}} vector or a
+\code{\link[base]{data.frame}})}
+
+\item{formula}{Formula used for defining the regression model, if applicable}
 
 \item{a}{The function that will be composed with
 \eqn{l(x) = (2 \log x)^{1/2}}}
@@ -49,16 +54,30 @@ A \code{htest}-class object containing the results of the test
 }
 \description{
 Performs the (univariate) Darling-Erdös test for change in mean, as described
-in \insertCite{horvathricemiller19}{CPAT}. This is effectively an interface
-to \code{\link{stat_de}}; see its documentation for more details. p-values
-are computed using \code{\link{pdarling_erdos}}, which represents the
-limiting distribution of the test statistic under the null hypothesis when
-\code{a} and \code{b} are chosen appropriately. (Change those parameters at
-your own risk!)
+in \insertCite{horvathricemiller19}{CPAT}.
+}
+\details{
+This is effectively an interface to \code{\link{stat_de}}; see its
+documentation for more details.
+
+When \code{x} is a (numeric) vector, the CUSUM test is perfomed directly on
+the data. When \code{x} is a \code{\link[base]{data.frame}} and
+\code{formula} is not \code{NULL}, then a regression model is estimated first
+with \code{\link[stats]{lm}} and the test is performed on the residuals of
+the regression model.
+
+p-values are computed using \code{\link{pdarling_erdos}}, which represents
+the limiting distribution of the test statistic under the null hypothesis
+when \code{a} and \code{b} are chosen appropriately. (Change those parameters
+at your own risk!)
 }
 \examples{
 DE.test(rnorm(1000))
 DE.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo", bandwidth = "nw")
+x <- rnorm(1000)
+y <- 1 + 2 * x + rnorm(1000)
+df <- data.frame(x, y)
+DE.test(df, formula = y ~ x, use_kernel_var = TRUE)
 }
 \references{
 \insertAllCited{}

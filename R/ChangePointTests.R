@@ -461,7 +461,7 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
   }
 }
 
-#' Compute the Hidalgo-Seo Statistic
+#' Compute the Univariate Hidalgo-Seo Statistic
 #'
 #' This function computes the Hidalgo-Seo statistic for a change in mean model.
 #'
@@ -478,9 +478,10 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'
 #' If \code{corr} is \code{FALSE}, then the residuals are assumed to be
 #' uncorrelated. Otherwise, the residuals are assumed to be correlated and
-#' \eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor \sqrt{n}
-#' \rfloor} (1 - \frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j)
-#' = \frac{1}{n}\sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}.
+#' \eqn{\hat{\Delta} = \hat{\gamma}(0) + 2 \sum_{j = 1}^{\lfloor m \rfloor} (1 -
+#' \frac{j}{\sqrt{n}}) \hat{\gamma}(j)} with \eqn{\hat{\gamma}(j) = \frac{1}{n}
+#' \sum_{t = 1}^{n - j} \hat{u}_t \hat{u}_{t + j}}. \eqn{m} is controlled by the
+#' parameter \code{m}.
 #'
 #' This statistic was presented in \insertCite{hidalgoseo13}{CPAT}.
 #'
@@ -492,6 +493,8 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #'             is not \code{NULL} or \code{use_kernel_var} is \code{TRUE}
 #' @param get_all_vals If \code{TRUE}, return all values for the statistic at
 #'                   every tested point in the data set
+#' @param m Either numeric or a function that returns numeric; corresponds to
+#'          \eqn{m} used in computing the estimate of the long-run variance
 #' @param custom_var Can be a vector the same length as \code{dat} consisting of
 #'                   variance-like numbers at each potential change point (so
 #'                   each entry of the vector would be the "best estimate" of
@@ -533,9 +536,9 @@ stat_de <- function(dat, a = log, b = log, estimate = FALSE,
 #' @examples
 #' CPAT:::stat_hs(rnorm(1000))
 #' CPAT:::stat_hs(rnorm(1000), corr = FALSE)
-stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
-                    custom_var = NULL, use_kernel_var = FALSE, kernel = "ba",
-                    bandwidth = "and") {
+stat_hs <- function(dat, estimate = FALSE, corr = TRUE, m = sqrt,
+                    get_all_vals = FALSE, custom_var = NULL,
+                    use_kernel_var = FALSE, kernel = "ba", bandwidth = "and") {
   # Formerly named statHS()
 
   n <- length(dat)
@@ -543,7 +546,9 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, get_all_vals = FALSE,
   u <- dat - mu
 
   if (corr) {
-    m <- sqrt(n)
+    if (is.function(m)) {
+      m <- m(n)
+    }
     Delta <- sum(u^2) / n + sum(sapply(1:m, function(j) {
       2 * (1 - j/m) * sum(u[(j + 1):n] * u[1:(n - j)])/n
     }))
@@ -793,7 +798,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' @inheritParams stat_Zn
 #' @return TODO: RETURN VALUE DESCRIPTION
 #' @examples
-#' stat_Zn_reg()  # TODO: EXAMPLE
+#' CPAT:::stat_Zn_reg()  # TODO: EXAMPLE
 stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                         estimate = FALSE, use_kernel_var = FALSE,
                         custom_var = NULL, kernel = "ba", bandwidth = "and",
@@ -921,19 +926,126 @@ andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
   }
 }
 
+#' Regression Model Hidalgo-Seo Statistic
+#'
+#' Compute the Hidalgo-Seo statistic indended for detecting change in linear
+#' models (estimated via least squares regression).
+#'
+#' For a data set \eqn{(y_t, x_t)} with \eqn{n} observations, \eqn{y_t \in
+#' \mathbf{R}}, and \eqn{x_t \in \mathbf{R}^d}, the test statistic is
+#'
+#' \deqn{\max_{d < s \leq n - d} 	(\mathcal{LM}(s) - B_n)/A_n}
+#'
+#' where \eqn{a_n = \sqrt{2 \log \log n}}; \eqn{b_n = a_n^2 + d \log \log \log n
+#' / 2 - \log \Gamma(d/2)}; \eqn{A_n = b_n/a_n^2}; \eqn{B_n = b_n^2/a_n^2};
+#' \eqn{\hat{\beta}} is the least-squares estimate of the linear regression
+#' model coefficients; \eqn{\hat{u}_t = y_t - \hat{\beta}^T x_t} are the
+#' residuals of the model;
+#'
+#' \deqn{\mathcal{LM}(s) = \left(\frac{n}{\hat{\Delta}(\hat{\beta}) s (n - s)}
+#' \right) \left(\sum_{t = 1}^s x_t \hat{u}_t \right)^T\left(\sum_{t = 1}^s x_t
+#' \hat{u}_t \right)^T}
+#'
+#' and \eqn{\hat{\Delta}(\hat{\beta})} is the long-run variance estimator
+#'
+#' \deqn{\hat{\Delta}(\beta) = \frac{1}{m} \sum_{j = 1}^m I\left( \frac{2\pi
+#' j}{n}; \beta\right)}
+#'
+#' where \eqn{I(\cdot ; \beta)} is the periodogram estimated from the residuals
+#' when the regression model coefficients are given by \eqn{\beta}. This is the
+#' test statistic suggested by the procedure introduced in
+#' \insertCite{hidalgoseo13}{CPAT}.
+#'
+#' The parameter \eqn{m} described above can be controlled via the function
+#' parameter \code{m}, which can be either numeric or a function that returns
+#' numeric values.
+#'
+#' @param formula A \code{link[base]{formula}} that describes the regression
+#'                model
+#' @param data A \code{\link[base]{data.frame}}-like object containing the data
+#'             set; should be able to be passed to the \code{data} argument of
+#'             \code{\link[stats]{lm}}
+#' @param m If numeric, the number of terms of the periodogram to sum; if a
+#'          function, how to compute the number of terms to sum (will be passed
+#'          the number of rows of \code{data})
+#' @param get_all_vals If \code{TRUE}, return all values for the statistic at
+#'                   every tested point in the data set
+#' @param estimate Set to \code{TRUE} to return the estimated location of the
+#'                 change point
+#' @return If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
+#'         value of the test statistic; otherwise, a list that contains the test
+#'         statistic and the other values requested (if both are \code{TRUE},
+#'         the test statistic is in the first position and the estimated change
+#'         point in the second)
+#' @references
+#'  \insertAllCited{}
+#' @examples
+#' x <- rnorm(100)
+#' y <- 1 + 2 * x + rnorm(100)
+#' df <- data.frame("x" = x, "y" = y)
+#' CPAT:::stat_hs_reg(y ~ x, data = df)
+stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
+                        get_all_vals = FALSE) {
+  if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
+                                    "argument \"formula\"")
+  fit <- lm(formula = formula, data = data)
+  X <- model.matrix(fit)
+  d <- ncol(X)
+  eps <- residuals(fit)
+  n <- length(eps)
+  if (is.function(m)) {
+    m <- m(n)
+  }
+  lrv <- sum((abs(fft(eps))^2)[1:m])/(n * m)
+
+  lms <- function(s) {
+    sum_of_gt <- colSums((X * eps)[1:s,])
+    sum(sum_of_gt * sum_of_gt) * n /(s * (n - s) * lrv)
+  }
+  lms <- Vectorize(lms)
+  b_n <- 2 * log(log(n)) + d/2 * log(log(log(n))) - log(gamma(d/2))
+  a_n <- sqrt(2 * log(log(n)))
+  A_n <- b_n/a_n^2
+  B_n <- b_n^2/a_n^2
+
+  stat_vals <- (lms((d + 1):(n - d)) - B_n)/A_n
+  stat <- max(stat_vals)
+  est <- which.max(stat_vals)
+  res <- list("statistic" = stat,
+              "estimate" = est,
+              "stat_vals" = stat_vals)
+
+  if (!estimate & !get_all_vals) {
+    return(res[[1]])
+  } else {
+    return(res[c(TRUE, estimate, get_all_vals)])
+  }
+}
+
 ################################################################################
 # STATISTICAL TEST INTERFACES
 ################################################################################
 
 #' CUSUM Test
 #'
-#' Performs the (univariate) CUSUM test for change in mean, as described in
-#' \insertCite{horvathricemiller19}{CPAT}. This is effectively an interface to
-#' \code{\link{stat_Vn}}; see its documentation for more details. p-values are
-#' computed using \code{\link{pkolmogorov}}, which represents the limiting
-#' distribution of the statistic under the null hypothesis.
+#' Performs the CUSUM test for change in mean, as described in
+#' \insertCite{horvathricemiller19}{CPAT}.
 #'
-#' @param x Data to test for change in mean
+#' This is effectively an interface to \code{\link{stat_Vn}}; see its
+#' documentation for more details.
+#'
+#' When \code{x} is a (numeric) vector, the CUSUM test is perfomed directly on
+#' the data. When \code{x} is a \code{\link[base]{data.frame}} and
+#' \code{formula} is not \code{NULL}, then a regression model is estimated first
+#' with \code{\link[stats]{lm}} and the test is performed on the residuals of
+#' the regression model (see \insertCite{plobergerkramer92}{CPAT}).
+#'
+#' p-values are computed using \code{\link{pkolmogorov}}, which represents the
+#' limiting distribution of the statistic under the null hypothesis.
+#'
+#' @param x Data to test for change in mean (either \code{\link[base]{numeric}}
+#'          or a \code{\link[base]{data.frame}})
+#' @param formula Formula used for defining the regression model, if applicable
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'        all potential change points
 #' @inheritParams stat_Vn
@@ -944,12 +1056,26 @@ andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
 #' CUSUM.test(rnorm(1000))
 #' CUSUM.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo",
 #'            bandwidth = "nw")
+#' x <- rnorm(1000)
+#' y <- 1 + 2 * x + rnorm(1000)
+#' df <- data.frame(x, y)
+#' CUSUM.test(df, formula = y ~ x, use_kernel_var = TRUE)
 #' @export
-CUSUM.test <- function(x, use_kernel_var = FALSE, stat_plot = FALSE,
-                     kernel = "ba", bandwidth = "and") {
+CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
+                       stat_plot = FALSE,
+                       kernel = "ba", bandwidth = "and") {
   testobj <- list()
-  testobj$method <- "CUSUM Test for Change in Mean"
   testobj$data.name <- deparse(substitute(x))
+  if (is.numeric(x)) {
+    testobj$method <- "CUSUM Test for Change in Mean"
+  } else if (is.data.frame(x)) {
+    if (is.null(formula)) {stop("Formula needed for data.frame input")}
+    testobj$method <- "CUSUM Test for Structural Change"
+    fit <- lm(formula = formula, data = x)
+    x <- residuals(fit)
+  } else {
+    stop("Don't know how to handle x of type" %s% class(x))
+  }
 
   res <- stat_Vn(x,
                  estimate = TRUE,
@@ -976,14 +1102,26 @@ CUSUM.test <- function(x, use_kernel_var = FALSE, stat_plot = FALSE,
 #' Darling-Erdös Test
 #'
 #' Performs the (univariate) Darling-Erdös test for change in mean, as described
-#' in \insertCite{horvathricemiller19}{CPAT}. This is effectively an interface
-#' to \code{\link{stat_de}}; see its documentation for more details. p-values
-#' are computed using \code{\link{pdarling_erdos}}, which represents the
-#' limiting distribution of the test statistic under the null hypothesis when
-#' \code{a} and \code{b} are chosen appropriately. (Change those parameters at
-#' your own risk!)
+#' in \insertCite{horvathricemiller19}{CPAT}.
 #'
-#' @param x Data to test for change in mean
+#' This is effectively an interface to \code{\link{stat_de}}; see its
+#' documentation for more details.
+#'
+#' When \code{x} is a (numeric) vector, the CUSUM test is perfomed directly on
+#' the data. When \code{x} is a \code{\link[base]{data.frame}} and
+#' \code{formula} is not \code{NULL}, then a regression model is estimated first
+#' with \code{\link[stats]{lm}} and the test is performed on the residuals of
+#' the regression model.
+#'
+#' p-values are computed using \code{\link{pdarling_erdos}}, which represents
+#' the limiting distribution of the test statistic under the null hypothesis
+#' when \code{a} and \code{b} are chosen appropriately. (Change those parameters
+#' at your own risk!)
+#'
+#' @param x Data to test for change in mean (either a
+#'          \code{\link[base]{numeric}} vector or a
+#'          \code{\link[base]{data.frame}})
+#' @param formula Formula used for defining the regression model, if applicable
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'                  all potential change points
 #' @inheritParams stat_de
@@ -993,15 +1131,30 @@ CUSUM.test <- function(x, use_kernel_var = FALSE, stat_plot = FALSE,
 #' @examples
 #' DE.test(rnorm(1000))
 #' DE.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo", bandwidth = "nw")
+#' x <- rnorm(1000)
+#' y <- 1 + 2 * x + rnorm(1000)
+#' df <- data.frame(x, y)
+#' DE.test(df, formula = y ~ x, use_kernel_var = TRUE)
 #' @export
-DE.test <- function(x, a = log, b = log, use_kernel_var = FALSE,
+DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
   l <- function(x) {sqrt(2*log(x))}
   u <- function(x) {2*log(x) + 1/2*log(log(x)) - 1/2*log(pi)}
 
   testobj <- list()
-  testobj$method <- "Darling-Erdos Test for Change in Mean"
   testobj$data.name <- deparse(substitute(x))
+
+  if (is.numeric(x)) {
+    testobj$method <- "Darling-Erd\u00F6s Test for Change in Mean"
+  } else if (is.data.frame(x)) {
+    if (is.null(formula)) {stop("Formula needed for data.frame input")}
+    testobj$method <- "Darling-Erd\u00F6s Test for Structural Change"
+    fit <- lm(formula = formula, data = x)
+    x <- residuals(fit)
+  } else {
+    stop("Don't know how to handle x of type" %s% class(x))
+  }
+
   params <- c(l(a(length(x))), u(b(length(x))))
   names(params) <- c("a(" %s0% deparse(substitute(a)) %s0% "(T))", "b(" %s0%
                      deparse(substitute(b)) %s0% "(T))")
@@ -1091,13 +1244,30 @@ HR.test <- function(x, kn = log, use_kernel_var = FALSE, stat_plot = FALSE,
 
 #' Hidalgo-Seo Test
 #'
-#' Performs the (univariate) Hidalgo-Seo test for change in mean, as described
-#' in \insertCite{horvathricemiller19}{CPAT}. This is effectively an interface
-#' to \code{\link{stat_hs}}; see its documentation for more details. p-values
-#' are computed using \code{\link{phidalgo_seo}}, which represents the limiting
-#' distribution of the test statistic when the null hypothesis is true.
+#' Performs the Hidalgo-Seo test for structural change, as proposed by
+#' \insertCite{hidalgoseo13;textual}{CPAT}.
 #'
-#' @param x Data to test for change in mean
+#' This function can perform both univariate and regression versions of the test
+#' described by Hidalgo and Seo.
+#'
+#' If \code{formula} is \code{NULL} and \code{x} is \code{\link[base]{numeric}},
+#' this function performs the (univariate) Hidalgo-Seo test for change in mean,
+#' as described in \insertCite{horvathricemiller19}{CPAT}. This is effectively
+#' an interface to \code{\link{stat_hs}}; see its documentation for more
+#' details.
+#'
+#' Otherwise, the function tests for structural change in a linear regression
+#' model (estimated via least squares), and serves as an interface to
+#' \code{\link{stat_hs_reg}}; see its documentation for more details. In this
+#' mode the parameter \code{corr} is effectively ignored.
+#'
+#' p-values are computed using \code{\link{phidalgo_seo}}, which represents the
+#' limiting distribution of the test statistic when the null hypothesis is true.
+#'
+#' @param x Data to test for change in mean (either a vector or
+#'          \code{\link[base]{data.frame}})
+#' @param formula The \code{\link[stats]{formula}} defining the regression
+#'                model, when applicable
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'        all potential change points
 #' @inheritParams stat_hs
@@ -1107,16 +1277,34 @@ HR.test <- function(x, kn = log, use_kernel_var = FALSE, stat_plot = FALSE,
 #' @examples
 #' HS.test(rnorm(1000))
 #' HS.test(rnorm(1000), corr = FALSE)
+#' x <- rnorm(1000)
+#' y <- 1 + 2 * x + rnorm(1000)
+#' df <- data.frame(x, y)
+#' HS.test(df, formula = y ~ x)
 #' @export
-HS.test <- function(x, corr = TRUE, stat_plot = FALSE) {
+HS.test <- function(x, formula = NULL, m = sqrt, corr = TRUE,
+                    stat_plot = FALSE) {
   testobj <- list()
-  testobj$method <- "Hidalgo-Seo Test for Change in Mean"
   testobj$data.name <- deparse(substitute(x))
-  params <- c(corr)
-  names(params) <- c("Correlated Residuals")
-  testobj$parameter <- params
 
-  res <- stat_hs(x, estimate = TRUE, corr = corr, get_all_vals = stat_plot)
+  if (is.numeric(x)) {
+    testobj$method <- "Hidalgo-Seo Test for Change in Mean"
+    params <- c(corr)
+    names(params) <- c("Correlated Residuals")
+    testobj$parameter <- params
+
+    res <- stat_hs(x, m = m, estimate = TRUE, corr = corr,
+                   get_all_vals = stat_plot)
+  } else if (is.data.frame(x)) {
+    if (is.null(formula)) {stop("Formula needed for data.frame input")}
+    testobj$method <- "Hidalgo-Seo Test for Structural Change"
+
+    res <- stat_hs_reg(formula = formula, data = x, estimate = TRUE, m = m,
+                       get_all_vals = stat_plot)
+  } else {
+    stop("Don't know how to handle x of type" %s% class(x))
+  }
+
   stat <- res[[1]]
   est <- res[[2]]
 
@@ -1143,7 +1331,7 @@ HS.test <- function(x, corr = TRUE, stat_plot = FALSE) {
 #' documentation of those functions for more details.
 #'
 #' @param x Data to test for change in mean (either a vector or
-#'          \code{data.frame})
+#'          \code{\link[base]{data.frame}})
 #' @inheritParams andrews_test_reg
 #' @return A \code{htest}-class object containing the results of the test
 #' @references
@@ -1167,7 +1355,7 @@ Andrews.test <- function(x, M, formula = NULL) {
     mchange <- nrow(x) - M
     res <- andrews_test_reg(formula, x, M, pval = TRUE, stat = TRUE)
   } else {
-    stop("x must be vector-like or a data frame")
+    stop("Don't know how to handle x of type" %s% class(x))
   }
 
   stat <- res[["stat"]]

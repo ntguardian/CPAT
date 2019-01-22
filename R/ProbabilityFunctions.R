@@ -35,7 +35,7 @@
 #' @inheritParams pBst
 #' @return The value of the density function at \code{x}
 #' @examples
-#' dBst(0.1, 1)
+#' CPAT:::dBst(0.1, 1)
 dBst <- function(x, b, nu = -1/2, summands = NULL) {
   if (is.null(summands)) {
     summands <- tryCatch({
@@ -71,10 +71,11 @@ dBst <- Vectorize(dBst, "x")
 #' distribution of the Rényi-type statistic.
 #'
 #' The density function was found by differentiating the CDF, as described by
-#' \code{\eqn{pZn}}.
+#' \code{\link{pZn}}.
 #'
 #' @param x Point at which to evaluate the density function (note that this
 #'          parameter is not vectorized)
+#' @param d Dimension parameter
 #' @param summands Number of summands to use in summation (the default should be
 #'                 machine accurate)
 #' @return Value of the density function at \eqn{x}
@@ -247,7 +248,7 @@ pZn <- Vectorize(pZn, "q")
 #'         distribution, the quantity \eqn{P(Z \leq q)}
 #' @examples
 #' CPAT:::phidalgo_seo(0.1)
-phidalgo_seo <- function(q)
+phidalgo_seo <- function(q) {
   # Formerly called pHidalgoSeo
   pdarling_erdos(q/2)
 }
@@ -271,7 +272,7 @@ phidalgo_seo <- function(q)
 #' @inheritParams pBst
 #' @return The quantile associated with \code{p}
 #' @examples
-#' CPAT:::qBst(0.5)
+#' CPAT:::qBst(0.5, b = 1)
 qBst <- function(p, b, nu = -1/2, summands = NULL, interval = c(0, 100),
                  tol = .Machine$double.eps, ...) {
   if (p == 1) return(Inf)
@@ -324,6 +325,7 @@ qhidalgo_seo <- function(p) {
 #' its documentation for more details.
 #'
 #' @param p Value of the CDF at the quantile
+#' @param d Dimension parameter
 #' @param summands Number of summands for infinite sum
 #' @param interval,tol,... Arguments to be passed to
 #'        \code{\link[stats]{uniroot}}

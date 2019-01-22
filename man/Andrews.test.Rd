@@ -8,7 +8,7 @@ Andrews.test(x, M, formula = NULL)
 }
 \arguments{
 \item{x}{Data to test for change in mean (either a vector or
-\code{data.frame})}
+\code{\link[base]{data.frame}})}
 
 \item{M}{Numeric index of the location of the first potential change point}
 

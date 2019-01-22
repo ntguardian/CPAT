@@ -35,5 +35,5 @@ and many of the the accepted parameters are arguments for that function; see
 its documentation for more details.
 }
 \examples{
-CPAT:::qBst(0.5)
+CPAT:::qBst(0.5, b = 1)
 }

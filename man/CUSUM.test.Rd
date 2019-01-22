@@ -4,11 +4,14 @@
 \alias{CUSUM.test}
 \title{CUSUM Test}
 \usage{
-CUSUM.test(x, use_kernel_var = FALSE, stat_plot = FALSE,
-  kernel = "ba", bandwidth = "and")
+CUSUM.test(x, formula = NULL, use_kernel_var = FALSE,
+  stat_plot = FALSE, kernel = "ba", bandwidth = "and")
 }
 \arguments{
-\item{x}{Data to test for change in mean}
+\item{x}{Data to test for change in mean (either \code{\link[base]{numeric}}
+or a \code{\link[base]{data.frame}})}
+
+\item{formula}{Formula used for defining the regression model, if applicable}
 
 \item{use_kernel_var}{Set to \code{TRUE} to use kernel methods for long-run
 variance estimation (typically used when the data is
@@ -41,16 +44,30 @@ value to use (the default is to use Andrews' method, as used in
 A \code{htest}-class object containing the results of the test
 }
 \description{
-Performs the (univariate) CUSUM test for change in mean, as described in
-\insertCite{horvathricemiller19}{CPAT}. This is effectively an interface to
-\code{\link{stat_Vn}}; see its documentation for more details. p-values are
-computed using \code{\link{pkolmogorov}}, which represents the limiting
-distribution of the statistic under the null hypothesis.
+Performs the CUSUM test for change in mean, as described in
+\insertCite{horvathricemiller19}{CPAT}.
+}
+\details{
+This is effectively an interface to \code{\link{stat_Vn}}; see its
+documentation for more details.
+
+When \code{x} is a (numeric) vector, the CUSUM test is perfomed directly on
+the data. When \code{x} is a \code{\link[base]{data.frame}} and
+\code{formula} is not \code{NULL}, then a regression model is estimated first
+with \code{\link[stats]{lm}} and the test is performed on the residuals of
+the regression model (see \insertCite{plobergerkramer92}{CPAT}).
+
+p-values are computed using \code{\link{pkolmogorov}}, which represents the
+limiting distribution of the statistic under the null hypothesis.
 }
 \examples{
 CUSUM.test(rnorm(1000))
 CUSUM.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo",
            bandwidth = "nw")
+x <- rnorm(1000)
+y <- 1 + 2 * x + rnorm(1000)
+df <- data.frame(x, y)
+CUSUM.test(df, formula = y ~ x, use_kernel_var = TRUE)
 }
 \references{
 \insertAllCited{}

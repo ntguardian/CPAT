@@ -276,7 +276,6 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                         Named("stat_vals") = all_vals);
 }
 
-// [[Rcpp::export]]
 // XXX: curtis: THIS CODE WORKS CORRECTLY BUT THE RESULTS ARE GARBAGE FROM A
 // STATISTICAL PERSPECTIVE -- Fri 11 Jan 2019 06:12:52 PM MST
 List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
@@ -419,6 +418,7 @@ NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
     return(sigma);
 }
 
+// XXX: curtis: INCOMPLETE -- Mon 21 Jan 2019 11:55:38 PM MST
 // [[Rcpp::export]]
 NumericVector get_reg_lrv_arr_cpp(const NumericMatrix& X_input,
                                   const NumericVector& y_input,
@@ -486,4 +486,8 @@ NumericVector get_reg_lrv_arr_cpp(const NumericMatrix& X_input,
 
         // TODO: curtis: REST OF ALGORITHM -- Mon 07 Jan 2019 05:38:36 PM MST
     }
+
+    // XXX: curtis: INCOMPLETE -- Mon 21 Jan 2019 11:54:44 PM MST
+    // Following line added to suppress compiler warning
+    return(y_input);
 }

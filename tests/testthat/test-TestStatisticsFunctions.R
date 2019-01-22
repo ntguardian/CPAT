@@ -16,6 +16,8 @@ library(CPAT)
 
 has_cointReg <- requireNamespace("cointReg", quietly = TRUE)
 
+`%s%` <- CPAT:::`%s%`
+
 #' Check for cointReg
 #'
 #' Check for the cointReg package; if not present, skip the test.
@@ -186,6 +188,24 @@ test_that("stat_hs() functions properly", {
   expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE), 0.78115982765937)
 })
 
+test_that("stat_hs_reg() functions properly", {
+  expect_error(CPAT:::stat_hs_reg(dat), "Bad formula passed")
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df), 281.501474313967)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = 6), 163.055563668931)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = log), 689.130875218082)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, estimate = TRUE,
+                                  get_all_vals = TRUE),
+               list(statistic = 281.501474313967, estimate = 8L,
+                    stat_vals = c(7.03491408202991,  1.66010199868875,
+                                  40.9399424737485,  14.1242827822490,
+                                  1.52286866035747,  19.5060044271148,
+                                  7.28586759701769,  281.501474313967,
+                                  226.284675272493,  31.8975103150450,
+                                  77.1922754922915,  31.7315590887255,
+                                  54.3369144393039,  60.6314012550627,
+                                  32.1069206921016, -2.23212098996788)))
+})
+
 test_that("andrews_test() functions properly", {
   expect_error(CPAT:::andrews_test(dat), "argument \"M\" is missing")
   expect_equal(CPAT:::andrews_test(dat, 15),
@@ -247,6 +267,10 @@ test_that("CUSUM.test() functions properly", {
   expect_equal(CUSUM.test(dat)$statistic, c(A = 0.888290332296761))
   expect_equal(CUSUM.test(dat, use_kernel_var = TRUE)$p.value,
                0.409673316747916)
+  expect_error(CUSUM.test(c("a", "b")), "Don't know how to handle x of type" %s%
+                                        "character")
+  expect_error(CUSUM.test(df), "Formula needed")
+  expect_equal(CUSUM.test(df, y ~ x)$statistic, c(A = 0.677882334483995))
 })
 
 test_that("HR.test() functions properly", {
@@ -270,14 +294,24 @@ test_that("DE.test() functions properly", {
                                          `b(log(T))` = 1.66838804851426))
   expect_equal(DE.test(dat, use_kernel_var = TRUE)$p.value,
                0.335268000418675)
+  expect_error(DE.test(c("a", "b")), "Don't know how to handle x of type" %s%
+                                     "character")
+  expect_error(DE.test(df), "Formula needed")
+  expect_equal(DE.test(df, y ~ x)$statistic, c(A = 2.07256284012386))
 })
 
 test_that("HS.test() functions properly", {
   expect_s3_class(HS.test(dat), "htest")
   expect_equal(HS.test(dat)$data.name, "dat")
+  expect_equal(HS.test(dat, m = 6)$statistic, c(A = 1.24993636457263))
   expect_equal(HS.test(dat)$p.value, 0.663825560827292)
   expect_equal(HS.test(dat)$statistic, c(A = 1.21370945972696))
   expect_equal(HS.test(dat, corr = FALSE)$p.value, 0.81061923831157)
+  expect_error(HS.test(c("a", "b")), "Don't know how to handle x of type" %s%
+                                      "character")
+  expect_error(HS.test(df), "Formula needed")
+  expect_equal(HS.test(df, y ~ x)$statistic, c(A = 281.501474313967))
+  expect_equal(HS.test(df, y ~ x, m = 6)$statistic, c(A = 163.055563668931))
 })
 
 test_that("Andrews.test() functions properly", {

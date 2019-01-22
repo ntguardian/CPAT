@@ -4,10 +4,18 @@
 \alias{HS.test}
 \title{Hidalgo-Seo Test}
 \usage{
-HS.test(x, corr = TRUE, stat_plot = FALSE)
+HS.test(x, formula = NULL, m = sqrt, corr = TRUE,
+  stat_plot = FALSE)
 }
 \arguments{
-\item{x}{Data to test for change in mean}
+\item{x}{Data to test for change in mean (either a vector or
+\code{\link[base]{data.frame}})}
+
+\item{formula}{The \code{\link[stats]{formula}} defining the regression
+model, when applicable}
+
+\item{m}{Either numeric or a function that returns numeric; corresponds to
+\eqn{m} used in computing the estimate of the long-run variance}
 
 \item{corr}{If \code{TRUE}, the long-run variance will be computed under the
 assumption of correlated residuals; ignored if \code{custom_var}
@@ -20,15 +28,34 @@ all potential change points}
 A \code{htest}-class object containing the results of the test
 }
 \description{
-Performs the (univariate) Hidalgo-Seo test for change in mean, as described
-in \insertCite{horvathricemiller19}{CPAT}. This is effectively an interface
-to \code{\link{stat_hs}}; see its documentation for more details. p-values
-are computed using \code{\link{phidalgo_seo}}, which represents the limiting
-distribution of the test statistic when the null hypothesis is true.
+Performs the Hidalgo-Seo test for structural change, as proposed by
+\insertCite{hidalgoseo13;textual}{CPAT}.
+}
+\details{
+This function can perform both univariate and regression versions of the test
+described by Hidalgo and Seo.
+
+If \code{formula} is \code{NULL} and \code{x} is \code{\link[base]{numeric}},
+this function performs the (univariate) Hidalgo-Seo test for change in mean,
+as described in \insertCite{horvathricemiller19}{CPAT}. This is effectively
+an interface to \code{\link{stat_hs}}; see its documentation for more
+details.
+
+Otherwise, the function tests for structural change in a linear regression
+model (estimated via least squares), and serves as an interface to
+\code{\link{stat_hs_reg}}; see its documentation for more details. In this
+mode the parameter \code{corr} is effectively ignored.
+
+p-values are computed using \code{\link{phidalgo_seo}}, which represents the
+limiting distribution of the test statistic when the null hypothesis is true.
 }
 \examples{
 HS.test(rnorm(1000))
 HS.test(rnorm(1000), corr = FALSE)
+x <- rnorm(1000)
+y <- 1 + 2 * x + rnorm(1000)
+df <- data.frame(x, y)
+HS.test(df, formula = y ~ x)
 }
 \references{
 \insertAllCited{}

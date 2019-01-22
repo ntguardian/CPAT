@@ -10,6 +10,8 @@ qZn(p, d = 1, summands = 500, interval = c(0, 100),
 \arguments{
 \item{p}{Value of the CDF at the quantile}
 
+\item{d}{Dimension parameter}
+
 \item{summands}{Number of summands for infinite sum}
 
 \item{interval, tol, ...}{Arguments to be passed to

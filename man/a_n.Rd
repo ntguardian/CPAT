@@ -19,5 +19,5 @@ Computes \eqn{a_n(m) = \sqrt{b_n(m)/(2 \log \log n)}}, with \eqn{b_n(m)} as
 described by \code{\link{b_n}}.
 }
 \examples{
-a_n(5, 2)
+CPAT:::a_n(5, 2)
 }
