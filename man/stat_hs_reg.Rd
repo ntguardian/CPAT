@@ -8,7 +8,7 @@ stat_hs_reg(formula, data, m = sqrt, estimate = FALSE,
   get_all_vals = FALSE)
 }
 \arguments{
-\item{formula}{A \code{link[base]{formula}} that describes the regression
+\item{formula}{A \code{\link[base]{formula}} that describes the regression
 model}
 
 \item{data}{A \code{\link[base]{data.frame}}-like object containing the data

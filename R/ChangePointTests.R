@@ -960,7 +960,7 @@ andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
 #' parameter \code{m}, which can be either numeric or a function that returns
 #' numeric values.
 #'
-#' @param formula A \code{link[base]{formula}} that describes the regression
+#' @param formula A \code{\link[base]{formula}} that describes the regression
 #'                model
 #' @param data A \code{\link[base]{data.frame}}-like object containing the data
 #'             set; should be able to be passed to the \code{data} argument of
