@@ -809,6 +809,7 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   y <- model.frame(formula, data = data)[[1]]
   X <- model.matrix(formula, data = data)
   d <- ncol(X)
+  n <- nrow(X)
   if (use_kernel_var) {
     stop("That functionality is not yet implemented")
   } else if (!is.null(custom_var)) {
@@ -841,7 +842,7 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                                             "custom_var are positive definite")}
     lrv <- custom_var_array
   } else {
-    stop("Feature not implemented; need custom_var to be set")
+    lrv <- array(0, dim = c(d, d, n))
   }
 
   res <- stat_Zn_reg_cpp(X, y, kn(nrow(data)), use_kernel_var, lrv,
