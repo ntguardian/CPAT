@@ -4,11 +4,14 @@
 \alias{HR.test}
 \title{Rényi-Type Test}
 \usage{
-HR.test(x, kn = log, use_kernel_var = FALSE, stat_plot = FALSE,
-  kernel = "ba", bandwidth = "and")
+HR.test(x, formula = NULL, kn = log, use_kernel_var = FALSE,
+  stat_plot = FALSE, kernel = "ba", bandwidth = "and")
 }
 \arguments{
 \item{x}{Data to test for change in mean}
+
+\item{formula}{The regression formula, which will be passed to
+\code{\link[stats]{lm}}}
 
 \item{kn}{A function corresponding to the trimming parameter \eqn{t_T}; by
 default, the square root function}
@@ -58,6 +61,10 @@ and \eqn{t_T/T \to 0} as \eqn{T \to \infty}. (\code{\link[base]{log}} and
 \examples{
 HR.test(rnorm(1000))
 HR.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo", bandwidth = "nw")
+x <- rnorm(1000)
+y <- 1 + 2 * x + rnorm(1000)
+df <- data.frame(x, y)
+HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = FALSE)
 }
 \references{
 \insertAllCited{}

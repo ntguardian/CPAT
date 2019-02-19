@@ -46,7 +46,11 @@ ker_func <- function(j) {
 dat <- c(-0.64, -1.17, 0.76,  1.77, 1.77, -0.28, -0.20, 0.83, -0.08,  2.57, 
          -0.13, -1.22, 0.47, -0.32, 0.18, -1.38,  0.21, 0.38,  0.15, -0.31)
 
+dat2 <-  c(-0.73, -0.87,  0.5, 2.34, 1.41,  0.42,  0.06, 0.86,  0.89, 1.04, 
+            1.48,  0.65, 1.84, 0.95, 0.94, -0.02, -0.08, 0.15, -0.07, 0.81)
+
 df <- data.frame(x = 1:20, y = 1 + 2 * 1:20 + dat)
+df2 <- data.frame(x = dat2, y = 1 + 2 * dat2 + dat)
 
 ################################################################################
 # UNDERLYING FUNCTION TESTING
@@ -80,6 +84,7 @@ test_that("stat_Zn() functions properly", {
 
 test_that("stat_Zn_reg() functions properly", {
   expect_error(CPAT:::stat_Zn_reg(dat), "Bad formula passed")
+  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df), 16417.7245430211)
   expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
                                   custom_var = function(x, k) {diag(2)}),
                36.9250446805558)
@@ -282,6 +287,11 @@ test_that("HR.test() functions properly", {
   expect_equal(HR.test(dat)$parameters, c(`log(T)` = 2.99573227355399))
   expect_equal(HR.test(dat, use_kernel_var = TRUE)$p.value,
                0.00349647304622447)
+  expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE, kn = sqrt)$p.value,
+               1.55431223447522e-15)
+  expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE,
+                       kn = sqrt)$parameters,
+               c(`sqrt(T)` = 4.47213595499958))
 })
 
 test_that("DE.test() functions properly", {

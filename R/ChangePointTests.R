@@ -1200,27 +1200,52 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #' @param x Data to test for change in mean
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'        all potential change points
-#' @inheritParams stat_Zn
+#' @inheritParams stat_Zn_reg
 #' @return A \code{htest}-class object containing the results of the test
 #' @references
 #'  \insertAllCited{}
 #' @examples
 #' HR.test(rnorm(1000))
 #' HR.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo", bandwidth = "nw")
+#' x <- rnorm(1000)
+#' y <- 1 + 2 * x + rnorm(1000)
+#' df <- data.frame(x, y)
+#' HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = FALSE)
 #' @export
-HR.test <- function(x, kn = log, use_kernel_var = FALSE, stat_plot = FALSE,
-                  kernel = "ba", bandwidth = "and") {
+HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
+                    stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
   testobj <- list()
-  testobj$method <- "Horvath-Rice Test for Change in Mean"
   testobj$data.name <- deparse(substitute(x))
 
-  res <- stat_Zn(x,
-                 kn = kn,
-                 estimate = TRUE,
-                 use_kernel_var = use_kernel_var,
-                 kernel = kernel,
-                 bandwidth = bandwidth,
-                 get_all_vals = stat_plot)
+  if (is.numeric(x)) {
+    testobj$method <- "Horv\u00E1th-Rice Test for Change in Mean"
+    res <- stat_Zn(x,
+                   kn = kn,
+                   estimate = TRUE,
+                   use_kernel_var = use_kernel_var,
+                   kernel = kernel,
+                   bandwidth = bandwidth,
+                   get_all_vals = stat_plot)
+    d <- 1
+    kn_val <- kn(length(x))
+  } else if (is.data.frame(x)) {
+    if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
+    testobj$method <- "Horv\u00E1th-Rice-Miller Test for Structural Change"
+    res <- stat_Zn_reg(formula = formula,
+                       data = x,
+                       estimate = TRUE,
+                       kn = kn,
+                       use_kernel_var = use_kernel_var,
+                       kernel = kernel,
+                       bandwidth = bandwidth,
+                       get_all_vals = stat_plot,
+                       fast = FALSE)
+    d <- ncol(model.matrix(formula, data = x[1,]))
+    kn_val <- kn(nrow(x))
+  } else {
+    stop("Don't know how to handle x of type" %s% class(x))
+  }
+
   stat <- res[[1]]
   est <- res[[2]]
 
@@ -1229,13 +1254,12 @@ HR.test <- function(x, kn = log, use_kernel_var = FALSE, stat_plot = FALSE,
     plot.ts(res[[3]], main = "Value of Test Statistic", ylab = "Statistic")
   }
 
-  kn_val <- kn(length(x))
   attr(kn_val, "names") <- deparse(substitute(kn)) %s0% "(T)"
 
   attr(stat, "names") <- "D"
   attr(est, "names") <- "t*"
   testobj$parameters <- kn_val
-  testobj$p.value <- 1 - pZn(res[[1]])
+  testobj$p.value <- 1 - pZn(res[[1]], d = d)
   testobj$estimate <- est
   testobj$statistic <- stat
 

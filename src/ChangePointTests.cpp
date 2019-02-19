@@ -261,19 +261,23 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
         } else {
             double eps = 0;
             arma::vec eta(d, arma::fill::zeros);
+            int l_lower;
+            int l_upper;
             if (k <= n / 2) {
-                int l_lower = 0;
-                int l_upper = k;
+                l_lower = 0;
+                l_upper = k;
             } else {
-                int l_lower = k - 1;
-                int l_upper = n;
+                l_lower = k - 1;
+                l_upper = n;
             }
 
             for (int l = l_lower; l < l_upper; ++l) {
-                eps = y[l] - X.row(l) * beta_lower;
+                eps = y[l] - arma::dot(X.row(l), beta_lower);
                 eta = eps * X.row(l).t();
                 sdk += eta * eta.t();
             }
+
+            sdk /= (l_upper - l_lower);
         }
         
         M_candidate = norm_inv_A_square(beta_lower - beta_upper, sdk);
