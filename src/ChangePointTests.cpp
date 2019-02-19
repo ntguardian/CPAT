@@ -255,8 +255,28 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
             beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
         }
         
-        M_candidate = norm_inv_A_square(beta_lower - beta_upper,
-                                        lrv_est_cube.slice(k - 1));
+        arma::mat sdk(d, d, arma::fill::zeros);
+        if (use_kernel_var) {
+            sdk = lrv_est_cube.slice(k - 1);
+        } else {
+            double eps = 0;
+            arma::vec eta(d, arma::fill::zeros);
+            if (k <= n / 2) {
+                int l_lower = 0;
+                int l_upper = k;
+            } else {
+                int l_lower = k - 1;
+                int l_upper = n;
+            }
+
+            for (int l = l_lower; l < l_upper; ++l) {
+                eps = y[l] - X.row(l) * beta_lower;
+                eta = eps * X.row(l).t();
+                sdk += eta * eta.t();
+            }
+        }
+        
+        M_candidate = norm_inv_A_square(beta_lower - beta_upper, sdk);
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
             all_vals.push_back(M_candidate * sqrt(kn));
