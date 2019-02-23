@@ -106,4 +106,19 @@ stop_with_message <- function(bool, message = NULL) {
   if (!all(bool)) stop(message)
 }
 
+################################################################################
+# SYSTEM UTILITIES
+################################################################################
+
+#' Extract Base File Name
+#'
+#' Extract the base name of the file without path or extension.
+#'
+#' @param x String from which to extract base name
+#' @return A string containing the base file name without extension
+#' @examples
+#' CPAT:::base_file_name("~/Documents/test.txt")
+base_file_name <- function(x) {
+  tools::file_path_sans_ext(basename(x))
+}
 

@@ -24,14 +24,52 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 `%s0%` <- CPAT:::`%s0%`
 stop_with_message <- CPAT:::stop_with_message
 check_envir_has_objects <- CPAT:::check_envir_has_objects
+base_file_name <- CPAT:::base_file_name
+
+#' Print Progress Report
+#'
+#' Creates a progress report string for reporting progress.
+#'
+#' @param n Sample size
+#' @param cpt Change point string
+#' @param stat Statistic string
+#' @param r Regime string
+#' @param n_vector Vector of all sample sizes
+#' @param cpt_vector Named vector of all change point functions
+#' @param stat_vector Named vector of all statistic functions
+#' @param r_list Named list of all regimes
+#' @return A string serving as a progress report
+#' @examples
+#' progress_report(50, "sqrt", "mean", "mean2", c(50, 100),
+#'                 cpt_vector = c("sqrt" = sqrt),
+#'                 stat_vector = c("mean" = mean, "sd" = sd),
+#'                 r_list = list("mean1" = cbind(1, 1), "mean2" = cbind(1, 2)))
+progress_report <- function(n, cpt, stat, r, n_vector, cpt_vector, stat_vector,
+                            r_list) {
+  counts <- c(length(n_vector), length(cpt_vector), length(stat_vector),
+              length(r_list))
+  idx <- c(which(n == n_vector), which(cpt == names(cpt_vector)),
+           which(stat == names(stat_vector)), which(r == names(r_list)))
+  perc <- round(100 * (idx - 1) / counts)
+  names(counts) <- c("n", "cpt", "stat", "r")
+  names(idx) <- names(counts)
+  names(perc) <- names(counts)
+
+  total_work_needed <- prod(counts)
+  total_work_done <- prod(idx)
+  total_perc <- round(100 * (total_work_done - 1) / total_work_needed)
+
+  sprintf("Total: %%%3d | n: %%%3d | k*: %%%3d | Stat.: %%%3d | Regime: %%%3d",
+          total_perc, perc["n"], perc["cpt"], perc["stat"], perc["r"])
+}
 
 ################################################################################
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(SIMINPUT, CONTEXTINPUT, output = NULL, seed = 20190219,
-                 seedless = FALSE, replications = 5000, cores = NULL,
-                 verbose = FALSE, notsafe = FALSE, help = FALSE) {
+main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
+                 seed = 20190219, seedless = FALSE, replications = 5000,
+                 cores = NULL, verbose = FALSE, notsafe = FALSE, help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -49,16 +87,21 @@ main <- function(SIMINPUT, CONTEXTINPUT, output = NULL, seed = 20190219,
 
   simulation_tools <- new.env()
   context_tools <- new.env()
+  test_tools <- new.env()
   load(SIMINPUT, envir = simulation_tools)
   load(CONTEXTINPUT, envir = context_tools)
-  # TODO: curtis: CHECK THAT NEEDED OBJECTS ARE IN PLACE -- Tue 19 Feb 2019 05:53:30 PM MST
+  load(TESTINPUT, envir = test_tools)
   simulation_tools_expected_objects <- c("df_generator", "eps_generator")
   context_tools_expected_objects <- c("n_values", "kstar_functions",
-                                      "struc_models", "stat_functions")
+                                      "struc_models")
+  test_tools_expected_objects <- c("stat_functions")
   check_envir_has_objects(simulation_tools_expected_objects,
                           envir = simulation_tools, blame_string = SIMINPUT)
   check_envir_has_objects(context_tools_expected_objects, envir = context_tools,
                           blame_string = CONTEXTINPUT)
+  check_envir_has_objects(test_tools_expected_objects, envir = test_tools,
+                          blame_string = TESTINPUT)
+
   # It should be safe now to pull what we want from the files we loaded
   # But always check assumptions
   n_values <- context_tools$n_values
@@ -80,10 +123,11 @@ main <- function(SIMINPUT, CONTEXTINPUT, output = NULL, seed = 20190219,
                     "Invalid struc_models from" %s% CONTEXTINPUT %s0% "; it" %s%
                     "must be a named list of numeric matrices that have two" %s%
                     "columns")
-  stat_functions <- context_tools$stat_functions
+
+  stat_functions <- test_tools$stat_functions
   stop_with_message(is.vector(stat_functions) & is.function(stat_function[1]) &
                     !any(is.null(names(stat_functions))), "Invalid" %s%
-                    "stat_functions from" %s% CONTEXTINPUT %s0% "; must be" %s%
+                    "stat_functions from" %s% TESTINPUT %s0% "; must be" %s%
                     "a named vector of functions")
   
   df_generator <- simulation_tools$df_generator
@@ -97,10 +141,36 @@ main <- function(SIMINPUT, CONTEXTINPUT, output = NULL, seed = 20190219,
                     "from" %s% SIMINPUT %s0% "; must be a function with" %s%
                     "argument n")
 
-  # TODO: curtis: CREATE LIST FOR STORING DATA -- Fri 22 Feb 2019 12:07:40 AM MST
-  # TODO: curtis: CREATE SAVE FILE NAME IF NULL -- Fri 22 Feb 2019 12:12:44 AM MST
+  # Create list for storing output
+  res_list <- sapply("n" %s0% n_values, USE.NAMES = TRUE, simplify = FALSE,
+                     FUN = function(x1) {
+                       sapply(names(kstar_functions), USE.NAMES = TRUE,
+                         simplify = FALSE, FUN = function(x2) {
+                           sapply(names(stat_functions),
+                             USE.NAMES = TRUE, simplify = FALSE,
+                             FUN = function(x3) {
+                               sapply(names(struc_models),
+                                 USE.NAMES = TRUE, simplify = FALSE,
+                                 FUN = function(y) {
+                                   rep(NA, times = replications)
+                                 }
+                               )
+                             })
+                         })
+                     })
+
+  if (is.null(output)) {
+    output <- paste("sims", base_file_name(CONTEXTINPUT),
+                    base_file_name(SIMINPUT), base_file_name(TESTINPUT),
+                    sep = "_") %s0% ifelse(seedless,
+                                           "", "_" %s0% seed) %s0% ".Rda"
+  }
+
+  ##############################################################################
+  # MAIN LOOP
+  ##############################################################################
+
   for (n in n_values) {
-    # TODO: curtis: CREATE INTERMEDIATE LISTS -- Fri 22 Feb 2019 12:08:17 AM MST
     nname <- "n" %s0% n
     for (kstar_name in names(kstar_functions)) {
       kstar <- kstar_functions[kstar_name]
@@ -137,13 +207,24 @@ main <- function(SIMINPUT, CONTEXTINPUT, output = NULL, seed = 20190219,
             
             stat(formula = f, data = df)
           }
-          # TODO: curtis: SAVE RESULTS IF NOTSAFE IS FALSE -- Fri 22 Feb 2019 12:08:57 AM MST
-          # TODO: curtis: IF VERBOSE REPORT PROGRESS -- Fri 22 Feb 2019 12:08:57 AM MST
+          res_list[[nname]][[kstar_name]][[stat_name]][[r_name]] <- simulation
+          if (!notsafe) {
+            save(res_list, file = output)
+          }
+
+          if (verbose) {
+            progress_string <- progress_report(n, kstar_name, stat_name, r_name,
+                                               n_values, kstar_functions,
+                                               stat_functions, struc_models)
+            cat(progress_string, "\r")
+          }
         }
       }
     }
   }
-  # TODO: curtis: SAVE RESULTS FOR LAST TIME -- Fri 22 Feb 2019 12:09:20 AM MST
+
+  cat("Output File:", output %s0% "\n")
+  save(res_list, file = output)
 }
 
 ################################################################################
@@ -160,17 +241,19 @@ if (sys.nframe() == 0) {
                              "how data simulations are to be performed"),
           make_option(c("--CONTEXTINPUT", "-C"), type = "character",
                       help = "Name of .Rda file defining what contexts" %s%
-                             "in which to perform simulations and how to" %s%
-                             "compute test statistics"),
+                             "in which to perform simulations"),
+          make_option(c("--TESTINPUT", "-T"), type = "character",
+                      help = "Name of .Rda file defining statistical tests" %s%
+                             "that are simulated"),
           make_option(c("--output", "-o"), type = "character", default = NULL,
                       help = "Output .Rda file for saving simulated test" %s%
                              "statistics; if not specified, name" %s%
-                             "automatically generated")
+                             "automatically generated"),
           make_option(c("--seed", "-s"), type = "integer", default = 20190219,
                       help = "The seed for simulations"),
           make_option(c("--seedless", "-R"), action = "store_true",
                       default = FALSE,
-                      help = "Don't set a seed (causes --seed to be ignored)")
+                      help = "Don't set a seed (causes --seed to be ignored)"),
           make_option(c("--replications", "-N"), type = "integer",
                       default = 5000,
                       help = "Number of replications per context"),
