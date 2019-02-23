@@ -46,7 +46,7 @@ gen_regime_mat <- function(base, delta = 0) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = NULL, help = FALSE) {
+main <- function(output = "MainContext.Rda", help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -54,10 +54,6 @@ main <- function(output = NULL, help = FALSE) {
 
   grm_12 <- partial(gen_regime_mat, base = 1:2)
   delta <- (0:20)/10
-
-  if (is.null(output)) {
-    output <- base_file_name(commandArgs()[1]) %s0% ".Rda"
-  }
 
   ##############################################################################
   # REQUIRED OBJECTS
@@ -77,10 +73,11 @@ main <- function(output = NULL, help = FALSE) {
 
 if (sys.nframe() == 0) {
   cl_args <- parse_args(OptionParser(
-        description = "This is a template for executable R scripts.",
+        description = paste("Primary context of simulations for structural",
+                            "change in regression models"),
         option_list = list(
-          make_option(c("--output", "-o"), type = "character", default = NULL,
-                      help = "Output .Rda file")
+          make_option(c("--output", "-o"), type = "character",
+                      default = "MainContext.Rda", help = "Output .Rda file")
         )
       ))
 
