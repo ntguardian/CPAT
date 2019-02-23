@@ -49,7 +49,6 @@ test_that("is-type functions work", {
 ################################################################################
 
 test_that("Environment checking function works", {
-  expect_silent(CPAT:::check_envir_has_objects(c("x")))
   expect_silent(CPAT:::check_envir_has_objects(c("y"), envir = test_env))
   expect_error(CPAT:::check_envir_has_objects(c("x", "y"), envir = test_env),
                "test_env does not have all expected objects; must have x, y")
@@ -63,4 +62,12 @@ test_that("stop_with_message() works", {
   expect_silent(CPAT:::stop_with_message(c(x == 1, TRUE)))
   expect_error(CPAT:::stop_with_message(c(x == 2, TRUE)))
   expect_error(CPAT:::stop_with_message(x == 2, message = "Hello!"), "Hello!")
+})
+
+################################################################################
+# FILESYSTEM UTILITIES TESTS
+################################################################################
+
+test_that("base_file_name() works properly", {
+  expect_equal(CPAT:::base_file_name("./some/tree/test.txt"), "test")
 })
