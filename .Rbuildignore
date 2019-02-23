@@ -6,13 +6,10 @@
 XOUT.*$
 ^\.gitignore$
 ^\.Rprofile$
-^Makefile$
 ^README.md$
 ^README.Rmd$
 ^MANUAL.pdf$
 ^package$
 ^data-raw/
 ^svgs/
-^exec/
-^R/Plotting.R$
-^R/SimulationUtils.R$
+^Makefile_old$
