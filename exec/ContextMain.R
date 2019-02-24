@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 ################################################################################
-# MainContext.R
+# ContextMain.R
 ################################################################################
 # 2019-02-22
 # Curtis Miller
@@ -46,7 +46,7 @@ gen_regime_mat <- function(base, delta = 0) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "MainContext.Rda", help = FALSE) {
+main <- function(output = "ContextMain.Rda", help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -59,7 +59,7 @@ main <- function(output = "MainContext.Rda", help = FALSE) {
   # REQUIRED OBJECTS
   ##############################################################################
   
-  n_values <- c(50, 250, 1000)
+  n_values <- as.integer(c(50, 250, 1000))
   kstar_functions <- c("c23rd" = function(n) {n^{2/3}})
   struc_models <- lapply(delta, grm_12)
   names(struc_models) <- "d" %s0% delta
@@ -77,7 +77,7 @@ if (sys.nframe() == 0) {
                             "change in regression models"),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "MainContext.Rda", help = "Output .Rda file")
+                      default = "ContextMain.Rda", help = "Output .Rda file")
         )
       ))
 

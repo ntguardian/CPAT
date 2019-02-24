@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimNormalXYData.R
+# SimDataNormalXY.R
 ################################################################################
 # 2019-02-22
 # Curtis Miller
@@ -19,7 +19,7 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "SimNormalXYData.Rda", help = FALSE) {
+main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -61,7 +61,7 @@ if (sys.nframe() == 0) {
         description = "Defines data generation functions for simulations",
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "SimNormalXYData.Rda",
+                      default = "SimDataNormalXY.Rda",
                       help = "Name of output .Rda file")
         )
       ))

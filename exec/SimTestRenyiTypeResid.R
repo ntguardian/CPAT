@@ -33,6 +33,7 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", help = FALSE) {
   ##############################################################################
 
   stat_functions <- c("ZnResid" = renyi_st)
+  # TODO: curtis: ADD pval_functions VECTOR -- Sat 23 Feb 2019 10:53:19 PM MST
 
   save(stat_functions, file = output)
 }
