@@ -19,7 +19,8 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "SimTestRenyiTypeResid.Rda", help = FALSE) {
+main <- function(output = "SimTestRenyiTypeResid.Rda", linetype = "dashed",
+                 help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -34,8 +35,9 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", help = FALSE) {
 
   stat_functions <- c("ZnResid" = renyi_st)
   pval_functions <- c("ZnResid" = function(q) {1 - CPAT:::pZn(q)})
+  plot_desc <- c("ZnResid" = linetype)
 
-  save(stat_functions, pval_functions, file = output)
+  save(stat_functions, pval_functions, plot_desc, file = output)
 }
 
 ################################################################################
@@ -50,7 +52,10 @@ if (sys.nframe() == 0) {
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
                       default = "SimTestRenyiTypeResid.Rda",
-                      help = "Name of output .Rda file")
+                      help = "Name of output .Rda file"),
+          make_option(c("--linetype", "-l"), type = "character",
+                      default = "dashed",
+                      help = "When plotted, type of line to plot")
         )
       ))
 

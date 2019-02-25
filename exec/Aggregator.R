@@ -40,7 +40,7 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
   load(TESTINPUT, envir = test_tools)
   load(input, envir = input_objects)
   load(CONTEXTINPUT, envir = context_tools)
-  test_tools_expected_objects <- c("pval_functions")
+  test_tools_expected_objects <- c("pval_functions", "plot_desc")
   input_objects_expected_objects <- c("res_list")
   context_tools_expected_objects <- c("struc_name_conversion")
   check_envir_has_objects(test_tools_expected_objects, envir = test_tools,
@@ -80,6 +80,11 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                     "Invalid res_list from" %s% input %s0% "; structure" %s%
                     "wrong (or perhaps it's struc_name_conversion from" %s%
                     CONTEXTINPUT %s0% ")")
+  plot_desc <- test_tools$plot_desc
+  stop_with_message(is.vector(plot_desc) & is.character(plot_desc) &
+                    all(!is.null(names(plot_desc))),
+                    "Invalid plot_desc from" %s% TESTINPUT %s0% "; must" %s%
+                    "be a named character vector")
   pval_functions <- test_tools$pval_functions
   stop_with_message(is.vector(pval_functions) &
                     all(sapply(pval_functions,
@@ -88,7 +93,9 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                     all(sapply(res_list,
                                function(l) {
                                  all(sapply(l, function(m) {
-                                       all(names(m) %in% names(pval_functions))
+                                       all(names(m) %in%
+                                         names(pval_functions)) &
+                                       all(names(m) %in% names(plot_desc))
                                      }))})),
                     "Invalid pval_functions from" %s% TESTINPUT %s0% ";" %s%
                     "must be a vector of functions that all take input 'q'" %s0%
@@ -155,13 +162,14 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                                          rownames(struc_name_conversion),
                                        struc_name_conversion))
   power_sim_stat_data <- select(merged_data_frame, select = -change)
+  power_sim_stat_data$stat <- as.character(power_sim_stat_data$stat)
 
   if (is.null(output)) {
     base <- CPAT:::base_file_name(input)
     output <- base %s0% "DataFrame.Rda"
   }
 
-  save(power_sim_stat_data, file = output)
+  save(power_sim_stat_data, plot_desc, file = output)
 }
 
 ################################################################################
