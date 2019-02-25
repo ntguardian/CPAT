@@ -33,9 +33,9 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", help = FALSE) {
   ##############################################################################
 
   stat_functions <- c("ZnResid" = renyi_st)
-  # TODO: curtis: ADD pval_functions VECTOR -- Sat 23 Feb 2019 10:53:19 PM MST
+  pval_functions <- c("ZnResid" = function(q) {1 - CPAT:::pZn(q)})
 
-  save(stat_functions, file = output)
+  save(stat_functions, pval_functions, file = output)
 }
 
 ################################################################################

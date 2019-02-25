@@ -63,8 +63,11 @@ main <- function(output = "ContextMain.Rda", help = FALSE) {
   kstar_functions <- c("c23rd" = function(n) {n^{2/3}})
   struc_models <- lapply(delta, grm_12)
   names(struc_models) <- "d" %s0% delta
+  struc_name_conversion <- data.frame("d" = delta)
+  rownames(struc_name_conversion) <- names(struc_models)
 
-  save(n_values, kstar_functions, struc_models, file = output)
+  save(n_values, kstar_functions, struc_models, struc_name_conversion,
+       file = output)
 }
 
 ################################################################################

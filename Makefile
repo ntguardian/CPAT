@@ -18,10 +18,13 @@ SIMSEED=201902
 SIMSNORMALRENYIRESID=data/SimsNormalRenyiResid.Rda
 ALLSIMS=$(SIMSNORMALRENYIRESID)
 
+SIMSNORMALRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYIRESID))
+ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
+
 LEVEL=0.05
 
 .PHONY : all
-all : inst/Makefile inst/package $(SIMSNORMALRENYIRESID)
+all : inst/Makefile inst/package $(ALLSIMSDATAFRAME)
 
 data/$(CONTEXTPREFIX)%.Rda : exec/$(CONTEXTPREFIX)%.R
 	$(RSCRIPT) $< -o $@
@@ -37,6 +40,11 @@ $(SIMSNORMALRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -s $(SIMSEED)23 -v
+
+$(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID)
+	$(RSCRIPT) exec/Aggregator.R -i $< -o $@ -a $(LEVEL) \
+		 -T data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+		 -C data/$(CONTEXTPREFIX)Main.Rda
 
 .PHONY : simconfig
 simconfig : $(CONTEXTGENERATORS) $(SIMDATAGENERATORS) $(SIMSTATGENERATORS)
@@ -60,6 +68,7 @@ clean :
 	-rm $(SIMDATADATA)
 	-rm $(SIMSTATDATA)
 	-rm $(ALLSIMS)
+	-rm $(ALLSIMSDATAFRAME)
 
 .PHONY : init
 init :
