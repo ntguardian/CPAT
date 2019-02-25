@@ -63,8 +63,26 @@ main <- function(inputs, output = "Appended.Rda", help = FALSE, opts = NA) {
   # Now for actual loop
   if (length(inputs) == 1) {
     save(power_sim_stat_data, plot_desc, file = output)
-  } else {
-
+    return()
+  }
+  
+  for (f in inputs[2:length(inputs)]) {
+    load(f, envir = temp_env)
+    check_envir_has_objects(temp_env_expected_objects, envir = temp_env,
+                            blame_string = f)
+    temp_df <- temp_env$power_sim_stat_data
+    temp_desc <- temp_env$plot_desc
+    stop_with_message(is.character(temp_desc) & all(!is.null(names(plot_desc))),
+                      "Invalid plot_desc from" %s% f %s0% "; must be named" %s%
+                      "character vector")
+    stop_with_message(is.data.frame(temp_df) & 
+                      length(temp_df) == length(power_sim_stat_data) &
+                      all(!is.null(names(temp_df))) &
+                      all(names(temp_df) %in% power_df_names) &
+                      all(sapply(temp_df, class) ==
+                        sapply(power_sim_stat_df, class)) &
+                      all(unique(temp_df$stat) %in% names(temp_desc)),
+                      "Invalid power_sim_stat_data from" %s% f)
   }
 }
 
