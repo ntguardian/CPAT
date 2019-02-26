@@ -68,6 +68,7 @@ main <- function(inputs, output = "Appended.Rda", help = FALSE, opts = NA) {
   
   for (f in inputs[2:length(inputs)]) {
     load(f, envir = temp_env)
+    # Import and check for errors
     check_envir_has_objects(temp_env_expected_objects, envir = temp_env,
                             blame_string = f)
     temp_df <- temp_env$power_sim_stat_data
@@ -83,7 +84,14 @@ main <- function(inputs, output = "Appended.Rda", help = FALSE, opts = NA) {
                         sapply(power_sim_stat_df, class)) &
                       all(unique(temp_df$stat) %in% names(temp_desc)),
                       "Invalid power_sim_stat_data from" %s% f)
+
+    # Do merge
+    plot_desc <- c(plot_desc, temp_desc[which(
+        !(names(temp_desc) %in% names(plot_desc)))])
+    power_sim_stat_df <- rbind(power_sim_stat_df, temp_df)
   }
+
+  save(power_sim_stat_df, plot_desc, file = output)
 }
 
 ################################################################################
