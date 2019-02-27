@@ -10,7 +10,7 @@
 ################################################################################
 
 # argparser: A package for handling command line arguments
-if (!suppessPackageStartupMessages(require("argparser"))) {
+if (!suppressPackageStartupMessages(require("argparser"))) {
   install.packages("argparser")
   require("argparser")
 }
@@ -28,10 +28,9 @@ stop_with_message <- CPAT:::stop_with_message
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(inputs, output = "Appended.Rda", help = FALSE, opts = NA) {
+main <- function(inputs, output = "Appended.Rda") {
   # This function will be executed when the script is called from the command
-  # line; the help and opts parameters does nothing, but are needed for
-  # do.call() to work
+  # line
 
   temp_env <- new.env()
   load(inputs[[1]], envir = temp_env)
@@ -73,7 +72,7 @@ main <- function(inputs, output = "Appended.Rda", help = FALSE, opts = NA) {
                             blame_string = f)
     temp_df <- temp_env$power_sim_stat_data
     temp_desc <- temp_env$plot_desc
-    stop_with_message(is.character(temp_desc) & all(!is.null(names(plot_desc))),
+    stop_with_message(is.character(temp_desc) & all(!is.null(names(temp_desc))),
                       "Invalid plot_desc from" %s% f %s0% "; must be named" %s%
                       "character vector")
     stop_with_message(is.data.frame(temp_df) & 
@@ -81,17 +80,17 @@ main <- function(inputs, output = "Appended.Rda", help = FALSE, opts = NA) {
                       all(!is.null(names(temp_df))) &
                       all(names(temp_df) %in% power_df_names) &
                       all(sapply(temp_df, class) ==
-                        sapply(power_sim_stat_df, class)) &
+                        sapply(power_sim_stat_data, class)) &
                       all(unique(temp_df$stat) %in% names(temp_desc)),
                       "Invalid power_sim_stat_data from" %s% f)
 
     # Do merge
     plot_desc <- c(plot_desc, temp_desc[which(
         !(names(temp_desc) %in% names(plot_desc)))])
-    power_sim_stat_df <- rbind(power_sim_stat_df, temp_df)
+    power_sim_stat_data <- rbind(power_sim_stat_data, temp_df)
   }
 
-  save(power_sim_stat_df, plot_desc, file = output)
+  save(power_sim_stat_data, plot_desc, file = output)
 }
 
 ################################################################################
@@ -107,6 +106,11 @@ if (sys.nframe() == 0) {
                     help = "Output file for data")
 
   cl_args <- parse_args(p)
+  cl_args <- cl_args[!(names(cl_args) %in% c("opts", "help"))]
+  if (any(sapply(cl_args, is.na))) {
+    print(p)
+    quit()
+  }
 
   do.call(main, cl_args[2:length(cl_args)])
 }
