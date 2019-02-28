@@ -37,30 +37,42 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf)
 .PHONY : all
 all : inst/Makefile inst/package $(ALLSIMSDATAFRAME) $(POWERPLOTS)
 
-data/$(CONTEXTPREFIX)%.Rda : exec/$(CONTEXTPREFIX)%.R
+data/$(CONTEXTPREFIX)%.Rda : exec/$(CONTEXTPREFIX)%.R R/Utils.R
+	make package
 	$(RSCRIPT) $< -o $@
 
-data/$(SIMDATAPREFIX)%.Rda : exec/$(SIMDATAPREFIX)%.R
+data/$(SIMDATAPREFIX)%.Rda : exec/$(SIMDATAPREFIX)%.R R/Utils.R
+	make package
 	$(RSCRIPT) $< -o $@
 
-data/$(SIMSTATPREFIX)%.Rda : exec/$(SIMSTATPREFIX)%.R
+data/$(SIMSTATPREFIX)%.Rda : exec/$(SIMSTATPREFIX)%.R R/Utils.R \
+                             R/ChangePointTests.R src/ChangePointTests.cpp \
+                             src/BoostMath.cpp R/ProbabilityFunctions.R \
+                             R/MathFunctions.R
+	make package
 	$(RSCRIPT) $< -o $@
 
 $(SIMSNORMALRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMDATAPREFIX)NormalXY.Rda \
-                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                          exec/PowerSimRegression.R R/Utils.R
+	make package
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -s $(SIMSEED)23 -v
 
-$(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID)
+$(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) exec/Aggregator.R R/Utils.R
+	make package
 	$(RSCRIPT) exec/Aggregator.R -i $< -o $@ -a $(LEVEL) \
 		 -T data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
 		 -C data/$(CONTEXTPREFIX)Main.Rda
 
-$(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ)
-	$(RSCRIPT) exec/Appender.R -i $^ -o $@
+$(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ) exec/Appender.R R/Utils.R
+	make package
+	$(RSCRIPT) exec/Appender.R -i $(word 1, $^) -o $@
 
-$(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF)
+$(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF) exec/UnivariatePlotter.R \
+                                R/Utils.R
+	make package
 	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTNORMALPREFIX) \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
