@@ -28,7 +28,7 @@ stop_with_message <- CPAT:::stop_with_message
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(input, prefix = "", variable = NULL, level = 0.05,
+main <- function(input, prefix = "", variable = "", level = 0.05,
                  levellinetype = "dotted", width = 3, height = 2,
                  verbose = FALSE, help = FALSE, opts = NA) {
   # This function will be executed when the script is called from the command
@@ -48,12 +48,12 @@ main <- function(input, prefix = "", variable = NULL, level = 0.05,
   check_envir_has_objects(input_env_expected_objects, envir = input_env,
                           blame_string = input)
   power_sim_stat_data <- input_env$power_sim_stat_data
-  plot_desc <- input_env$power_sim_stat_data
+  plot_desc <- input_env$plot_desc
   stop_with_message(is.character(plot_desc) & all(!is.null(names(plot_desc))),
                     "Invalid plot_desc from" %s% input %s% "; must be" %s%
                     "named character vector")
   power_df_names <- names(power_sim_stat_data)
-  if (is.null(variable)) {
+  if (variable == "") {
     variable <- power_df_names[which(!(power_df_names %in%
                                c("power", "stat", "cpt", "n")))[1]]
   }
@@ -94,6 +94,9 @@ main <- function(input, prefix = "", variable = NULL, level = 0.05,
   names(filenames_base) <- n_levels
   filenames_tex <- filenames_base %s0% ".tex"
   filenames_pdf <- filenames_base %s0% ".pdf"
+  names(filenames_tex) <- names(filenames_base)
+  names(filenames_pdf) <- names(filenames_base)
+  cwd <- getwd()  # Get the current working directory
   for (nc in n_levels) {
     nch <- as.character(nc)
     df <- plot_df %>% filter(n == nc)
@@ -105,7 +108,9 @@ main <- function(input, prefix = "", variable = NULL, level = 0.05,
     tikz(filenames_tex[nch], width = width, height = height, standAlone = TRUE)
     print(p)
     dev.off()
-    texi2pdf(filenames_tex[nch], clean = TRUE, quiet = verbose)
+    setwd(dirname(filenames_tex[[nch]]))
+    texi2pdf(basename(filenames_tex[nch]), clean = TRUE, quiet = verbose)
+    setwd(cwd)
   }
 
   if (verbose) {
@@ -122,15 +127,14 @@ main <- function(input, prefix = "", variable = NULL, level = 0.05,
 # INTERFACE DEFINITION AND COMMAND LINE IMPLEMENTATION
 ################################################################################
 
-  if (sys.nframe() == 0) {
+if (sys.nframe() == 0) {
   p <- arg_parser("Plot power simulation data when the changing variable" %s%
                   "is univariate, and save the plots.")
   p <- add_argument(p, "input", type = "character", nargs = 1,
                     help = ".Rda file containing data to plot")
   p <- add_argument(p, "--prefix", type = "character", default = "",
-                    nargs = 1, help = "Prefix for output file names" %s%
-                                      "(including directory)")
-  p <- add_argument(p, "--variable", type = "character", default = NULL,
+                    help = "Prefix for output file names (including directory)")
+  p <- add_argument(p, "--variable", type = "character", default = "",
                     help = "The x-axis variable (if not set, automatically" %s%
                            "determined)")
   p <- add_argument(p, "--level", type = "double", default = 0.05,

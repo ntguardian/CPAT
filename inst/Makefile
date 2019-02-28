@@ -29,9 +29,13 @@ ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS)) $(SIMSNORMALDF)
 
 POWERPLOTPREFIX=inst/plots/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
+POWERPLOTWIDTH=3
+POWERPLOTHEIGHT=2
+POWERPLOTLEVELLINE=dotted
+POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf)
 
 .PHONY : all
-all : inst/Makefile inst/package $(ALLSIMSDATAFRAME)
+all : inst/Makefile inst/package $(ALLSIMSDATAFRAME) $(POWERPLOTS)
 
 data/$(CONTEXTPREFIX)%.Rda : exec/$(CONTEXTPREFIX)%.R
 	$(RSCRIPT) $< -o $@
@@ -56,6 +60,11 @@ $(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID)
 $(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ)
 	$(RSCRIPT) exec/Appender.R -i $^ -o $@
 
+$(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF)
+	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTNORMALPREFIX) \
+		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
+		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
 .PHONY : simconfig
 simconfig : $(CONTEXTGENERATORS) $(SIMDATAGENERATORS) $(SIMSTATGENERATORS)
 	make $(CONTEXTGENERATORS:exec/%.R=data/%.Rda)
@@ -79,10 +88,13 @@ clean :
 	-rm $(SIMSTATDATA)
 	-rm $(ALLSIMS)
 	-rm $(ALLSIMSDATAFRAME)
+	-rm $(subst .pdf,.tex,$(POWERPLOTS))
+	-rm $(POWERPLOTS)
 
 .PHONY : init
 init :
 	make simconfig
+	echo "I'm empty for now" > $(POWERPLOTNORMALPREFIX)n50.pdf
 
 .PHONY : dependencies
 dependencies :
