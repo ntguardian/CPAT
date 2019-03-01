@@ -65,7 +65,11 @@ equations); otherwise, use slower but more numerically stable
 solution techniques}
 }
 \value{
-TODO: RETURN VALUE DESCRIPTION
+If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
+        value of the test statistic; otherwise, a list that contains the test
+        statistic and the other values requested (if both are \code{TRUE},
+        the test statistic is in the first position and the estimated change
+        point in the second)
 }
 \description{
 This function computes the Rényi-type statistic for detecting structural
@@ -80,5 +84,8 @@ IGNORED AND \code{custom_var} SHOULD NOT BE NULL, BUT CREATE A MATRIX THE
 SAME DIMENSION AS THE REGRESSION MODEL.
 }
 \examples{
-CPAT:::stat_Zn_reg()  # TODO: EXAMPLE
+x <- rnorm(1000)
+y <- 1 + 2 * x + rnorm(1000)
+df <- data.frame(x, y)
+CPAT:::stat_Zn_reg(y ~ x, data = df)
 }
