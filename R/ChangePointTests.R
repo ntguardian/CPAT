@@ -796,9 +796,16 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #'             equations); otherwise, use slower but more numerically stable
 #'             solution techniques
 #' @inheritParams stat_Zn
-#' @return TODO: RETURN VALUE DESCRIPTION
+#' @return If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
+#'         value of the test statistic; otherwise, a list that contains the test
+#'         statistic and the other values requested (if both are \code{TRUE},
+#'         the test statistic is in the first position and the estimated change
+#'         point in the second)
 #' @examples
-#' CPAT:::stat_Zn_reg()  # TODO: EXAMPLE
+#' x <- rnorm(1000)
+#' y <- 1 + 2 * x + rnorm(1000)
+#' df <- data.frame(x, y)
+#' CPAT:::stat_Zn_reg(y ~ x, data = df)
 stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                         estimate = FALSE, use_kernel_var = FALSE,
                         custom_var = NULL, kernel = "ba", bandwidth = "and",
