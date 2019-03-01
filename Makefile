@@ -18,7 +18,17 @@ SIMSEED=201902
 LEVEL=0.05
 
 SIMSNORMALRENYIRESID=data/SimsNormalRenyiResid.Rda
-ALLSIMS=$(SIMSNORMALRENYIRESID)
+SIMSNORMALCUSUM=data/SimsNormalCUSUM.Rda
+SIMSNORMALHS=data/SimsNormalHS.Rda
+SIMSARMARENYIRESID=data/SimsARMARenyiResid.Rda
+SIMSARMACUSUM=data/SimsARMACUSUM.Rda
+SIMSARMAHS=data/SimsARMAHS.Rda
+SIMSGARCHRENYIRESID=data/SimsGARCHRenyiResid.Rda
+SIMSGARCHCUSUM=data/SimsGARCHCUSUM.Rda
+SIMSGARCHHS=data/SimsGARCHHS.Rda
+ALLSIMS=$(SIMSNORMALRENYIRESID) $(SIMSNORMALCUSUM) $(SIMSNORMALHS) \
+        $(SIMSARMARENYIRESID) $(SIMSARMACUSUM) $(SIMSARMAHS) \
+        $(SIMSGARCHRENYIRESID) $(SIMSGARCHCUSUM) $(SIMSGARCHHS)
 
 SIMSNORMALRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYIRESID))
 
@@ -57,6 +67,30 @@ data/$(SIMSTATPREFIX)%.Rda : exec/$(SIMSTATPREFIX)%.R R/Utils.R \
 $(SIMSNORMALRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMDATAPREFIX)NormalXY.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSNORMALCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
+                     data/$(SIMDATAPREFIX)NormalXY.Rda \
+                     data/$(SIMSTATPREFIX)CUSUM.Rda
+$(SIMSNORMALHS) : data/$(CONTEXTPREFIX)Main.Rda \
+                  data/$(SIMDATAPREFIX)NormalXY.Rda \
+                  data/$(SIMSTATPREFIX)HS.Rda
+$(SIMSARMARENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
+                        data/$(SIMDATAPREFIX)ARMAXY.Rda \
+                        data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSARMACUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
+                   data/$(SIMDATAPREFIX)ARMAXY.Rda \
+                   data/$(SIMSTATPREFIX)CUSUM.Rda
+$(SIMSARMAHS) : data/$(CONTEXTPREFIX)Main.Rda \
+                data/$(SIMDATAPREFIX)ARMAXY.Rda \
+                data/$(SIMSTATPREFIX)HS.Rda
+$(SIMSGARCHRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
+                         data/$(SIMDATAPREFIX)GARCHXY.Rda \
+                         data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSGARCHCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
+                    data/$(SIMDATAPREFIX)GARCHXY.Rda \
+                    data/$(SIMSTATPREFIX)CUSUM.Rda
+$(SIMSGARCHHS) : data/$(CONTEXTPREFIX)Main.Rda \
+                 data/$(SIMDATAPREFIX)GARCHXY.Rda \
+                 data/$(SIMSTATPREFIX)HS.Rda
 
 $(ALLSIMS) : exec/PowerSimRegression.R R/Utils.R
 
