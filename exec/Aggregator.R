@@ -60,7 +60,7 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                     "all rows named, with names corresponding to names" %s0%
                     "struc_models")
   res_list <- input_objects$res_list
-  stop_with_message(all(sapply(res_list, is.list)) &
+  stop_with_message(is.list(res_list) & all(sapply(res_list, is.list)) &
                     all(sapply(res_list,
                                function(l) {all(sapply(l, is.list))})) &
                     all(sapply(res_list,

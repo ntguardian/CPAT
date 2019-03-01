@@ -37,6 +37,8 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf)
 .PHONY : all
 all : inst/Makefile inst/package $(ALLSIMSDATAFRAME) $(POWERPLOTS)
 
+.PRECIOUS : $(ALLSIMS)
+
 data/$(CONTEXTPREFIX)%.Rda : exec/$(CONTEXTPREFIX)%.R R/Utils.R
 	make package
 	$(RSCRIPT) $< -o $@
