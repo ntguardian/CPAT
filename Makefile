@@ -31,11 +31,25 @@ ALLSIMS=$(SIMSNORMALRENYIRESID) $(SIMSNORMALCUSUM) $(SIMSNORMALHS) \
         $(SIMSGARCHRENYIRESID) $(SIMSGARCHCUSUM) $(SIMSGARCHHS)
 
 SIMSNORMALRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYIRESID))
+SIMSNORMALCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALCUSUM))
+SIMSNORMALHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHS))
+SIMSARMARENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSARMARENYIRESID))
+SIMSARMACUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSARMACUSUM))
+SIMSARMAHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSARMAHS))
+SIMSGARCHRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHRENYIRESID))
+SIMSGARCHCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHCUSUM))
+SIMSGARCHHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHS))
 
-SIMSNORMALDFPREREQ=$(SIMSNORMALRENYIRESIDDF)
+SIMSNORMALDFPREREQ=$(SIMSNORMALRENYIRESIDDF) $(SIMSNORMALCUSUMDF) \
+                   $(SIMSNORMALHSDF)
 SIMSNORMALDF=data/SimsNormal.Rda
+SIMSARMADFPREREQ=$(SIMSARMARENYIRESIDDF) $(SIMSARMACUSUMDF) $(SIMSARMAHSDF)
+SIMSARMADF=data/SimsARMA.Rda
+SIMSGARCHDFPREREQ=$(SIMSGARCHRENYIRESIDDF) $(SIMSGARCHCUSUMDF) $(SIMSGARCHHSDF)
+SIMSGARCHDF=data/SimsGARCH.Rda
 
-ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS)) $(SIMSNORMALDF)
+ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS)) $(SIMSNORMALDF) \
+                 $(SIMSARMADF) $(SIMSGARCHDF)
 
 POWERPLOTPREFIX=inst/plots/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
@@ -99,11 +113,34 @@ $(ALLSIMS) :
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -s $(SIMSEED)23 -v
 
-$(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) exec/Aggregator.R R/Utils.R
+$(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) \
+                            data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                            data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMALCUSUMDF) : $(SIMSNORMALCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
+                       data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMALHSDF) : $(SIMSNORMALHS) data/$(SIMSTATPREFIX)HS.Rda \
+                    data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSARMARENYIRESIDDF) : $(SIMSARMARENYIRESID) \
+                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                          data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSARMACUSUMDF) : $(SIMSARMACUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
+                     data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSARMAHSDF) : $(SIMSARMAHS) data/$(SIMSTATPREFIX)HS.Rda \
+                  data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSGARCHRENYIRESIDDF) : $(SIMSGARCHRENYIRESID) \
+                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                           data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSGARCHCUSUMDF) : $(SIMSGARCHCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
+                      data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSGARCHHSDF) : $(SIMSGARCHHS) data/$(SIMSTATPREFIX)HS.Rda \
+                   data/$(CONTEXTPREFIX)Main.Rda
+
+$(ALLSIMSDATAFRAME) : exec/Aggregator.R R/Utils.R
+
+$(ALLSIMSDATAFRAME) :
 	make package
-	$(RSCRIPT) exec/Aggregator.R -i $< -o $@ -a $(LEVEL) \
-		 -T data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
-		 -C data/$(CONTEXTPREFIX)Main.Rda
+	$(RSCRIPT) exec/Aggregator.R -i $(word 1, $^) -o $@ -a $(LEVEL) \
+		 -T $(word 2, $^) -C $(word 3, $^)
 
 $(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ) exec/Appender.R R/Utils.R
 	make package
