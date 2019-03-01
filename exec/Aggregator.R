@@ -169,7 +169,7 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
     output <- base %s0% "DataFrame.Rda"
   }
 
-  save(power_sim_stat_data, plot_desc, file = output)
+  save(power_sim_stat_data, plot_desc, file = output, ascii = TRUE)
 }
 
 ################################################################################

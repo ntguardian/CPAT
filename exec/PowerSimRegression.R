@@ -262,7 +262,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
             attributes(simulation) <- NULL
             res_list[[nname]][[kstar_name]][[stat_name]][[r_name]] <- simulation
             if (!notsafe) {
-              save(res_list, file = output)
+              save(res_list, file = output, ascii = TRUE)
             }
           }
           seed <- seed + 1  # Get next seed
@@ -280,7 +280,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
     print(warnings())
   }
   cat("Output File:", output %s0% "\n")
-  save(res_list, file = output)
+  save(res_list, file = output, ascii = TRUE)
 }
 
 ################################################################################

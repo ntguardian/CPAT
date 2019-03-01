@@ -37,7 +37,7 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", linetype = "dashed",
   pval_functions <- c("ZnResid" = function(q) {1 - CPAT:::pZn(q)})
   plot_desc <- c("ZnResid" = linetype)
 
-  save(stat_functions, pval_functions, plot_desc, file = output)
+  save(stat_functions, pval_functions, plot_desc, file = output, ascii = TRUE)
 }
 
 ################################################################################

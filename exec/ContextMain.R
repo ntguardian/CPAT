@@ -67,7 +67,7 @@ main <- function(output = "ContextMain.Rda", help = FALSE) {
   rownames(struc_name_conversion) <- names(struc_models)
 
   save(n_values, kstar_functions, struc_models, struc_name_conversion,
-       file = output)
+       file = output, ascii = TRUE)
 }
 
 ################################################################################

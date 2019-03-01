@@ -61,7 +61,7 @@ main <- function(inputs, output = "Appended.Rda") {
 
   # Now for actual loop
   if (length(inputs) == 1) {
-    save(power_sim_stat_data, plot_desc, file = output)
+    save(power_sim_stat_data, plot_desc, file = output, ascii = TRUE)
     return()
   }
   
@@ -90,7 +90,7 @@ main <- function(inputs, output = "Appended.Rda") {
     power_sim_stat_data <- rbind(power_sim_stat_data, temp_df)
   }
 
-  save(power_sim_stat_data, plot_desc, file = output)
+  save(power_sim_stat_data, plot_desc, file = output, ascii = TRUE)
 }
 
 ################################################################################

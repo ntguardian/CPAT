@@ -56,8 +56,11 @@ data/$(SIMSTATPREFIX)%.Rda : exec/$(SIMSTATPREFIX)%.R R/Utils.R \
 
 $(SIMSNORMALRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMDATAPREFIX)NormalXY.Rda \
-                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
-                          exec/PowerSimRegression.R R/Utils.R
+                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+
+$(ALLSIMS) : exec/PowerSimRegression.R R/Utils.R
+
+$(ALLSIMS) :
 	make package
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -s $(SIMSEED)23 -v
@@ -112,6 +115,7 @@ clean :
 .PHONY : init
 init :
 	make simconfig
+	-mkdir inst/plots
 	echo "I'm empty for now" > $(POWERPLOTNORMALPREFIX)n50.pdf
 
 .PHONY : dependencies

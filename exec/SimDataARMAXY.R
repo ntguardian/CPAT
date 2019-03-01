@@ -1,33 +1,38 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimDataNormalXY.R
+# SimDataARMAXY.R
 ################################################################################
-# 2019-02-22
+# 2019-03-01
 # Curtis Miller
 ################################################################################
 # Data simulation definition file; simulate data from Normal distribution, and
-# residuals from i.i.d. Normal distribution.
+# residuals from an ARMA(1, 1) process.
 ################################################################################
 
-# optparse: A package for handling command line arguments
-if (!suppressPackageStartupMessages(require("optparse"))) {
-  install.packages("optparse")
-  require("optparse")
+# argparser: A package for handling command line arguments
+if (!suppressPackageStartupMessages(require("argparser"))) {
+  install.packages("argparser")
+  require("argparser")
 }
 
 ################################################################################
-# MAIN FUNCTION DEFINITION
+# EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
+main <- function(output) {
   # This function will be executed when the script is called from the command
-  # line; the help parameter does nothing, but is needed for do.call() to work
+  # line
 
   ################################################################################
   # REQUIRED OBJECTS
   ################################################################################
 
-  eps_generator <- function(n) {rnorm(n)}
+  # ARIMA(2, 2) model
+  eps_generator <- function(n) {arima.sim(n = n, n.start = 500, model = list(
+                                 order = c(2, 0, 2),
+                                 ar = c(0.4, -0.03),
+                                 ma = c(0.5, -0.06)
+  ))}
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
@@ -53,19 +58,24 @@ main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
 }
 
 ################################################################################
-# INTERFACE SETUP
+# INTERFACE DEFINITION AND COMMAND LINE IMPLEMENTATION
 ################################################################################
 
 if (sys.nframe() == 0) {
-  cl_args <- parse_args(OptionParser(
-        description = "Defines data generation functions for simulations",
-        option_list = list(
-          make_option(c("--output", "-o"), type = "character",
-                      default = "SimDataNormalXY.Rda",
-                      help = "Name of output .Rda file")
-        )
-      ))
+  p <- arg_parser("Defines data generation functions for simulations.")
+  p <- add_argument(p, "--output", type = "character", nargs = 1,
+                    default = "SimDataARMAXY.R",
+                    help = "Name of output .Rda file")
 
-  do.call(main, cl_args)
+  cl_args <- parse_args(p)
+  cl_args <- cl_args[!(names(cl_args) %in% c("help", "opts"))]
+  if (any(sapply(cl_args, is.na))) {
+    # User did not specify all inputs; print help message
+    print(p)
+    cat("\n\nNot all needed inputs were given.\n")
+    quit()
+  }
+
+  do.call(main, cl_args[2:length(cl_args)])
 }
 

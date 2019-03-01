@@ -36,7 +36,7 @@ main <- function(output = "SimTestCUSUM.Rda", linetype = "longdash",
   pval_functions <- c("VnResid" = function(q) {1 - CPAT:::pkolmogorov(q)})
   plot_desc <- c("VnResid" = linetype)
 
-  save(stat_functions, pval_functions, plot_desc, file = output)
+  save(stat_functions, pval_functions, plot_desc, file = output, ascii = TRUE)
 }
 
 ################################################################################
