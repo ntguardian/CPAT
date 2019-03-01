@@ -13,7 +13,7 @@ SIMSTATGENERATORS=$(wildcard exec/$(SIMSTATPREFIX)*.R)
 CONTEXTDATA=$(wildcard data/$(CONTEXTPREFIX)*.Rda)
 SIMDATADATA=$(wildcard data/$(SIMDATAPREFIX)*.Rda)
 SIMSTATDATA=$(wildcard data/$(SIMSTATPREFIX)*.Rda)
-SIMSEED=201902
+SIMSEED=2019
 
 LEVEL=0.05
 
@@ -111,7 +111,8 @@ $(ALLSIMS) : exec/PowerSimRegression.R R/Utils.R
 $(ALLSIMS) :
 	make package
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
-		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -s $(SIMSEED)23 -v
+		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -v \
+		 -s $(SIMSEED)$(shell echo $@ | md5sum | grep -Eo "[[:digit:]]{,5}" | head -n1)
 
 $(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) \
                             data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
