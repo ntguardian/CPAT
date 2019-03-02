@@ -48,9 +48,9 @@ SIMSARMADF=data/SimsARMA.Rda
 SIMSGARCHDFPREREQ=$(SIMSGARCHRENYIRESIDDF) $(SIMSGARCHCUSUMDF) $(SIMSGARCHHSDF)
 SIMSGARCHDF=data/SimsGARCH.Rda
 
-ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS)) $(SIMSNORMALDF) \
-                 $(SIMSARMADF) $(SIMSGARCHDF)
+ALLDISTDF=$(SIMSNORMALDF) $(SIMSARMADF) $(SIMSGARCHDF)
 
+ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
 POWERPLOTPREFIX=inst/plots/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
 POWERPLOTWIDTH=3
@@ -112,7 +112,7 @@ $(ALLSIMS) :
 	make package
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -v \
-		 -s $(SIMSEED)$(shell echo $@ | md5sum | grep -Eo "[[:digit:]]{,5}" | head -n1)
+		 -s $(SIMSEED)$(shell echo $@ $^ | md5sum | grep -Eo "[[:digit:]]{3,9}" | head -n1)
 
 $(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) \
                             data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
@@ -143,9 +143,15 @@ $(ALLSIMSDATAFRAME) :
 	$(RSCRIPT) exec/Aggregator.R -i $(word 1, $^) -o $@ -a $(LEVEL) \
 		 -T $(word 2, $^) -C $(word 3, $^)
 
-$(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ) exec/Appender.R R/Utils.R
-	make package
-	$(RSCRIPT) exec/Appender.R -i $(word 1, $^) -o $@
+$(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ)
+$(SIMSARMADF) : $(SIMSARMADFPREREQ)
+$(SIMSGARCHDF) : $(SIMSGARCHDFPREREQ)
+$(ALLDISTDF) : exec/Appender.R
+
+$(ALLDISTDF) :
+	echo $@ $^
+#	make package
+#	$(RSCRIPT) exec/Appender.R -i $(word 1, $^) -o $@
 
 $(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF) exec/UnivariatePlotter.R \
                                 R/Utils.R
@@ -176,6 +182,7 @@ mostlyclean :
 	-rm $(SIMDATADATA)
 	-rm $(SIMSTATDATA)
 	-rm $(ALLSIMSDATAFRAME)
+	-rm $(ALLDISTDF)
 	-rm $(subst .pdf,.tex,$(POWERPLOTS))
 	-rm $(POWERPLOTS)
 
