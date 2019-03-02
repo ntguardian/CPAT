@@ -149,9 +149,8 @@ $(SIMSGARCHDF) : $(SIMSGARCHDFPREREQ)
 $(ALLDISTDF) : exec/Appender.R
 
 $(ALLDISTDF) :
-	echo $@ $^
-#	make package
-#	$(RSCRIPT) exec/Appender.R -i $(word 1, $^) -o $@
+	make package
+	$(RSCRIPT) exec/Appender.R -i $(filter-out exec/Appender.R, $^) -o $@
 
 $(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF) exec/UnivariatePlotter.R \
                                 R/Utils.R
