@@ -107,10 +107,6 @@ if (sys.nframe() == 0) {
 
   cl_args <- parse_args(p)
   cl_args <- cl_args[!(names(cl_args) %in% c("opts", "help"))]
-  if (any(sapply(cl_args, is.na))) {
-    print(p)
-    quit()
-  }
 
   do.call(main, cl_args[2:length(cl_args)])
 }
