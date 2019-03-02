@@ -258,7 +258,6 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
               f <- as.formula(f)
               
               stat(formula = f, data = df)
-              cat("I'm here!\n")
             }
             attributes(simulation) <- NULL
             res_list[[nname]][[kstar_name]][[stat_name]][[r_name]] <- simulation
