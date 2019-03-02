@@ -53,10 +53,14 @@ ALLDISTDF=$(SIMSNORMALDF) $(SIMSARMADF) $(SIMSGARCHDF)
 ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
 POWERPLOTPREFIX=inst/plots/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
+POWERPLOTARMAPREFIX=$(POWERPLOTPREFIX)ARMA_
+POWERPLOTGARCHPREFIX=$(POWERPLOTPREFIX)GARCH_
 POWERPLOTWIDTH=3
 POWERPLOTHEIGHT=2
 POWERPLOTLEVELLINE=dotted
-POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf)
+POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
+           $(wildcard $(POWERPLOTARMAPREFIX)*.pdf) \
+           $(wildcard $(POWERPLOTGARCHPREFIX)*.pdf)
 
 .PHONY : all
 all : inst/Makefile inst/package $(ALLSIMSDATAFRAME) $(POWERPLOTS)
@@ -159,6 +163,20 @@ $(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF) exec/UnivariatePlotter.R \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
 
+$(POWERPLOTARMAPREFIX)%.pdf : $(SIMSARMADF) exec/UnivariatePlotter.R \
+                              R/Utils.R
+	make package
+	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTARMAPREFIX) \
+		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
+		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
+$(POWERPLOTGARCHPREFIX)%.pdf : $(SIMSGARCHDF) exec/UnivariatePlotter.R \
+                               R/Utils.R
+	make package
+	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTGARCHPREFIX) \
+		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
+		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
 .PHONY : simconfig
 simconfig : $(CONTEXTGENERATORS) $(SIMDATAGENERATORS) $(SIMSTATGENERATORS)
 	make $(CONTEXTGENERATORS:exec/%.R=data/%.Rda)
@@ -195,6 +213,8 @@ init :
 	make simconfig
 	-mkdir inst/plots
 	echo "I'm empty for now" > $(POWERPLOTNORMALPREFIX)n50.pdf
+	echo "I'm empty for now" > $(POWERPLOTARMAPREFIX)n50.pdf
+	echo "I'm empty for now" > $(POWERPLOTGARCHPREFIX)n50.pdf
 
 .PHONY : dependencies
 dependencies :
