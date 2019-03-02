@@ -63,7 +63,7 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTGARCHPREFIX)*.pdf)
 
 .PHONY : all
-all : inst/Makefile inst/package $(ALLSIMSDATAFRAME) $(POWERPLOTS)
+all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME)
 
 .PRECIOUS : $(ALLSIMS)
 
