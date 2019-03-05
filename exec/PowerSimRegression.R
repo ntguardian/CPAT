@@ -77,8 +77,6 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
-  # TODO: curtis: ADD RECOVERY MODE -- Thu 28 Feb 2019 04:24:59 PM MST
-
   suppressPackageStartupMessages(library(doParallel))
   suppressPackageStartupMessages(library(doRNG))
   suppressPackageStartupMessages(library(purrr))
