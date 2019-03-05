@@ -195,20 +195,20 @@ test_that("stat_hs() functions properly", {
 
 test_that("stat_hs_reg() functions properly", {
   expect_error(CPAT:::stat_hs_reg(dat), "Bad formula passed")
-  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df), 281.501474313967)
-  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = 6), 163.055563668931)
-  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = log), 689.130875218082)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df), 4.31295336184296)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = 6), 1.90718155854372)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = log), 45728821107836504)
   expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, estimate = TRUE,
                                   get_all_vals = TRUE),
-               list(statistic = 281.501474313967, estimate = 8L,
-                    stat_vals = c(7.03491408202991,  1.66010199868875,
-                                  40.9399424737485,  14.1242827822490,
-                                  1.52286866035747,  19.5060044271148,
-                                  7.28586759701769,  281.501474313967,
-                                  226.284675272493,  31.8975103150450,
-                                  77.1922754922915,  31.7315590887255,
-                                  54.3369144393039,  60.6314012550627,
-                                  32.1069206921016, -2.23212098996788)))
+               list(statistic = 4.31295336184296, estimate = 1L,
+                    stat_vals = c( 4.312953361842960, -0.464210620180501,
+                                  -1.209761372351950, -1.511710762774970,
+                                  -1.636033980821910, -1.423330875070440,
+                                  -1.664290280254540,  3.863475451748580,
+                                   2.729950006095740, -1.453799593143130,
+                                  -0.422480788176892, -1.476981256289980,
+                                  -0.937368463192843, -0.636798519922383,
+                                  -1.379690943378280, -2.284485815966370)))
 })
 
 test_that("andrews_test() functions properly", {
@@ -320,8 +320,8 @@ test_that("HS.test() functions properly", {
   expect_error(HS.test(c("a", "b")), "Don't know how to handle x of type" %s%
                                       "character")
   expect_error(HS.test(df), "Formula needed")
-  expect_equal(HS.test(df, y ~ x)$statistic, c(A = 281.501474313967))
-  expect_equal(HS.test(df, y ~ x, m = 6)$statistic, c(A = 163.055563668931))
+  expect_equal(HS.test(df, y ~ x)$statistic, c(A = 4.31295336184296))
+  expect_equal(HS.test(df, y ~ x, m = 6)$statistic, c(A = 1.90718155854372))
 })
 
 test_that("Andrews.test() functions properly", {
