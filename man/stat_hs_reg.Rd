@@ -33,7 +33,7 @@ If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
         point in the second)
 }
 \description{
-Compute the Hidalgo-Seo statistic indended for detecting change in linear
+Compute the Hidalgo-Seo statistic intended for detecting change in linear
 models (estimated via least squares regression).
 }
 \details{
@@ -48,19 +48,19 @@ where \eqn{a_n = \sqrt{2 \log \log n}}; \eqn{b_n = a_n^2 + d \log \log \log n
 model coefficients; \eqn{\hat{u}_t = y_t - \hat{\beta}^T x_t} are the
 residuals of the model;
 
-\deqn{\mathcal{LM}(s) = \left(\frac{n}{\hat{\Delta}(\hat{\beta}) s (n - s)}
-\right) \left(\sum_{t = 1}^s x_t \hat{u}_t \right)^T\left(\sum_{t = 1}^s x_t
-\hat{u}_t \right)^T}
+\deqn{\mathcal{LM}(s) = \left(\frac{n}{(\hat{\beta}) s (n - s)}
+\right) \left(\sum_{t = 1}^s x_t \hat{u}_t
+\right)^T\hat{\Delta}^{-1}\left(\sum_{t = 1}^s x_t \hat{u}_t \right)^T}
 
 and \eqn{\hat{\Delta}(\hat{\beta})} is the long-run variance estimator
 
 \deqn{\hat{\Delta}(\beta) = \frac{1}{m} \sum_{j = 1}^m I\left( \frac{2\pi
 j}{n}; \beta\right)}
 
-where \eqn{I(\cdot ; \beta)} is the periodogram estimated from the residuals
-when the regression model coefficients are given by \eqn{\beta}. This is the
-test statistic suggested by the procedure introduced in
-\insertCite{hidalgoseo13}{CPAT}.
+where \eqn{I(\cdot ; \beta)} is the periodogram estimated from \eqn{x_t
+\hat{u}_t} #' when the regression model coefficients are given by
+\eqn{\beta}. This is the #' test statistic suggested by the procedure
+introduced in \insertCite{hidalgoseo13}{CPAT}.
 
 The parameter \eqn{m} described above can be controlled via the function
 parameter \code{m}, which can be either numeric or a function that returns
