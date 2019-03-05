@@ -1004,11 +1004,12 @@ stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
   if (is.function(m)) {
     m <- m(n)
   }
-  lrv <- sum((abs(fft(eps))^2)[1:m])/(n * m)
+  fourier <- mvfft(X * eps)
+  Delta <- Conj(t(fourier[1:m, ])) %*% fourier[1:m, ] / (n * m)
 
   lms <- function(s) {
     sum_of_gt <- colSums((X * eps)[1:s,])
-    sum(sum_of_gt * sum_of_gt) * n /(s * (n - s) * lrv)
+    abs((sum_of_gt %*% solve(Delta, sum_of_gt) * n /(s * (n - s)))[1, 1])
   }
   lms <- Vectorize(lms)
   b_n <- 2 * log(log(n)) + d/2 * log(log(log(n))) - log(gamma(d/2))

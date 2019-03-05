@@ -23,16 +23,16 @@ main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
-  ################################################################################
+  ##############################################################################
   # REQUIRED OBJECTS
-  ################################################################################
+  ##############################################################################
 
   eps_generator <- function(n) {rnorm(n)}
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
     if (d > 1) {
-      interim_mat <- matrix(rnorm(n * d, mean = 1), ncol = d - 1)
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 1), ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
       interim_mat <- as.matrix(const)

@@ -23,9 +23,9 @@ main <- function(output) {
   # This function will be executed when the script is called from the command
   # line
 
-  ################################################################################
+  ##############################################################################
   # REQUIRED OBJECTS
-  ################################################################################
+  ##############################################################################
 
   # ARIMA(2, 2) model
   eps_generator <- function(n) {arima.sim(n = n, n.start = 500, model = list(
@@ -37,7 +37,7 @@ main <- function(output) {
     d <- length(beta)
     const <- rep(1, times = n)
     if (d > 1) {
-      interim_mat <- matrix(rnorm(n * d, mean = 1), ncol = d - 1)
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 1), ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
       interim_mat <- as.matrix(const)
