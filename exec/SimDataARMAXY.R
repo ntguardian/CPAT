@@ -28,11 +28,12 @@ main <- function(output) {
   ##############################################################################
 
   # ARIMA(2, 2) model
-  eps_generator <- function(n) {arima.sim(n = n, n.start = 500, model = list(
-                                 order = c(2, 0, 2),
-                                 ar = c(0.4, -0.03),
-                                 ma = c(0.5, -0.06)
-  ))}
+  eps_generator <- function(n) {as.numeric(
+                                  arima.sim(n = n, n.start = 500, model = list(
+                                    order = c(2, 0, 2),
+                                    ar = c(0.4, -0.03),
+                                    ma = c(0.5, -0.06)
+  ), sd = sqrt(2153/4042)))}  # SD chosen so that LRV is 1
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
