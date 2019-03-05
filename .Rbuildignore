@@ -13,3 +13,4 @@ XOUT.*$
 ^data-raw/
 ^svgs/
 ^Makefile_old$
+^MakeOutput.txt$
