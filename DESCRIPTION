@@ -15,7 +15,8 @@ Suggests:
     ggplot2 (>= 2.2),
     dplyr (>= 0.7),
     tikzDevice (>= 0.12),
-    testthat (>= 2.0)
+    testthat (>= 2.0),
+    R.rsp,
 Imports:
     stats (>= 3.2),
     utils (>= 3.2),
@@ -26,6 +27,7 @@ Imports:
     purrr (>= 0.2),
 RdMacros:
     Rdpack
+VignetteBuilder: R.rsp
 SystemRequirements:
     GNU make
 License: MIT + file LICENSE

@@ -12,5 +12,5 @@ XOUT.*$
 ^package$
 ^data-raw/
 ^svgs/
-^Makefile_old$
 ^MakeOutput.txt$
+^vignettes/power_plot_*.tex$

@@ -51,7 +51,7 @@ SIMSGARCHDF=data/SimsGARCH.Rda
 ALLDISTDF=$(SIMSNORMALDF) $(SIMSARMADF) $(SIMSGARCHDF)
 
 ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
-POWERPLOTPREFIX=inst/plots/power_plot_
+POWERPLOTPREFIX=vignettes/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
 POWERPLOTARMAPREFIX=$(POWERPLOTPREFIX)ARMA_
 POWERPLOTGARCHPREFIX=$(POWERPLOTPREFIX)GARCH_
@@ -211,7 +211,6 @@ clean :
 .PHONY : init
 init :
 	make simconfig
-	-mkdir inst/plots
 	echo "I'm empty for now" > $(POWERPLOTNORMALPREFIX)n50.pdf
 	echo "I'm empty for now" > $(POWERPLOTARMAPREFIX)n50.pdf
 	echo "I'm empty for now" > $(POWERPLOTGARCHPREFIX)n50.pdf
