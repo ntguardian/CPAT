@@ -62,6 +62,8 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTARMAPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTGARCHPREFIX)*.pdf)
 
+VIGNETTES: doc/CollectedPlots.pdf
+
 .PHONY : all
 all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME)
 
@@ -176,6 +178,12 @@ $(POWERPLOTGARCHPREFIX)%.pdf : $(SIMSGARCHDF) exec/UnivariatePlotter.R \
 	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTGARCHPREFIX) \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
+doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
+
+$(VIGNETTES) :
+	$(RSCRIPT) exec/RemakePackage.R
+	touch package
 
 .PHONY : simconfig
 simconfig : $(CONTEXTGENERATORS) $(SIMDATAGENERATORS) $(SIMSTATGENERATORS)

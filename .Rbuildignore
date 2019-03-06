@@ -1,3 +1,5 @@
+^Meta$
+^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LOGO\.txt$
@@ -13,4 +15,4 @@ XOUT.*$
 ^data-raw/
 ^svgs/
 ^MakeOutput.txt$
-^vignettes/power_plot_*.tex$
+^vignettes/power_plot_.*.tex$
