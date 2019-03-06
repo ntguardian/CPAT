@@ -1,0 +1,121 @@
+%\VignetteIndexEntry{Preliminary Power Plots}
+%\VignetteEngine{R.rsp::tex}
+%\VignetteKeyword{power}
+
+\documentclass{article}
+    % General document formatting
+    \usepackage[margin=0.7in]{geometry}
+    \usepackage[parfill]{parskip}
+    \usepackage[utf8]{inputenc}
+    
+    % Related to math
+    \usepackage{amsmath,amssymb,amsfonts,amsthm}
+
+    \usepackage{tikz}
+    \usepackage{graphicx}
+    \usepackage{subcaption}
+
+    \title{Preliminary Power Plots}
+    \date{March 4, 2019}
+    \author{Curtis Miller}
+
+\begin{document}
+\maketitle
+
+The plots below are power simulations comparing the ability of different test
+statistics to detect structural change in linear regression models. Here, $\beta
+= (1, 2)^T$, so the regression model is $y_t = 1 + 2 x_t + \epsilon_t$, where
+$x_t$ was generated from a $N(1, 1)$ distribution and $\{\epsilon_t\}_{t \in
+\mathbb{N}}$ is a mean-zero stationary process.
+
+The test statistics displayed include the R\'enyi-type statistic with trimming
+parameter $t_T = T^{1/2}$ (\tikz[baseline=-0.5ex]
+\draw[thick, dash pattern=on 4pt off 4pt](0,0) -- (1,0);), the CUSUM statistic
+(\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 8pt off 4pt](0,0) --
+(1,0);), and the Hidalgo-Seo statistic
+(\tikz[baseline=-0.5ex]\draw[thick, dash dot](0,0) -- (1,0);). The R\'enyi-type
+statistic and CUSUM statistics are the univariate statistics computed on the
+estimated residuals of the regression model. The Hidalgo-Seo statistic was
+tailored to the regression context as described in their paper.
+
+For a sample size $T$, the change point occurs near $T^{2/3}$ if there is a
+change at all. If it does, the new model the data follows is $y_t = (1 +
+\frac{\delta}{\sqrt{2}}) + (2 + \frac{\delta}{\sqrt{2}}) x_t + \epsilon_t$,
+where $\delta \in [0,2]$. One may then say that, if $\beta^{*}$ is the new model
+after the change, $\|\beta - \beta^{*}\| = \delta$. Thus the case $\delta = 0$
+represents no change in the model. $\epsilon_t$ is as before.
+
+In this document, $\epsilon_t$ follows one of three models: independent and
+identically distributed $N(0, 1)$ random variables; an ARMA(2, 2) process with
+$\phi_1 = 0.4$, $\phi_2 = -0.03$, $\theta_1 = 0.5$, $\theta_2 = -0.06$, and the
+variance of the noise parameter is chosen so that the long-run variance is one;
+and a GARCH(1, 1) process with $\omega = 0.2$, $\alpha = 0.3$, and $\beta = 0.5$
+(again the long-run variance is one).
+
+For every combination of sample size, test statistic, $\delta$, and
+data-generating process for $\epsilon_t$, 20,000 independent test statistics
+were simulated, and their asymptotically-appropriate $p$-values were computed.
+$H_0$ is rejected for $p$-values less than $\alpha = 0.05$; the value of
+$\alpha$ is signified with a dotted line (\tikz[baseline=-0.5ex]\draw[thick,
+dotted](0,0) -- (1,0);). Values of $\delta$ increment by $0.1$, and the sample
+sizes considered are $T \in \{50, 250, 1000\}$.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_norm_n50.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_ARMA_n50.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_GARCH_n50.pdf}
+    \end{subfigure}
+
+    \bigskip
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_norm_n250.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_ARMA_n250.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_GARCH_n250.pdf}
+    \end{subfigure}
+
+    \bigskip
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_norm_n1000.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_ARMA_n1000.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_GARCH_n1000.pdf}
+    \end{subfigure}
+    \caption{Power plots; rows correspond to the sample sizes 50, 250, and 1000
+             respectively, the first column is for \textit{iid} Normal
+             residuals, the second column ARMA(2, 2) residuals, and the third
+             column GARCH(1, 1) residuals. The $x$-axis tracks values of
+             $\delta$ and the $y$-axis tracks observed power.}
+\end{figure}
+
+From the plots one sees that the Hidalgo-Seo statistic often seems to do better
+than the other statistics. However, it suffers significant size inflation
+especially at smaller sample sizes, and even for larger sample sizes it
+experiences the most size inflation of the three statistics considered.
+Additionally, it is the only statistic shown that is tailored to regression
+models specifically. For small sample sizes, the statistic has bad power
+properties.
+
+The R\'enyi-type statistic and the CUSUM statistic often have similar power
+properties. The latter seems to suffer more from size inflation but generally
+has better power, particularly in larger samples with the size inflation has
+largely vanished.
+
+All statistics struggle the most when the residuals follow an ARMA(2, 2)
+process. The Hidalgo-Seo statistic struggles particularly in the GARCH(1, 1)
+context even when the other statistics seem to perform reasonably well.
+
+\end{document}
+
