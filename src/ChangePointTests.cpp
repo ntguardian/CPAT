@@ -202,6 +202,8 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     const arma::mat X = as<arma::mat>(X_input);
     const arma::vec y = as<arma::vec>(y_input);
     const arma::cube lrv_est_cube(lrv_est.begin(), d, d, n, false);
+    const arma::vec eps = y - X * arma::solve(X, y);
+    const arma::mat eX = X.each_col() % eps;
 
     /* Call X the data matrix and X' its transpose (I usually don't do this);
      * then X'X and X'y are sums. I want sums; these will be "upper sums" (i.e.
@@ -240,7 +242,17 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     arma::vec beta_lower(d, arma::fill::zeros);
     arma::vec beta_upper(d, arma::fill::zeros);
 
+    // If not using pre-computed LRV, prepare for computing it
+    arma::mat Q_lower(d, d, arma::fill::zeros);
+    arma::mat Q_upper(d, d, arma::fill::zeros);
+    if (!(use_kernel_var)) {
+        for (int i = ceiling(double(n)/2) - 1; i < n; ++i) {
+            Q_upper += eX.row(i).t() * eX.row(i);
+        }
+    }
+
     // Compute the test statistic
+    // TODO: INCOMPLETE -- curtis; 2019-03-06 21:48
     for (int k = kn; k <= (n - kn); ++k) {
         if (fast) {
             sxx_lower += X.row(k - 1).t() * X.row(k - 1);
@@ -259,7 +271,6 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
         if (use_kernel_var) {
             sdk = lrv_est_cube.slice(k - 1);
         } else {
-            double eps = 0;
             arma::vec eta(d, arma::fill::zeros);
             int l_lower;
             int l_upper;
@@ -272,8 +283,7 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
             }
 
             for (int l = l_lower; l < l_upper; ++l) {
-                eps = y[l] - arma::dot(X.row(l), beta_lower);
-                eta = eps * X.row(l).t();
+                eta = eps[l] * X.row(l).t();
                 sdk += eta * eta.t();
             }
 
