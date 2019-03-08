@@ -201,7 +201,7 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     // Create Armadillo objects
     const arma::mat X = as<arma::mat>(X_input);
     const arma::vec y = as<arma::vec>(y_input);
-    const arma::cube lrv_est_cube(lrv_est.begin(), d, d, n, false);
+    arma::cube lrv_est_cube(lrv_est.begin(), d, d, n, false);
     const arma::vec eps = y - X * arma::solve(X, y);
     const arma::mat eX = X.each_col() % eps;
 
@@ -246,13 +246,17 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     arma::mat Q_lower(d, d, arma::fill::zeros);
     arma::mat Q_upper(d, d, arma::fill::zeros);
     if (!(use_kernel_var)) {
-        for (int i = ceiling(double(n)/2) - 1; i < n; ++i) {
+        for (int i = 0; i < n / 2; ++i) {
+            Q_lower += eX.row(i).t() * eX.row(i);
+            lrv_est_cube.slice(i) = Q_lower / (double(i) + 1);
+        }
+        for (int i = (n - 1); i >= n / 2; --i) {
             Q_upper += eX.row(i).t() * eX.row(i);
+            lrv_est_cube.slice(i) = Q_upper / (double(n) - i);
         }
     }
 
     // Compute the test statistic
-    // TODO: INCOMPLETE -- curtis; 2019-03-06 21:48
     for (int k = kn; k <= (n - kn); ++k) {
         if (fast) {
             sxx_lower += X.row(k - 1).t() * X.row(k - 1);
@@ -267,30 +271,8 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
             beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
         }
         
-        arma::mat sdk(d, d, arma::fill::zeros);
-        if (use_kernel_var) {
-            sdk = lrv_est_cube.slice(k - 1);
-        } else {
-            arma::vec eta(d, arma::fill::zeros);
-            int l_lower;
-            int l_upper;
-            if (k <= n / 2) {
-                l_lower = 0;
-                l_upper = k;
-            } else {
-                l_lower = k - 1;
-                l_upper = n;
-            }
-
-            for (int l = l_lower; l < l_upper; ++l) {
-                eta = eps[l] * X.row(l).t();
-                sdk += eta * eta.t();
-            }
-
-            sdk /= (l_upper - l_lower);
-        }
-        
-        M_candidate = norm_inv_A_square(beta_lower - beta_upper, sdk);
+        M_candidate = norm_inv_A_square(beta_lower - beta_upper,
+                                        lrv_est_cube.slice(k - 1));
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
             all_vals.push_back(M_candidate * sqrt(kn));
