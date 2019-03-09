@@ -862,6 +862,32 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   }
 }
 
+#' Compute the Rényi-Type Statistic for Stability in Linear Regression Models (R
+#' Implementation)
+#'
+#' This is a pure-R implementation of \code{\link{stat_Zn_reg}}. It's likely
+#' much slower than the original function (with its core written in C++), but
+#' checking that this function correctly computes the test statistic should be
+#' more easily verified.
+#'
+#' @inheritParams stat_Zn_reg
+#' @return If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
+#'         value of the test statistic; otherwise, a list that contains the test
+#'         statistic and the other values requested (if both are \code{TRUE},
+#'         the test statistic is in the first position and the estimated change
+#'         point in the second)
+#' @examples
+#' x <- rnorm(1000)
+#' y <- 1 + 2 * x + rnorm(1000)
+#' df <- data.frame(x, y)
+#' stat_Zn_reg_r(y ~ x, data = df)
+stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
+                          estimate = FALSE, use_kernel_var = FALSE,
+                          custom_var = NULL, kernel = "ba", bandwidth = "and",
+                          get_all_vals = FALSE) {
+  # TODO: curtis: FUNCTION BODY -- Fri 08 Mar 2019 11:36:49 AM MST
+}
+
 #' Multivariate Andrews' Test for End-of-Sample Structural Change
 #'
 #' This implements Andrews' test for end-of-sample change, as described by
