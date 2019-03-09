@@ -180,8 +180,8 @@ inline double norm_inv_A(arma::vec x, arma::mat A) {
     return sqrt(norm_inv_A_square(x, A));
 }
 
-// [[Rcpp::export]]
 // TODO: curtis: THIS HAS BAD STATISTICAL PROPERTIES; WHAT IS WRONG? -- Fri 08 Mar 2019 12:00:51 AM MST
+// [[Rcpp::export]]
 List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                      const double& kn, const bool& use_kernel_var,
                      NumericVector lrv_est, const bool& get_all_vals,

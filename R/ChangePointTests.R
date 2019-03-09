@@ -802,7 +802,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #'         the test statistic is in the first position and the estimated change
 #'         point in the second)
 #' @examples
-#' x <- rnorm(1000)
+#' x <- rnorm(1000, mean = 4)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' CPAT:::stat_Zn_reg(y ~ x, data = df)
@@ -877,15 +877,77 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
 #'         the test statistic is in the first position and the estimated change
 #'         point in the second)
 #' @examples
-#' x <- rnorm(1000)
+#' x <- rnorm(1000, mean = 4)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' stat_Zn_reg_r(y ~ x, data = df)
+#' stat1 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df)
+#' 1 - CPAT:::pZn(stat1, d = 2)
+#' stat2 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df,
+#'                               custom_var = function(y, X) {
+#'                                 n <- length(y)
+#'                                 d <- ncol(X)
+#'                                 array(sapply(1:n, function(i) {
+#'                                   rbind(c(1, 4), c(4, 17))
+#'                                 }), dim = c(2, 2, n))  # Custom for x
+#'                               })
+#' 1 - CPAT:::pZn(stat2, d = 2)
 stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                           estimate = FALSE, use_kernel_var = FALSE,
                           custom_var = NULL, kernel = "ba", bandwidth = "and",
                           get_all_vals = FALSE) {
-  # TODO: curtis: FUNCTION BODY -- Fri 08 Mar 2019 11:36:49 AM MST
+  total_fit <- lm(formula = formula, data = data)
+  eps <- residuals(total_fit)
+  n <- length(eps)
+  X <- model.matrix(total_fit)
+  d <- ncol(X)
+  eX <- X * eps
+  y <- predict(total_fit) + eps
+  k <- kn(n)
+
+  if (use_kernel_var) {
+    stop("This functionality is not yet implemented")
+  }
+  if (!is.null(custom_var)) {
+    if (is.function(custom_var)) {
+      custom_var <- custom_var(y = y, X = X)
+    }
+    if (is.array(custom_var)) {
+      stopifnot(all(dim(custom_var) == c(d, d, n)) &
+        length(dim(custom_var)) == 3)
+      Q <- custom_var
+    } else {
+      stop("Don't know how to handle custom_var of class" %s% class(custom_var))
+    }
+  } else {
+    Q <- array(sapply(1:n, function(i) {
+      if (i <= n/2) {
+        t(eX[1:i, , drop = FALSE]) %*% eX[1:i, , drop = FALSE] / i
+      } else {
+        t(eX[i:n, , drop = FALSE]) %*% eX[i:n, , drop = FALSE] / (n - i + 1)
+      }
+    }), dim = c(d, d, n))
+  }
+  stat_vals <- sapply(k:(n - k), function(i) {
+    df1 <- data[1:i, ]
+    df2 <- data[(i + 1):n, ]
+    beta1 <- coefficients(lm(formula = formula, data = df1))
+    beta2 <- coefficients(lm(formula = formula, data = df2))
+
+    diff <- (beta1 - beta2)
+    (diff %*% solve(Q[ , , i], diff))[1, 1]
+  })
+
+  stat_vals <- abs(stat_vals)
+
+  stat <- max(stat_vals)
+  est <- which.max(stat_vals)
+  res <- list("statistic" = stat, "estimate" = est, "stat_vals" = stat_vals)
+  res[[2]] <- as.integer(res[[2]])
+  if (!estimate & !get_all_vals) {
+    return(res[[1]])
+  } else {
+    return(res[c(TRUE, estimate, get_all_vals)])
+  }
 }
 
 #' Multivariate Andrews' Test for End-of-Sample Structural Change
