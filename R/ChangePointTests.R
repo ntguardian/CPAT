@@ -877,7 +877,7 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
 #'         the test statistic is in the first position and the estimated change
 #'         point in the second)
 #' @examples
-#' x <- rnorm(1000, mean = 4)
+#' x <- rnorm(1000, mean = 1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' stat1 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df)
@@ -946,9 +946,16 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
     model2 <- lm(formula = formula, data = df2)
     beta1 <- coefficients(model1)
     beta2 <- coefficients(model2)
+    if (i <= n/2) {
+      X2 <- model.matrix(model1)
+      C <- t(X2) %*% X2 / i
+    } else {
+      X2 <- model.matrix(model2)
+      C <- t(X2) %*% X2 / (n - i + 1)
+    }
 
-    diff <- (beta1 - beta2)
-    (diff %*% solve(Q[ , , i], diff))[1, 1]
+    diff <- C %*% (beta1 - beta2)
+    (t(diff) %*% solve(Q[ , , i], diff))[1, 1]
   })
 
   stat_vals <- abs(stat_vals)
