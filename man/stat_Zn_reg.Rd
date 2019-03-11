@@ -84,7 +84,7 @@ IGNORED AND \code{custom_var} SHOULD NOT BE NULL, BUT CREATE A MATRIX THE
 SAME DIMENSION AS THE REGRESSION MODEL.
 }
 \examples{
-x <- rnorm(1000)
+x <- rnorm(1000, mean = 4)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 CPAT:::stat_Zn_reg(y ~ x, data = df)

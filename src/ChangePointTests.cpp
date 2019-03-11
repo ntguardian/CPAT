@@ -286,6 +286,7 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     }
 
     /* One final step to get the test statistic; multiply the maximum by kn */
+    M = sqrt(M);
     M *= sqrt(kn);
 
     return List::create(Named("statistic") = M,

@@ -891,6 +891,18 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
 #'                                 }), dim = c(2, 2, n))  # Custom for x
 #'                               })
 #' 1 - CPAT:::pZn(stat2, d = 2)
+#' stat3 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df,
+#'                               custom_var = function(y, X) {
+#'                                 n <- length(y)
+#'                                 d <- ncol(X)
+#'                                 eps <- y - as.vector(X %*% solve(t(X) %*% X,
+#'                                                                  t(X) %*% y))
+#'                                 eX <- X * eps
+#'                                 array(sapply(1:n, function(i) {
+#'                                   var(eX)
+#'                                 }), dim = c(2, 2, n))  # Custom for x
+#'                               })
+#' 1 - CPAT:::pZn(stat3, d = 2)
 stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                           estimate = FALSE, use_kernel_var = FALSE,
                           custom_var = NULL, kernel = "ba", bandwidth = "and",
@@ -928,8 +940,8 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
     }), dim = c(d, d, n))
   }
   stat_vals <- sapply(k:(n - k), function(i) {
-    df1 <- data[1:i, ]
-    df2 <- data[(i + 1):n, ]
+    df1 <- data[1:i, , drop = FALSE]
+    df2 <- data[(i + 1):n, , drop = FALSE]
     beta1 <- coefficients(lm(formula = formula, data = df1))
     beta2 <- coefficients(lm(formula = formula, data = df2))
 
@@ -938,6 +950,7 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   })
 
   stat_vals <- abs(stat_vals)
+  stat_vals <- sqrt(stat_vals * k)
 
   stat <- max(stat_vals)
   est <- which.max(stat_vals)

@@ -73,9 +73,30 @@ checking that this function correctly computes the test statistic should be
 more easily verified.
 }
 \examples{
-x <- rnorm(1000, mean = 1)
+x <- rnorm(1000, mean = 4)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
-stat <- CPAT:::stat_Zn_reg_r(y ~ x, data = df)
-1 - CPAT:::pZn(stat, d = 2)
+stat1 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df)
+1 - CPAT:::pZn(stat1, d = 2)
+stat2 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df,
+                              custom_var = function(y, X) {
+                                n <- length(y)
+                                d <- ncol(X)
+                                array(sapply(1:n, function(i) {
+                                  rbind(c(1, 4), c(4, 17))
+                                }), dim = c(2, 2, n))  # Custom for x
+                              })
+1 - CPAT:::pZn(stat2, d = 2)
+stat3 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df,
+                              custom_var = function(y, X) {
+                                n <- length(y)
+                                d <- ncol(X)
+                                eps <- y - as.vector(X \%*\% solve(t(X) \%*\% X,
+                                                                 t(X) \%*\% y))
+                                eX <- X * eps
+                                array(sapply(1:n, function(i) {
+                                  var(eX)
+                                }), dim = c(2, 2, n))  # Custom for x
+                              })
+1 - CPAT:::pZn(stat3, d = 2)
 }

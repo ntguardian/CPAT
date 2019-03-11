@@ -60,6 +60,70 @@ is.formula <- function(x) {
   is(x, "formula")
 }
 
+#' Command-Line Utility for Printing Through Loop
+#'
+#' This is a tool for moving through an iterable object in the R command line.
+#' \code{obj} is the object being iterated through, and \code{accessor} is a
+#' function that can take this object and some index and return the item in that
+#' (integer) index of the object. This is then printed to the screen until
+#' stopped.
+#'
+#' When the utility is called, it enters a loop. The user can type the index of
+#' the object she wishes to see, or \code{j} for the previous entry, or \code{k}
+#' for the next entry. Pressing \code{q} ends the loop.
+#'
+#' @param obj The object through which to iterate
+#' @param accessor A function with parameters \code{index} and \code{obj} that
+#'                 will access the entry in position \code{index} of \code{obj}
+#'                 and return the result
+#' @export
+#' @examples
+#' \dontrun{
+#' loop_print_iterator(1:10, function(index, obj) {obj[[index]]})
+#' }
+loop_print_iterator <- function(obj, accessor) {
+  stopifnot(is.function(accessor))
+  stopifnot(all(c("index", "obj") %in% names(formals(accessor))))
+  index <- 1
+  input <- ""
+  while (TRUE) {
+    system("clear")
+    m <- 1
+    if (input != "") {
+      if (nchar(input) > 1 & suppressWarnings(is.na(as.integer(input)))) {
+        n <- nchar(input)
+        prefix <- substr(input, 1, n - 1)
+        input <- substr(input, n, n)
+        prefix <- suppressWarnings(as.integer(prefix))
+        if (is.na(prefix) | input == "q") {
+          input <- "z"  # A value meant to cause a later error
+        } else {
+          m <- prefix
+        }
+      }
+      if (input == "j") {
+        index <- max(index - m, 1)
+      } else if (input == "k") {
+        index <- index + m
+	    } else if (input == "q") {
+        break
+      } else {
+        index <- suppressWarnings(as.integer(input))
+      }
+
+      cat("INDEX:", index, "\n\n")
+      x <- try(accessor(index = index, obj = obj), silent = TRUE)
+      if (is(x, "try-error") | is.na(index)) {
+        cat("Bad index! Could not access element. Index reset to 1.\n")
+        index <- 1
+      } else {
+        print(x)
+      }
+    }
+    input <- readline("(index, j, k, q)> ")
+  }
+}
+
 ################################################################################
 # ERROR CHECKING
 ################################################################################
