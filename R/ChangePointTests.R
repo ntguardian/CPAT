@@ -942,8 +942,10 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   stat_vals <- sapply(k:(n - k), function(i) {
     df1 <- data[1:i, , drop = FALSE]
     df2 <- data[(i + 1):n, , drop = FALSE]
-    beta1 <- coefficients(lm(formula = formula, data = df1))
-    beta2 <- coefficients(lm(formula = formula, data = df2))
+    model1 <- lm(formula = formula, data = df1)
+    model2 <- lm(formula = formula, data = df2)
+    beta1 <- coefficients(model1)
+    beta2 <- coefficients(model2)
 
     diff <- (beta1 - beta2)
     (diff %*% solve(Q[ , , i], diff))[1, 1]
