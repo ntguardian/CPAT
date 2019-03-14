@@ -16,7 +16,7 @@
     \usepackage{subcaption}
 
     \title{Preliminary Power Plots}
-    \date{March 4, 2019}
+    \date{March 14, 2019}
     \author{Curtis Miller}
 
 \begin{document}
@@ -29,8 +29,12 @@ $x_t$ was generated from a $N(1, 1)$ distribution and $\{\epsilon_t\}_{t \in
 \mathbb{N}}$ is a mean-zero stationary process.
 
 The test statistics displayed include the R\'enyi-type statistic with trimming
-parameter $t_T = T^{1/2}$ (\tikz[baseline=-0.5ex]
-\draw[thick, dash pattern=on 4pt off 4pt](0,0) -- (1,0);), the CUSUM statistic
+parameter $t_T = T^{1/2}$ computed with the regression model coefficients
+directly (\tikz[baseline=-0.5ex] \draw[thick](0,0) -- (1,0);)
+the R\'enyi-type statistic with trimming parameter $t_T = T^{1/2}$ computed on
+the residuals
+(\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 4pt off 4pt](0,0) -- 
+(1,0);), the CUSUM statistic
 (\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 8pt off 4pt](0,0) --
 (1,0);), and the Hidalgo-Seo statistic
 (\tikz[baseline=-0.5ex]\draw[thick, dash dot](0,0) -- (1,0);). The R\'enyi-type
@@ -55,6 +59,9 @@ and a GARCH(1, 1) process with $\omega = 0.2$, $\alpha = 0.3$, and $\beta = 0.5$
 For every combination of sample size, test statistic, $\delta$, and
 data-generating process for $\epsilon_t$, 20,000 independent test statistics
 were simulated, and their asymptotically-appropriate $p$-values were computed.
+(The R\'enyi-type statistic using the regression model coefficients, though, was
+not computed for when the residuals followed an ARMA(2, 2) process, since this
+would require long-run variance estimation procedures not yet implemented.)
 $H_0$ is rejected for $p$-values less than $\alpha = 0.05$; the value of
 $\alpha$ is signified with a dotted line (\tikz[baseline=-0.5ex]\draw[thick,
 dotted](0,0) -- (1,0);). Values of $\delta$ increment by $0.1$, and the sample
@@ -100,22 +107,13 @@ sizes considered are $T \in \{50, 250, 1000\}$.
              $\delta$ and the $y$-axis tracks observed power.}
 \end{figure}
 
-From the plots one sees that the Hidalgo-Seo statistic often seems to do better
-than the other statistics. However, it suffers significant size inflation
-especially at smaller sample sizes, and even for larger sample sizes it
-experiences the most size inflation of the three statistics considered.
-Additionally, it is the only statistic shown that is tailored to regression
-models specifically. For small sample sizes, the statistic has bad power
-properties.
-
-The R\'enyi-type statistic and the CUSUM statistic often have similar power
-properties. The latter seems to suffer more from size inflation but generally
-has better power, particularly in larger samples with the size inflation has
-largely vanished.
-
-All statistics struggle the most when the residuals follow an ARMA(2, 2)
-process. The Hidalgo-Seo statistic struggles particularly in the GARCH(1, 1)
-context even when the other statistics seem to perform reasonably well.
+The best-performing statistics use only the residuals of the estimated models;
+in many situations, the R\'enyi-type statistic that uses the regression model
+coefficients directly has the worst performance (except in smaller sample sizes
+compared to the Hidalgo-Seo statistic). While all statistics seem to have
+appropriate power curves, the R\'enyi-type statistic often has the worst power,
+except for the version of the statistic that uses the residuals of the
+regression model only; that statistic seems to do well in the limit.
 
 \end{document}
 
