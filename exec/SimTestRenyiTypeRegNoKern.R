@@ -25,17 +25,17 @@ main <- function(output = "SimTestRenyiTypeReg.Rda", linetype = "solid",
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   renyi_reg_st <- function(formula, data) {
-    CPAT:::stat_Zn_reg_r(formula = formula, data = data, kn = sqrt,
-                         use_kernel_var = FALSE)
+    CPAT:::stat_Zn_reg(formula = formula, data = data, kn = sqrt,
+                       use_kernel_var = FALSE)
   }
 
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
 
-  stat_functions <- c("ZnReg" = renyi_reg_st)
-  pval_functions <- c("ZnReg" = function(q) {1 - CPAT:::pZn(q, d = 2)})
-  plot_desc <- c("ZnReg" = linetype)
+  stat_functions <- c("ZnRegNoKern" = renyi_reg_st)
+  pval_functions <- c("ZnRegNoKern" = function(q) {1 - CPAT:::pZn(q, d = 2)})
+  plot_desc <- c("ZnRegNoKern" = linetype)
 
   save(stat_functions, pval_functions, plot_desc, file = output, ascii = TRUE)
 }
