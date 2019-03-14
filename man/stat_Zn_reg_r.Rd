@@ -73,7 +73,7 @@ checking that this function correctly computes the test statistic should be
 more easily verified.
 }
 \examples{
-x <- rnorm(1000, mean = 4)
+x <- rnorm(1000, mean = 1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 stat1 <- CPAT:::stat_Zn_reg_r(y ~ x, data = df)

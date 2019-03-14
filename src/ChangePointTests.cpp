@@ -214,17 +214,21 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
     // The "lower sums" (i.e. those below k)
     arma::mat sxx_lower(d, d, arma::fill::zeros);
     arma::mat sxy_lower(d, 1, arma::fill::zeros);
-    if (fast) {
-        // Normal equations will be used for fast computation
-        /* Get lower sums; go to kn - 1 to prevent double-counting in main
-         * loop */
-        for (int i = 0; i < kn - 1; ++i) {
-            sxx_lower += X.row(i).t() * X.row(i);
+
+    arma::mat C(d, d, arma::fill::zeros);   // A scaling matrix used later
+    // Normal equations will be used for fast computation
+    /* Get lower sums; go to kn - 1 to prevent double-counting in main
+     * loop */
+    for (int i = 0; i < kn - 1; ++i) {
+        sxx_lower += X.row(i).t() * X.row(i);
+        if (fast) {
             sxy_lower += X.row(i).t() * y(i);
         }
-        // Get upper sum
-        for (int i = kn - 1; i < n; ++i) {
-            sxx_upper += X.row(i).t() * X.row(i);
+    }
+    // Get upper sum
+    for (int i = kn - 1; i < n; ++i) {
+        sxx_upper += X.row(i).t() * X.row(i);
+        if (fast) {
             sxy_upper += X.row(i).t() * y(i);
         }
     }
@@ -259,10 +263,10 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
 
     // Compute the test statistic
     for (int k = kn; k <= (n - kn); ++k) {
+        sxx_lower += X.row(k - 1).t() * X.row(k - 1);
+        sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
         if (fast) {
-            sxx_lower += X.row(k - 1).t() * X.row(k - 1);
             sxy_lower += X.row(k - 1).t() * y(k - 1);
-            sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
             sxy_upper -= X.row(k - 1).t() * y(k - 1);
 
             beta_lower = arma::solve(sxx_lower, sxy_lower);
@@ -271,12 +275,18 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
             beta_lower = arma::solve(X.head_rows(k), y.head(k));
             beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
         }
+
+        if (k <= n/2) {
+            C = sxx_lower / k;
+        } else {
+            C = sxx_upper / (n - k + 1);
+        }
         
-        M_candidate = norm_inv_A_square(beta_lower - beta_upper,
+        M_candidate = norm_inv_A_square(C * (beta_lower - beta_upper),
                                         lrv_est_cube.slice(k - 1));
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
-            all_vals.push_back(M_candidate * sqrt(kn));
+            all_vals.push_back(sqrt(M_candidate * kn));
         }
         // Choose new maximum
         if (M_candidate > M) {

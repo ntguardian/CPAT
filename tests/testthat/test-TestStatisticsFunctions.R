@@ -84,21 +84,21 @@ test_that("stat_Zn() functions properly", {
 
 test_that("stat_Zn_reg() functions properly", {
   expect_error(CPAT:::stat_Zn_reg(dat), "Bad formula passed")
-  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df), 16417.7245430211)
+  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df), 5.93426034417689)
   expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
                                   custom_var = function(x, k) {diag(2)}),
-               36.9250446805558)
+               49.1565680600069)
   expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
                                   custom_var = function(x, k) {diag(2)},
-                                  estimate = TRUE)$estimate, 15L)
+                                  estimate = TRUE)$estimate, 11L)
   expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df,
                                   custom_var = function(x, k) {diag(2)},
                                   get_all_vals = TRUE)$stat_vals,
-               c( 21.1159408602941, 12.1744432908163,   5.37067526863372, 
-                  4.50388682677218, 3.34972742569482,   4.40727066758493,
-                 0.485861561065175,  2.7190934239874, 0.0433351582718952,
-                  4.18669523306354, 5.34125658908606,   36.9250446805558,
-                  16.4185459416089))
+               c(1.49379676274333, 3.84317040943000, 0.727071394520901, 
+                 3.14210359828251, 1.10739365339191, 4.648741703797920,
+                 15.3837927214878, 49.1565680600069, 16.00624104013680,
+                 18.8677456895055, 10.1824122337828, 10.99171939307290,
+                 10.5272602747702))
   expect_is(CPAT:::stat_Zn_reg(y ~ x, data = df,
                                custom_var = function(x, k) {diag(2)},
                                get_all_vals = TRUE, estimate = TRUE), "list")
@@ -288,7 +288,7 @@ test_that("HR.test() functions properly", {
   expect_equal(HR.test(dat, use_kernel_var = TRUE)$p.value,
                0.00349647304622447)
   expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE, kn = sqrt)$p.value,
-               1.55431223447522e-15)
+               4.81098723914553e-06)
   expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE,
                        kn = sqrt)$parameters,
                c(`sqrt(T)` = 4.47213595499958))
