@@ -71,7 +71,7 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
 VIGNETTES: doc/CollectedPlots.pdf
 
 .PHONY : all
-all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME)
+all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) $(VIGNETTES)
 
 .PRECIOUS : $(ALLSIMS)
 
