@@ -7,9 +7,22 @@
 * C++ functions accompanying functions in R/ChangePointTests.R.
 *******************************************************************************/
 
+#define _USE_MATH_DEFINES
+ 
+#include <cmath>
+#include <list>
 // #include <Rcpp.h>
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
+
+// Constants
+// For kernels
+const unsigned char KERN_CUSTOM   = 0;
+const unsigned char KERN_TRUNC    = 1;
+const unsigned char KERN_BARTLETT = 2;
+const unsigned char KERN_PARZEN   = 3;
+const unsigned char KERN_TUKHAN   = 4;
+const unsigned char KERN_QS       = 5;
 
 using namespace Rcpp;
 
@@ -304,112 +317,6 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                         Named("stat_vals") = all_vals);
 }
 
-// XXX: curtis: THIS CODE WORKS CORRECTLY BUT THE RESULTS ARE GARBAGE FROM A
-// STATISTICAL PERSPECTIVE -- Fri 11 Jan 2019 06:12:52 PM MST
-List stat_de_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
-                     const double& kn, const double& a_n, const double& b_n,
-                     const bool& get_all_vals, const bool& fast = false) {
-    const unsigned int n = X_input.rows();
-    const unsigned int d = X_input.cols();
-    if (y_input.size() != n) {
-        throw std::range_error("Bad y passed; must have one column and same "
-                               "number of rows as data matrix X");
-    }
-    // Create Armadillo objects
-    const arma::mat X = as<arma::mat>(X_input);
-    const arma::vec y = as<arma::vec>(y_input);
-    const arma::mat Sigma = X.t() * X;
-    
-    /* Call X the data matrix and X' its transpose; then X'X and X'y are sums. I
-     * want sums; these will be "upper sums" (i.e. the sum above k). */
-    arma::mat sxx_upper(d, d, arma::fill::zeros);
-    arma::mat sxy_upper(d, 1, arma::fill::zeros);
-    // The "lower sums" (i.e. those below k)
-    arma::mat sxx_lower(d, d, arma::fill::zeros);
-    arma::mat sxy_lower(d, 1, arma::fill::zeros);
-    if (fast) {
-        // Normal equations will be used for fast computation
-        /* Get lower sums; go to kn - 1 to prevent double-counting in main 
-         * loop */
-        for (int i = 0; i < kn - 1; ++i) {
-            sxx_lower += X.row(i).t() * X.row(i);
-            sxy_lower += X.row(i).t() * y(i);
-        }
-        // Get upper sum
-        for (int i = kn - 1; i < n; ++i) {
-            sxx_upper += X.row(i).t() * X.row(i);
-            sxy_upper += X.row(i).t() * y(i);
-        }
-    }
-
-    // The maximum, which will be returned
-    double M;
-    // A candidate for the new maximum, used in a loop
-    double M_candidate;
-    // Estimate for change location
-    int est = n;
-    // Omega matrix involved in covariance estimator
-    arma::mat Omega(d, d, arma::fill::zeros);
-    /* A vector that will contain the value of the statistic at each n checked;
-     * relevant only if get_all_vals == TRUE */
-    NumericVector all_vals = NumericVector::create();
-
-    // Lower/upper coefficient estimates
-    arma::vec beta_lower(d, arma::fill::zeros);
-    arma::vec beta_upper(d, arma::fill::zeros);
-
-    double s2 = 0;  // Used in the loop (part of estimating Omega)
-
-    // Compute the test statistic
-    for (int k = kn + 1; k < (n - kn); ++k) {
-        if (fast) {
-            sxx_lower += X.row(k - 1).t() * X.row(k - 1);
-            sxy_lower += X.row(k - 1).t() * y(k - 1);
-            sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
-            sxy_upper -= X.row(k - 1).t() * y(k - 1);
-
-            beta_lower = arma::solve(sxx_lower, sxy_lower);
-            beta_upper = arma::solve(sxx_upper, sxy_upper);
-        } else {
-            beta_lower = arma::solve(X.head_rows(k), y.head(k));
-            beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
-        }
-
-        Omega *= 0;
-        for (int j = 0; j < n; ++j) {
-            if (j < k) {
-                s2 = y(j) - arma::dot(beta_lower, X.row(j));
-            } else {
-                s2 = y(j) - arma::dot(beta_upper, X.row(j));
-            }
-            s2 *= s2;   // Square it
-            Omega += s2 * (X.row(j).t() * X.row(j));
-        }
-
-        // Compute candidate
-        M_candidate = norm_inv_A_square(Sigma * (beta_lower - beta_upper),
-                                        Omega);
-        M_candidate *= static_cast<double>(k * (n - k)) /
-            static_cast<double>(n * n);
-        M_candidate -= b_n;
-        M_candidate /= a_n;
-
-        // If we are getting all values, add another value to all_vals
-        if (get_all_vals) {
-            all_vals.push_back(M_candidate);
-        }
-        // Choose new maximum
-        if ((M_candidate > M) || (k == kn)) {
-            M = M_candidate;
-            est = k;
-        }
-    }
-
-    return List::create(Named("statistic") = M,
-                        Named("estimate") = est,
-                        Named("stat_vals") = all_vals);
-}
-
 // Function used for computing long-run variance; see R function get_lrv_vec()
 // [[Rcpp::export]]
 NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
@@ -443,7 +350,194 @@ NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
         sigma[t - 1] = sum;
     }
     
-    return(sigma);
+    return sigma;
+}
+
+// Kernel functions used in LRV estimation
+// Truncated kernel
+inline double tr_kernel(const double& x) {
+    if ((x < -1) || (x > 1)) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+// Bartlett kernel
+inline double ba_kernel(const double& x) {
+    const double absx = std::abs(x);
+    if (absx > 1) {
+        return absx;
+    } else {
+        return 1 - absx;
+    }
+}
+
+// Parzen kernel
+inline double pa_kernel(const double& x) {
+    const double absx = std::abs(x);
+    if (absx <= 0.5) {
+        return 1 - 6 * std::pow(absx, 2) + 6 * std::pow(absx, 3);
+    } else if (absx <= 1) {
+        return 2 * std::pow(1 - absx, 3);
+    } else {
+        return 0;
+    }
+}
+
+// Tukey-Hanning kernel
+inline double th_kernel(const double& x) {
+    if ((x < -1) || (x > 1)) {
+        return 0;
+    } else {
+        return (1 + std::cos(M_PI * x))/2;
+    }
+}
+
+// Quadratic spectral kernel
+inline double qs_kernel(const double& x) {
+    const double spxd5 = 6 * M_PI * x / 5;
+    return 3750 * (std::sin(spxd5)/spxd5 - std::cos(spxd5)) / 
+        (2 * std::pow(spxd5));
+}
+
+// Bandwidth functions, for getting the bandwidth
+// Truncated kernel
+inline double tr_bandwidth(const double& param, const unsigned int& n) {
+    // As recommended by Lin and Sataka (2013)
+    // (DOI: https://doi.org/10.1007/978-1-4614-1653-1_15)
+    return qs_bandwidth(param, n) / 3.0;
+}
+
+// Bartlett kernel
+inline double ba_bandwidth(const double& param, const unsigned int& n) {
+    // In Andrews (1991), the parameter was 1.1447; round up, to be conservative
+    return 1.1448 * param * std::pow(n, 1.0/3.0);
+}
+
+// Parzen kernel
+inline double pa_bandwidth(const double& param, const unsigned int& n) {
+    // In Andrews (1991), the parameter was 2.6614; round up, to be conservative
+    return 2.6615 * param * std::pow(n, 1.0/5.0);
+}
+
+// Tukey-Hanning kernel
+inline double th_bandwidth(const double& param, const unsigned int& n) {
+    // In Andrews (1991), the parameter was 1.7462; round up, to be conservative
+    return 1.7463 * param * std::pow(n, 1.0/5.0);
+}
+
+// Quadratic spectral kernel
+inline double qs_bandwidth(const double& param, const unsigned int& n) {
+    // In Andrews (1991), the parameter was 1.3221; round up, to be conservative
+    return 1.3222 * param * std::pow(n, 1.0/5/0);
+}
+
+// Short function for outer product of vectors
+inline arma::mat outer_product(arma::vec x, arma::vec y) {
+    return x * y.t();
+}
+
+inline arma::mat lag_product(arma::mat X, int s, int u) {
+    arma::mat slice = outer_product(X.row(s).t(), X.row(s + u).t());
+    return slice + slice.t();
+}
+
+double get_bandwidth(const double& param, const unsigned int& n,
+                     const unsigned char& kernel) {
+    switch (kernel) {
+        case KERN_TRUNC:
+            return tr_bandwidth(param, n);
+            break;  // Safety first!
+        case KERN_BARTLETT:
+            return ba_bandwidth(param, n);
+            break;
+        case KERN_PARZEN:
+            return pa_bandwidth(param, n);
+            break;
+        case KERN_TUKHAN:
+            return th_bandwidth(param, n);
+            break;
+        case KERN_QS:
+            return qs_bandwidth(param, n);
+            break;
+        default:
+            throw std::domain_error("get_bandwidth() given bad kernel"
+                                    "identifier; should not be in default"
+                                    "case!");
+            return 1;
+            break;
+    }
+
+    throw std::runtime_error("get_bandwidth() should not have left its switch!"
+                             "How did I get here?");
+    return 1;
+}
+
+// Generic kernel function
+double kernel_function(const double& x, const unsigned char& kernel) {
+    switch (kernel) {
+        case KERN_TRUNC:
+            return tr_kernel(x);
+            break;  // Safety first!
+        case KERN_BARTLETT:
+            return ba_kernel(x);
+            break;
+        case KERN_PARZEN:
+            return pa_kernel(x);
+            break;
+        case KERN_TUKHAN:
+            return th_kernel(x);
+            break;
+        case KERN_QS:
+            return qs_kernel(x);
+            break;
+        default:
+            throw std::domain_error("kernel_function() given bad kernel"
+                                    "identifier; should not be in default"
+                                    "case!");
+            return 1;
+            break;
+    }
+
+    throw std::runtime_error("kernel_function() should not have left its"
+                             "switch! How did I get here?");
+    return 1;
+}
+
+/* 
+ * Function that computes a sequence of long-run variance matrices and returns
+ * them in an armadillo cube.
+ */
+arma::cube lrv_matrix_cube_computer(const arma::mat X,
+                                    const unsigned char& kernel,
+                                    const double& param,
+                                    const bool& use_custom_bw = false,
+                                    const double& custom_bw = 1) {
+    const unsigned int n = X.n_rows;
+    const unsigned int d = X.n_cols;
+    arma::cube covs(d, d, n, arma::fill::zeros);
+    arma::mat slice_cov(d, d, arma::fill::zeros);
+    std::list<arma::mat> mat_cum_sums;
+    double bandwidth;
+    unsigned int maxlag = 0;
+    unsigned int previous_maxlag = 0;
+
+    for (int k = 0; k < n; ++k) {
+        slice_cov *= 0;
+        if (use_custom_bw) {
+            bandwidth = custom_bw;
+        } else {
+            bandwidth = get_bandwidth(param, n, kernel);
+        }
+        if (kernel == KERN_QS) {
+            maxlag = k;
+        } else {
+            maxlag = int(bandwidth);
+        }
+
+        // TODO: curtis: WRITE COVARIANCE COMPUTATION LOOPS -- Sun 17 Mar 2019 01:28:55 AM MDT
+    }
 }
 
 // XXX: curtis: INCOMPLETE -- Mon 21 Jan 2019 11:55:38 PM MST
@@ -451,71 +545,4 @@ NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
 NumericVector get_reg_lrv_arr_cpp(const NumericMatrix& X_input,
                                   const NumericVector& y_input,
                                   const NumericVector& kern,
-                                  const int& max_l, const bool& fast = false) {
-    unsigned int n = X_input.rows();
-    unsigned int d = X_input.cols();
-    if (y_input.size() != n) {
-        throw std::range_error("Bad y passed; must have one column and same "
-                               "number of rows as data matrix X");
-    }
-
-    const arma::mat X = as<arma::mat>(X_input);
-    const arma::vec y = as<arma::vec>(y_input);
-    // n - 2 * d is because you need at least d observations to not be
-    // underdetermined
-    arma::cube lrv_est_cube(d, d, n - 2 * d, arma::fill::zeros);
-
-    /* Call X the data matrix and X' its transpose; then X'X and X'y are sums. I
-     * want sums; these will be "upper sums" (i.e. the sum above k). */
-    arma::mat sxx_upper(d, d, arma::fill::zeros);
-    arma::mat sxy_upper(d, 1, arma::fill::zeros);
-    // The "lower sums" (i.e. those below k)
-    arma::mat sxx_lower(d, d, arma::fill::zeros);
-    arma::mat sxy_lower(d, d, arma::fill::zeros);
-    if (fast) {
-        // Normal equations will be used for fast computation
-        /* Get lower sums; go to d - 1 to prevent double-counting in main
-         * loop */
-        for (int i = 0; i < d - 1; ++i) {
-            sxx_lower += X.row(i).t() * X.row(i);
-            sxy_lower += X.row(i).t() * y(i);
-        }
-        // Get upper sum
-        for (int i = d - 1; i < n; ++i) {
-            sxx_upper += X.row(i).t() * X.row(i);
-            sxy_upper += X.row(i).t() * y(i);
-        }
-    }
-
-    // Lower/upper coefficient estimates
-    arma::vec beta_lower(d, arma::fill::zeros);
-    arma::vec beta_upper(d, arma::fill::zeros);
-
-    // Estimated error vectors
-    arma::vec eps_lower(n, arma::fill::zeros);
-    arma::vec eps_upper(n, arma::fill::zeros);
-
-    for (int k = d; k <= (n - d); ++k) {
-        if (fast) {
-            sxx_lower += X.row(k - 1).t() * X.row(k - 1);
-            sxy_lower += X.row(k - 1).t() * y(k - 1);
-            sxx_upper -= X.row(k - 1).t() * X.row(k - 1);
-            sxy_upper -= X.row(k - 1).t() * y(k - 1);
-
-            beta_lower = arma::solve(sxx_lower, sxy_lower);
-            beta_upper = arma::solve(sxx_upper, sxy_upper);
-        } else {
-            beta_lower = arma::solve(X.head_rows(k), y.head(k));
-            beta_upper = arma::solve(X.tail_rows(n - k), y.tail(n - k));
-        }
-
-        eps_lower = y - arma::vec(X * beta_lower);
-        eps_upper = y - arma::vec(X * beta_upper);
-
-        // TODO: curtis: REST OF ALGORITHM -- Mon 07 Jan 2019 05:38:36 PM MST
-    }
-
-    // XXX: curtis: INCOMPLETE -- Mon 21 Jan 2019 11:54:44 PM MST
-    // Following line added to suppress compiler warning
-    return(y_input);
-}
+                                  const int& max_l);
