@@ -244,18 +244,58 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
 #' for more details.
 #'
-#' TODO: EXTENDED DESCRIPTION (OPTIONAL)
+#' While the documentation refers to \pkg{cointReg}, that package is never used
+#' here. The kernels and methods referred to have implementations specific to
+#' this context. This is due to the computational demand of computing
+#' \code{nrow(X)} separate (but related) covariance matrices using kernel
+#' methods. Thus this function, by default, uses \pkg{cointReg} notation only,
+#' not its methods.
 #'
-#' @param X TODO: PARAMETER DESCRIPTION
-#' @param kernel TODO: PARAMETER DESCRIPTION
-#' @param bandwidth TODO: PARAMETER DESCRIPTION
+#' @param X The data matrix
+#' @param kernel If character, the identifier of the kernel function as used in
+#'               \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
+#'               function, the kernel function to be used for long-run variance
+#'               estimation (default is the Bartlett kernel)
+#' @param bandwidth If character, the identifier for how to compute the
+#'               bandwidth as defined in \pkg{cointReg} (see
+#'               \code{\link[cointReg]{getBandwidth}}); if function, a function
+#'               to use for computing the bandwidth; if vector, the bandwidth
+#'               values to use (the default is to use Andrews' method)
+#' @return A 3D array of estimate of the long-run covariance matrices
 #' @references
 #'   \insertAllCited{}
-#' @return TODO: RETURN VALUE DESCRIPTION
 #' @examples
-#' get_lrv_arr()  # TODO: EXAMPLE
+#' x <- rnorm(50)
+#' y <- 1 + 2 * x + rnorm(50)
+#' df <- data.frame(x, y)
+#' X <- model.matrix(y ~ x, data = df)
+#' get_lrv_arr(X)
 get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
-  # TODO: curtis: FUNCTION BODY -- Mon 18 Mar 2019 09:20:31 AM MDT
+  kernel_func <- sqrt
+  use_custom_bw <- FALSE
+  bandwidth_vector <- 1
+  if (is.character(kernel)) {
+    # Translation of codes; see first few lines of src/ChangePointTests.cpp
+    kernel <- switch(kernel, "tr" = 1, "ba" = 2, "pa" = 3, "th" = 4, "qs" = 5)
+  } else if (is.function(kernel)) {
+    kernel_func <- kernel
+    kernel <- 0 # Means use custom bandwidth
+  } else {
+    stop("Don't know how to handle kernel of type" %s% class(kernel))
+  }
+
+  if (is.character(bandwidth)) {
+    stop("This functionality is not yet implemented")
+  } else if (is.vector(bandwidth)) {
+    bandwidth_vector <- bandwidth
+    use_custom_bw <- TRUE
+    bandwidth_param <- -1
+  } else {
+    stop("Don't know how to handle bandwidth of type" %s% class(bandwidth))
+  }
+
+  get_lrv_arr_cpp(X, kernel, bandwidth_param, bandwidth_vector, kernel_func,
+                  use_custom_bw)
 }
 
 ################################################################################
