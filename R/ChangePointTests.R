@@ -127,7 +127,7 @@ getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
 #' described in \insertCite{horvathricemiller19}{CPAT}. By default it uses
 #' kernel and bandwidth selection as used in the package \pkg{cointReg}, though
 #' changing the parameters \code{kernel} and \code{bandwidth} can change this
-#' behavior. If \pkg{cointReg} is not installed, the Bartlett internal (defined
+#' behavior. If \pkg{cointReg} is not installed, the Bartlett kernel (defined
 #' internally) will be used and the bandwidth will be the square root of the
 #' sample size.
 #'
@@ -235,6 +235,27 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
   }
 
   sigma
+}
+
+#' Long-Run Covariance Matrix Estimation for Early Change and Block
+#' Heteroskedasticity
+#'
+#' Estimates the covariance matrix of the process \eqn{\{x_t \epsilon_t\}} in a
+#' block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
+#' for more details.
+#'
+#' TODO: EXTENDED DESCRIPTION (OPTIONAL)
+#'
+#' @param X TODO: PARAMETER DESCRIPTION
+#' @param kernel TODO: PARAMETER DESCRIPTION
+#' @param bandwidth TODO: PARAMETER DESCRIPTION
+#' @references
+#'   \insertAllCited{}
+#' @return TODO: RETURN VALUE DESCRIPTION
+#' @examples
+#' get_lrv_arr()  # TODO: EXAMPLE
+get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
+  # TODO: curtis: FUNCTION BODY -- Mon 18 Mar 2019 09:20:31 AM MDT
 }
 
 ################################################################################
