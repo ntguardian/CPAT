@@ -29,7 +29,7 @@ Computes the estimates of the long-run variance in a change point context, as
 described in \insertCite{horvathricemiller19}{CPAT}. By default it uses
 kernel and bandwidth selection as used in the package \pkg{cointReg}, though
 changing the parameters \code{kernel} and \code{bandwidth} can change this
-behavior. If \pkg{cointReg} is not installed, the Bartlett internal (defined
+behavior. If \pkg{cointReg} is not installed, the Bartlett kernel (defined
 internally) will be used and the bandwidth will be the square root of the
 sample size.
 }

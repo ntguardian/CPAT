@@ -269,7 +269,7 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' y <- 1 + 2 * x + rnorm(50)
 #' df <- data.frame(x, y)
 #' X <- model.matrix(y ~ x, data = df)
-#' get_lrv_arr(X)
+#' CPAT:::get_lrv_arr(X)
 get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
   kernel_func <- sqrt
   use_custom_bw <- FALSE
@@ -286,10 +286,17 @@ get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
 
   if (is.character(bandwidth)) {
     stop("This functionality is not yet implemented")
-  } else if (is.vector(bandwidth)) {
-    bandwidth_vector <- bandwidth
-    use_custom_bw <- TRUE
-    bandwidth_param <- -1
+  } else if (is.numeric(bandwidth)) {
+    if (length(bandwidth) == nrow(X)) {
+      bandwidth_vector <- bandwidth
+      use_custom_bw <- TRUE
+      bandwidth_param <- -1
+    } else if (length(bandwidth) == 1) {
+      bandwidth_param <- bandwidth
+    } else {
+      stop("bandwidth must either be univariate or have same length as data" %s%
+           "rows")
+    }
   } else {
     stop("Don't know how to handle bandwidth of type" %s% class(bandwidth))
   }
