@@ -7,10 +7,10 @@
 * C++ functions accompanying functions in R/ChangePointTests.R.
 *******************************************************************************/
 
-#define _USE_MATH_DEFINES
- 
-#include <cmath>
+// [[Rcpp::depends(BH)]]
+#include <boost/math/constants/constants.hpp>
 #include <list>
+#include <iterator>
 // #include <Rcpp.h>
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -23,6 +23,8 @@ const unsigned char KERN_BARTLETT = 2;
 const unsigned char KERN_PARZEN   = 3;
 const unsigned char KERN_TUKHAN   = 4;
 const unsigned char KERN_QS       = 5;
+// Math constants
+const double L_PI = boost::math::constants::pi<double>();
 
 using namespace Rcpp;
 
@@ -193,7 +195,6 @@ inline double norm_inv_A(arma::vec x, arma::mat A) {
     return sqrt(norm_inv_A_square(x, A));
 }
 
-// TODO: curtis: THIS HAS BAD STATISTICAL PROPERTIES; WHAT IS WRONG? -- Fri 08 Mar 2019 12:00:51 AM MST
 // [[Rcpp::export]]
 List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                      const double& kn, const bool& use_kernel_var,
@@ -390,25 +391,18 @@ inline double th_kernel(const double& x) {
     if ((x < -1) || (x > 1)) {
         return 0;
     } else {
-        return (1 + std::cos(M_PI * x))/2;
+        return (1 + std::cos(L_PI * x))/2;
     }
 }
 
 // Quadratic spectral kernel
 inline double qs_kernel(const double& x) {
-    const double spxd5 = 6 * M_PI * x / 5;
+    const double spxd5 = 6 * L_PI * x / 5;
     return 3750 * (std::sin(spxd5)/spxd5 - std::cos(spxd5)) / 
-        (2 * std::pow(spxd5));
+        (2 * std::pow(spxd5, 2));
 }
 
 // Bandwidth functions, for getting the bandwidth
-// Truncated kernel
-inline double tr_bandwidth(const double& param, const unsigned int& n) {
-    // As recommended by Lin and Sataka (2013)
-    // (DOI: https://doi.org/10.1007/978-1-4614-1653-1_15)
-    return qs_bandwidth(param, n) / 3.0;
-}
-
 // Bartlett kernel
 inline double ba_bandwidth(const double& param, const unsigned int& n) {
     // In Andrews (1991), the parameter was 1.1447; round up, to be conservative
@@ -430,7 +424,14 @@ inline double th_bandwidth(const double& param, const unsigned int& n) {
 // Quadratic spectral kernel
 inline double qs_bandwidth(const double& param, const unsigned int& n) {
     // In Andrews (1991), the parameter was 1.3221; round up, to be conservative
-    return 1.3222 * param * std::pow(n, 1.0/5/0);
+    return 1.3222 * param * std::pow(n, 1.0/5.0);
+}
+
+// Truncated kernel
+inline double tr_bandwidth(const double& param, const unsigned int& n) {
+    // As recommended by Lin and Sataka (2013)
+    // (DOI: https://doi.org/10.1007/978-1-4614-1653-1_15)
+    return qs_bandwidth(param, n) / 3.0;
 }
 
 // Short function for outer product of vectors
@@ -509,40 +510,114 @@ double kernel_function(const double& x, const unsigned char& kernel) {
  * Function that computes a sequence of long-run variance matrices and returns
  * them in an armadillo cube.
  */
+// XXX: curtis: GIVES BAD RESULTS FOR QS KERNEL; PROBABLY MAKING CONSISTENT
+// ERROR -- Sun 17 Mar 2019 11:26:54 PM MDT
 arma::cube lrv_matrix_cube_computer(const arma::mat X,
                                     const unsigned char& kernel,
                                     const double& param,
-                                    const bool& use_custom_bw = false,
-                                    const double& custom_bw = 1) {
+                                    const NumericVector& custom_bw,
+                                    const Function& custom_kernel,
+                                    const bool& use_custom_bw = false) {
+    typedef std::list<arma::mat> mat_list;
+    typedef mat_list::size_type mat_list_size;
+
     const unsigned int n = X.n_rows;
     const unsigned int d = X.n_cols;
     arma::cube covs(d, d, n, arma::fill::zeros);
     arma::mat slice_cov(d, d, arma::fill::zeros);
-    std::list<arma::mat> mat_cum_sums;
+    mat_list mat_cum_sums;
     double bandwidth;
-    unsigned int maxlag = 0;
-    unsigned int previous_maxlag = 0;
+    mat_list_size maxlag;
+    // Loop variables
+    unsigned int u = 0;
+    mat_list::iterator li;
+
+    // Determine number of elements in list, and initialize
+    if ((kernel == KERN_QS) || (kernel == KERN_CUSTOM)) {
+        maxlag = n - 1;
+    } else {
+        if (use_custom_bw) {
+            bandwidth = custom_bw[n - 1];
+        } else {
+            bandwidth = get_bandwidth(param, n - 1, kernel);
+        }
+        maxlag = std::min(int(bandwidth), int(n - 1));
+    }
+    mat_cum_sums.resize(maxlag + 1, arma::mat(d, d, arma::fill::zeros));
 
     for (int k = 0; k < n; ++k) {
         slice_cov *= 0;
         if (use_custom_bw) {
-            bandwidth = custom_bw;
+            bandwidth = custom_bw[k];
         } else {
-            bandwidth = get_bandwidth(param, n, kernel);
+            bandwidth = get_bandwidth(param, k, kernel);
         }
-        if (kernel == KERN_QS) {
+        if ((kernel == KERN_QS) || (kernel == KERN_CUSTOM)) {
             maxlag = k;
         } else {
-            maxlag = int(bandwidth);
+            maxlag = std::min(int(bandwidth), k);
         }
 
-        // TODO: curtis: WRITE COVARIANCE COMPUTATION LOOPS -- Sun 17 Mar 2019 01:28:55 AM MDT
+        // TODO: curtis: DO DETAILED CHECK FOR CORRECTNESS -- Sun 17 Mar 2019 11:27:14 PM MDT
+        for (u = 0, li = mat_cum_sums.begin();
+                (li != mat_cum_sums.end()) && (u <= k);
+                ++u, ++li) {
+            *li += lag_product(X, k - u, u);
+            if (u == 0) {
+                slice_cov += *li / double(2 * (k + 1));
+            } else if (u <= maxlag) {
+                if (kernel == KERN_CUSTOM) {
+                    NumericVector kval = custom_kernel(double(u)/bandwidth);
+                    slice_cov += kval[0] * (*li) / 
+                        double(k + 1 - u);
+                } else {
+                    slice_cov += kernel_function(double(u)/bandwidth, kernel) *
+                        (*li) / double(k + 1 - u);
+                }
+            }
+        }
+
+        covs.slice(k) = slice_cov;
     }
+
+    return covs;
 }
 
-// XXX: curtis: INCOMPLETE -- Mon 21 Jan 2019 11:55:38 PM MST
+arma::cube flipfb(const arma::cube& X) {
+    const unsigned int m = X.n_rows;
+    const unsigned int n = X.n_cols;
+    const unsigned int p = X.n_slices;
+    arma::cube res(m, n, p);
+
+    for (int i = 0; i < p; ++i) {
+        res.slice(p - i - 1) = X.slice(i);
+    }
+
+    return res;
+}
+
+/* Function used for computing long-run covariance matrices; see R function
+ * get_lrv_arr() */
 // [[Rcpp::export]]
-NumericVector get_reg_lrv_arr_cpp(const NumericMatrix& X_input,
-                                  const NumericVector& y_input,
-                                  const NumericVector& kern,
-                                  const int& max_l);
+NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
+                              const unsigned char& kernel,
+                              const double& bandwidth_param,
+                              const NumericVector& custom_bw,
+                              const Function& custom_kernel,
+                              const bool& use_custom_bw = false) {
+    const unsigned int n = X_input.rows();
+    const unsigned int d = X_input.cols();
+    const arma::mat X = as<arma::mat>(X_input);
+    arma::cube lrv_est(d, d, n, arma::fill::zeros);
+
+    lrv_est.slices(0, n/2) = lrv_matrix_cube_computer(X.rows(0, n/2), kernel,
+                                                      bandwidth_param,
+                                                      custom_bw, custom_kernel,
+                                                      use_custom_bw);
+    arma::cube last_cube_half = lrv_matrix_cube_computer(
+            arma::flipud(X.rows(n/2 + 1, n - 1)), kernel, bandwidth_param,
+            custom_bw, custom_kernel, use_custom_bw);
+    lrv_est.slices(n/2 + 1, n - 1) = flipfb(last_cube_half);
+
+    return wrap(lrv_est);
+}

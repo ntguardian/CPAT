@@ -21,8 +21,8 @@ get_lrv_vec_cpp <- function(Y, kern, max_l) {
     .Call('_CPAT_get_lrv_vec_cpp', PACKAGE = 'CPAT', Y, kern, max_l)
 }
 
-get_reg_lrv_arr_cpp <- function(X_input, y_input, kern, max_l, fast = FALSE) {
-    .Call('_CPAT_get_reg_lrv_arr_cpp', PACKAGE = 'CPAT', X_input, y_input, kern, max_l, fast)
+get_lrv_arr_cpp <- function(X_input, kernel, bandwidth_param, custom_bw, custom_kernel, use_custom_bw = FALSE) {
+    .Call('_CPAT_get_lrv_arr_cpp', PACKAGE = 'CPAT', X_input, kernel, bandwidth_param, custom_bw, custom_kernel, use_custom_bw)
 }
 
 cond_var_gradient_hessian_cpp <- function(var, eps, omega, alpha, beta, init_vals) {
