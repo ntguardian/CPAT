@@ -244,6 +244,17 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
 #' for more details.
 #'
+#' \code{\link[cointReg]{getBandwidth}} is used to find the missing parameter in
+#' the bandwidth models as described by ... but actual implementation details
+#' and the kernel functions used are not based on \pkg{cointReg} functionality.
+#' For example, the approach used to find a bandwidth for the truncated kernel
+#' is the one described in ... .
+#'
+#' Only a single bandwidth value is estimated from the data, using the entire
+#' data set. From this bandwidth value, all other bandwidths are determined,
+#' taking the form \eqn{h_t = \hat{\gamma} t^{1/k}} (where \eqn{k = 3} for the
+#' Bartlett kernel and \eqn{k = 5} in all other cases).
+#'
 #' @param X The data matrix
 #' @param kernel If character, the identifier of the kernel function as used in
 #'               \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
@@ -251,9 +262,10 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #'               estimation (default is the Bartlett kernel)
 #' @param bandwidth If character, the identifier for how to compute the
 #'               bandwidth as defined in \pkg{cointReg} (see
-#'               \code{\link[cointReg]{getBandwidth}}); if function, a function
-#'               to use for computing the bandwidth; if vector, the bandwidth
-#'               values to use (the default is to use Andrews' method)
+#'               \code{\link[cointReg]{getBandwidth}}); if vector, the
+#'               bandwidth values to use; if single number, the plug-in value
+#'               for the corresponding kernel (the default is to use Andrews'
+#'               method)
 #' @return A 3D array of estimate of the long-run covariance matrices
 #' @references
 #'   \insertAllCited{}

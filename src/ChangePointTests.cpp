@@ -75,18 +75,18 @@ List stat_Vn_cpp(const NumericVector& dat, const double& kn, const double& tau,
         // Get estimate of sd for this k
         double sdk = 0;
         if (use_kernel_var) {
-            sdk = std::sqrt(lrv_est[k - 1]);
+            sdk = sqrt(lrv_est[k - 1]);
         } else {
-            sdk = std::sqrt((s_square_lower - s_lower * s_lower / k +
+            sdk = sqrt((s_square_lower - s_lower * s_lower / k +
                 s_square_upper -
                 s_upper * s_upper / (n - k))/n);
         }
-        M_candidate = std::abs(s_lower - (k / n) * s_total) / sdk /
-            std::pow(k / n * (n - k) / n, tau);
+        M_candidate = abs(s_lower - (k / n) * s_total) / sdk /
+            pow(k / n * (n - k) / n, tau);
         
             // If we are getting all values, add another value to all_vals
             if (get_all_vals) {
-                all_vals.push_back(M_candidate / std::sqrt(n));
+                all_vals.push_back(M_candidate / sqrt(n));
             }
         // Choose new maximum
         if (M_candidate > M) {
@@ -95,7 +95,7 @@ List stat_Vn_cpp(const NumericVector& dat, const double& kn, const double& tau,
         }
     }
     // Final step; the maximum M should be normalized
-    M /= std::sqrt(n);
+    M /= sqrt(n);
     
     return List::create(Named("statistic") = M,
                         Named("estimate") = est,
@@ -147,17 +147,17 @@ List stat_Zn_cpp(const NumericVector& dat, const double& kn,
         // Get estimate of sd for this k
         double sdk = 0;
         if (use_kernel_var) {
-            sdk = std::sqrt(lrv_est[k - 1]);
+            sdk = sqrt(lrv_est[k - 1]);
         } else {
-            sdk = std::sqrt((s_square_lower - s_lower * s_lower / k +
+            sdk = sqrt((s_square_lower - s_lower * s_lower / k +
                                s_square_upper -
                                s_upper * s_upper / (n - k))/n);
         }
-        M_candidate = std::abs(s_lower / k - s_upper / (n - k)) / sdk;
+        M_candidate = abs(s_lower / k - s_upper / (n - k)) / sdk;
         
         // If we are getting all values, add another value to all_vals
         if (get_all_vals) {
-            all_vals.push_back(M_candidate * std::sqrt(kn));
+            all_vals.push_back(M_candidate * sqrt(kn));
         }
         // Choose new maximum
         if (M_candidate > M) {
@@ -168,7 +168,7 @@ List stat_Zn_cpp(const NumericVector& dat, const double& kn,
     
     // One final step to get the test statistic;
     // Multiply the maximum by kn
-    M *= std::sqrt(kn);
+    M *= sqrt(kn);
     
     return List::create(Named("statistic") = M,
                         Named("estimate") = est,
@@ -366,7 +366,7 @@ inline double tr_kernel(const double& x) {
 
 // Bartlett kernel
 inline double ba_kernel(const double& x) {
-    const double absx = std::abs(x);
+    const double absx = abs(x);
     if (absx > 1) {
         return absx;
     } else {
@@ -376,11 +376,11 @@ inline double ba_kernel(const double& x) {
 
 // Parzen kernel
 inline double pa_kernel(const double& x) {
-    const double absx = std::abs(x);
+    const double absx = abs(x);
     if (absx <= 0.5) {
-        return 1 - 6 * std::pow(absx, 2) + 6 * std::pow(absx, 3);
+        return 1 - 6 * pow(absx, 2) + 6 * pow(absx, 3);
     } else if (absx <= 1) {
-        return 2 * std::pow(1 - absx, 3);
+        return 2 * pow(1 - absx, 3);
     } else {
         return 0;
     }
@@ -391,7 +391,7 @@ inline double th_kernel(const double& x) {
     if ((x < -1) || (x > 1)) {
         return 0;
     } else {
-        return (1 + std::cos(L_PI * x))/2;
+        return (1 + cos(L_PI * x))/2;
     }
 }
 
@@ -401,32 +401,32 @@ inline double qs_kernel(const double& x) {
     if (x == 0) {
         return 1;
     }
-    return (std::sin(spxd5)/spxd5 - std::cos(spxd5)) / (std::pow(spxd5, 2));
+    return (sin(spxd5)/spxd5 - cos(spxd5)) / (pow(spxd5, 2));
 }
 
 // Bandwidth functions, for getting the bandwidth
 // Bartlett kernel
 inline double ba_bandwidth(const double& param, const unsigned int& n) {
     // In Andrews (1991), the parameter was 1.1447; round up, to be conservative
-    return 1.1448 * param * std::pow(n, 1.0/3.0);
+    return 1.1448 * param * pow(n, 1.0/3.0);
 }
 
 // Parzen kernel
 inline double pa_bandwidth(const double& param, const unsigned int& n) {
     // In Andrews (1991), the parameter was 2.6614; round up, to be conservative
-    return 2.6615 * param * std::pow(n, 1.0/5.0);
+    return 2.6615 * param * pow(n, 1.0/5.0);
 }
 
 // Tukey-Hanning kernel
 inline double th_bandwidth(const double& param, const unsigned int& n) {
     // In Andrews (1991), the parameter was 1.7462; round up, to be conservative
-    return 1.7463 * param * std::pow(n, 1.0/5.0);
+    return 1.7463 * param * pow(n, 1.0/5.0);
 }
 
 // Quadratic spectral kernel
 inline double qs_bandwidth(const double& param, const unsigned int& n) {
     // In Andrews (1991), the parameter was 1.3221; round up, to be conservative
-    return 1.3222 * param * std::pow(n, 1.0/5.0);
+    return 1.3222 * param * pow(n, 1.0/5.0);
 }
 
 // Truncated kernel

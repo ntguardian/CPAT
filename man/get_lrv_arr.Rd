@@ -29,14 +29,6 @@ Estimates the covariance matrix of the process \eqn{\{x_t \epsilon_t\}} in a
 block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
 for more details.
 }
-\details{
-While the documentation refers to \pkg{cointReg}, that package is never used
-here. The kernels and methods referred to have implementations specific to
-this context. This is due to the computational demand of computing
-\code{nrow(X)} separate (but related) covariance matrices using kernel
-methods. Thus this function, by default, uses \pkg{cointReg} notation only,
-not its methods.
-}
 \examples{
 x <- rnorm(50)
 y <- 1 + 2 * x + rnorm(50)
