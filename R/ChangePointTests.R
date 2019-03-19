@@ -244,6 +244,23 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
 #' for more details.
 #'
+#' This function computes the matrix \eqn{\hat{Q}_{t,T} = I_{t \leq T/2}
+#' \hat{Q}_{t,1} + I_{t > T/2} \hat{Q}_{t,2}}, where \eqn{I} is the indicator
+#' function. Let \eqn{\hat{e}_t = x_t \hat{\epsilon}_t} where
+#' \eqn{\hat{\epsilon}_t} are the estimated residuals of the regression model.
+#' Then, if \eqn{K} is the kernel function, \eqn{h_t} the bandwidth for a
+#' sample of size \eqn{t}, and \eqn{\hat{V}_{t, u} = \hat{e}_t \hat{e}_{t + u}^T
+#' + \hat{e}_{t + u} \hat{e}_t^T},
+#'
+#' \deqn{\hat{Q}_{t,1} = \frac{1}{2t} \sum_{s = 1}^t \hat{V}_{s,0} + \sum_{u =
+#' 1}^{t - 1} K(u/h_t) \frac{1}{t - u} \sum_{s = 1}^{t - u} \hat{V}_{s, u}}
+#'
+#' and
+#'
+#' \deqn{\hat{Q}_{t,2} = \frac{1}{2(T - t)} \sum_{s = t + 1}^T \hat{V}_{s,0} +
+#' \sum_{u = 1}^{T - t - 1} K(u/h_{T - t}) \frac{1}{T - t + u} \sum_{s = t +
+#' 1}^{T - u} \hat{V}_{s, u}}
+#'
 #' \code{\link[cointReg]{getBandwidth}} is used to find the missing parameter in
 #' the bandwidth models as described by \insertCite{andrews91b}{CPAT} and
 #' \insertCite{neweywest94}{CPAT} but actual implementation details
@@ -862,12 +879,40 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' Compute the Rényi-Type Statistic for Stability in Linear Regression Models
 #'
 #' This function computes the Rényi-type statistic for detecting structural
-#' change in linear regression models.
+#' change in linear regression models. See
+#' \insertCite{horvathmillerrice20}{CPAT} for more details.
 #'
-#' TODO: EXTENDED DESCRIPTION
+#' Let \eqn{y_t = x_t^T \beta_t + \epsilon_t}. The definition of the statistic
+#' is
 #'
-#' TODO: THIS FUNCTION DOES NOT WORK AS MARKETED BECAUSE WE'RE STILL WORKING ON
-#' THE THEORY.
+#' \deqn{\sqrt{t_T} \max_{t_T \leq t \leq T} \sqrt{(\hat{\beta_{t,1} -
+#' \hat{\beta_{t,2}}})^T \hat{D}_{T,t}^{-1} (\hat{\beta}_{1,t} -
+#' \hat{\beta}_{2,t})}}
+#'
+#' where \eqn{t_T} is the trimming parameter, \eqn{\hat{\beta}_{1,t}} is the
+#' least-squares model fit for the first half of the data when split at \eqn{t},
+#' \eqn{\hat{\beta}_{2,t}} the same but for the upper half, and
+#'
+#' \deqn{\hat{D}_{t,T} = I_{t \leq T/2} (t^{-1} X_{t,1}^T X_{t,1})
+#' \hat{Q_{t,T}^{-1}} (t^{-1} X_{t,1}^T X_{t,1}) + I_{t > T/2} ((T - t)^{-1}
+#' X_{t,2}^T X_{t,2}) \hat{Q_{t,T}^{-1}} ((T - t)^{-1} X_{t,2}^T X_{t,2})}
+#'
+#' with \eqn{X_{t,1}} being the data matrix containing the data up to \eqn{t},
+#' \eqn{X_{t,2}} the data matrix containing the data after \eqn{t}, \eqn{I} the
+#' indicator function, and \eqn{Q_{t,T}} a matrix for long-run variance
+#' estimation of the process \eqn{\{x_t \epsilon_t\}}.
+#'
+#' Let \eqn{\hat{e}_t = x_t \hat{\epsilon}_t}. When \code{use_kernel_var} is
+#' \code{FALSE}, then the internal estimator for \eqn{Q} is used; it is
+#'
+#' \deqn{\hat{Q}_{t,T} = I_{t \leq T/2} \hat{Q}_{1,t} + I_{t > T/2}
+#' \hat{Q}_{t,2}}
+#'
+#' with \eqn{\hat{Q}_{1,t} = t^{-1} \sum_{s = 1}^t \hat{e}_s \hat{e}_s^T} and
+#' \eqn{\hat{Q}_{t,2} = (T - t)^{-1} \sum_{s = t + 1}^{T} \hat{e}_s
+#' \hat{e}_s^T}. Otherwise, \code{\link{get_lrv_arr}} is called to estimate this
+#' matrix using kernel methods (unless \code{custom_var} is set, which will then
+#' be used for estimation instead).
 #'
 #' @param formula The regression formula, which will be passed to
 #'        \code{\link[stats]{lm}}
@@ -879,7 +924,9 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #'                       see \code{\link{get_lrv_arr}} for more details
 #' @param custom_var Either a \eqn{d \times d \times T} array of symmetric
 #'                   positive-definite matrices containing covariance matrices
-#'                   or a function producing such an array
+#'                   or a function producing such an array and having a
+#'                   parameter \code{x} for the data; if set,
+#'                   \code{use_kernel_var} is ignored
 #' @param fast If \code{TRUE}, the test statistic is computed quickly but at a
 #'             potential loss of numerical accuracy (by solving the normal
 #'             equations); otherwise, use slower but more numerically stable
@@ -890,6 +937,8 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #'         statistic and the other values requested (if both are \code{TRUE},
 #'         the test statistic is in the first position and the estimated change
 #'         point in the second)
+#' @references
+#'   \insertAllCited{}
 #' @examples
 #' x <- rnorm(1000, mean = 4)
 #' y <- 1 + 2 * x + rnorm(1000)
@@ -1398,14 +1447,17 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #' Rényi-Type Test
 #'
 #' Performs the (univariate) Rényi-type test for change in mean, as described in
-#' \insertCite{horvathricemiller19}{CPAT}. This is effectively an interface to
-#' \code{\link{stat_Zn}}; see its documentation for more details. p-values are
-#' computed using \code{\link{pZn}}, which represents the limiting distribution
-#' of the test statistic under the null hypothesis, which represents the
-#' limiting distribution of the test statistic under the null hypothesis when
-#' \code{kn} represents a sequence \eqn{t_T} satisfying \eqn{t_T \to \infty}
-#' and \eqn{t_T/T \to 0} as \eqn{T \to \infty}. (\code{\link[base]{log}} and
-#' \code{\link[base]{sqrt}} should be good choices.)
+#' \insertCite{horvathricemiller19}{CPAT} or the Rényi-type test for regression
+#' models, as described in \insertCite{horvathmillerrice20}{CPAT}. This is
+#' effectively an interface to \code{\link{stat_Zn}} and
+#' \code{\link{stat_Zn_reg}}; see their documentation for more details. p-values
+#' are computed using \code{\link{pZn}}, which represents the limiting
+#' distribution of the test statistic under the null hypothesis, which
+#' represents the limiting distribution of the test statistic under the null
+#' hypothesis when \code{kn} represents a sequence \eqn{t_T} satisfying \eqn{t_T
+#' \to \infty} and \eqn{t_T/T \to 0} as \eqn{T \to \infty}.
+#' (\code{\link[base]{log}} and \code{\link[base]{sqrt}} should be good
+#' choices.)
 #'
 #' @param x Data to test for change in mean
 #' @param stat_plot Whether to create a plot of the values of the statistic at
