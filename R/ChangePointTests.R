@@ -244,13 +244,6 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
 #' for more details.
 #'
-#' While the documentation refers to \pkg{cointReg}, that package is never used
-#' here. The kernels and methods referred to have implementations specific to
-#' this context. This is due to the computational demand of computing
-#' \code{nrow(X)} separate (but related) covariance matrices using kernel
-#' methods. Thus this function, by default, uses \pkg{cointReg} notation only,
-#' not its methods.
-#'
 #' @param X The data matrix
 #' @param kernel If character, the identifier of the kernel function as used in
 #'               \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
@@ -271,21 +264,18 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' X <- model.matrix(y ~ x, data = df)
 #' CPAT:::get_lrv_arr(X)
 get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
-  kernel_func <- sqrt
+  kernel_func <- ba_kernel_r
   use_custom_bw <- FALSE
   bandwidth_vector <- 1
-  if (is.character(kernel)) {
-    # Translation of codes; see first few lines of src/ChangePointTests.cpp
-    kernel <- switch(kernel, "tr" = 1, "ba" = 2, "pa" = 3, "th" = 4, "qs" = 5)
-  } else if (is.function(kernel)) {
-    kernel_func <- kernel
-    kernel <- 0 # Means use custom bandwidth
-  } else {
-    stop("Don't know how to handle kernel of type" %s% class(kernel))
-  }
 
   if (is.character(bandwidth)) {
-    stop("This functionality is not yet implemented")
+    stopifnot(is.character(kernel))
+    k <- ifelse(kernel == "ba", 3, 5)
+    kernel_constant <- switch(kernel, "ba" = 1.1447, "pa" = 2.6614,
+                              "qs" = 1.3221, "th" = 1.7462, "tr" = 0.661)
+    bandwidth_param <- cointReg::getBandwidth(X, kernel = kernel,
+                                              bandwidth = bandwidth) / 
+      kernel_constant / nrow(X)^(1/k)
   } else if (is.numeric(bandwidth)) {
     if (length(bandwidth) == nrow(X)) {
       bandwidth_vector <- bandwidth
@@ -299,6 +289,18 @@ get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
     }
   } else {
     stop("Don't know how to handle bandwidth of type" %s% class(bandwidth))
+  }
+
+  if (is.character(kernel)) {
+    # Translation of codes; see first few lines of src/ChangePointTests.cpp
+    stopifnot(kernel %in% c("tr", "ba", "pa", "th", "qs"))
+    kernel <- switch(kernel, "tr" = 1, "ba" = 2, "pa" = 3, "th" = 4, "qs" = 5)
+  } else if (is.function(kernel)) {
+    stopifnot(is.numeric(bandwidth) & length(bandwidth) == nrow(X))
+    kernel_func <- kernel
+    kernel <- 0 # Means use custom bandwidth
+  } else {
+    stop("Don't know how to handle kernel of type" %s% class(kernel))
   }
 
   get_lrv_arr_cpp(X, kernel, bandwidth_param, bandwidth_vector, kernel_func,
