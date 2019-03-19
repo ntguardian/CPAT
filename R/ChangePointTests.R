@@ -245,10 +245,11 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
 #' for more details.
 #'
 #' \code{\link[cointReg]{getBandwidth}} is used to find the missing parameter in
-#' the bandwidth models as described by ... but actual implementation details
+#' the bandwidth models as described by \insertCite{andrews91b}{CPAT} and
+#' \insertCite{neweywest94}{CPAT} but actual implementation details
 #' and the kernel functions used are not based on \pkg{cointReg} functionality.
 #' For example, the approach used to find a bandwidth for the truncated kernel
-#' is the one described in ... .
+#' is the one described in \insertCite{linsataka13}{CPAT}.
 #'
 #' Only a single bandwidth value is estimated from the data, using the entire
 #' data set. From this bandwidth value, all other bandwidths are determined,
@@ -866,13 +867,19 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' TODO: EXTENDED DESCRIPTION
 #'
 #' TODO: THIS FUNCTION DOES NOT WORK AS MARKETED BECAUSE WE'RE STILL WORKING ON
-#' THE THEORY; \code{use_kernel_var}, \code{kernel}, AND \code{bandwidth} ARE
-#' IGNORED AND \code{custom_var} SHOULD NOT BE NULL, BUT CREATE A MATRIX THE
-#' SAME DIMENSION AS THE REGRESSION MODEL.
+#' THE THEORY.
 #'
 #' @param formula The regression formula, which will be passed to
 #'        \code{\link[stats]{lm}}
 #' @param data \code{data.frame} containing the data
+#' @param use_kernel_var Set to \code{TRUE} to use kernel methods for long-run
+#'                       covariance matrix estimation (typically used when the
+#'                       data is believed to be correlated), and \code{FALSE} to
+#'                       use an estimator that assumes the data is uncorrelated;
+#'                       see \code{\link{get_lrv_arr}} for more details
+#' @param custom_var Either a \eqn{d \times d \times T} array of symmetric
+#'                   positive-definite matrices containing covariance matrices
+#'                   or a function producing such an array
 #' @param fast If \code{TRUE}, the test statistic is computed quickly but at a
 #'             potential loss of numerical accuracy (by solving the normal
 #'             equations); otherwise, use slower but more numerically stable
@@ -899,8 +906,11 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   X <- model.matrix(formula, data = data)
   d <- ncol(X)
   n <- nrow(X)
+  fit <- lm(formula = formula, data = data)
+  eps <- residuals(fit)
+  eX <- X * eps
   if (use_kernel_var) {
-    stop("That functionality is not yet implemented")
+    lrv <- get_lrv_arr(eX, kernel = kernel, bandwidth = bandwidth)
   } else if (!is.null(custom_var)) {
     use_kernel_var <- TRUE
     if (is.function(custom_var)) {
@@ -1410,7 +1420,7 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = FALSE)
+#' HR.test(df, formula = y ~ x, kn = sqrt, kernel = "qs", bandwidth = "and")
 #' @export
 HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {

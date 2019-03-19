@@ -22,27 +22,14 @@ default, the square root function}
 change point}
 
 \item{use_kernel_var}{Set to \code{TRUE} to use kernel methods for long-run
-variance estimation (typically used when the data is
-believed to be correlated); if \code{FALSE}, then the
-long-run variance is estimated using
-\eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
-\sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
-\sum_{s = t + 1}^{T}\left(X_s -
-\tilde{X}_{T - t}\right)^2\right)}, where
-\eqn{\bar{X}_t = t^{-1}\sum_{s = 1}^t X_s} and
-\eqn{\tilde{X}_{T - t} = (T - t)^{-1}
-\sum_{s = t + 1}^{T} X_s}; if \code{custom_var} is not
-\code{NULL}, this argument is ignored}
+covariance matrix estimation (typically used when the
+data is believed to be correlated), and \code{FALSE} to
+use an estimator that assumes the data is uncorrelated;
+see \code{\link{get_lrv_arr}} for more details}
 
-\item{custom_var}{Can be a vector the same length as \code{dat} consisting of
-variance-like numbers at each potential change point (so
-each entry of the vector would be the "best estimate" of
-the long-run variance if that location were where the
-change point occured) or a function taking two parameters
-\code{x} and \code{k} that can be used to generate this
-vector, with \code{x} representing the data vector and
-\code{k} the position of a potential change point; if
-\code{NULL}, this argument is ignored}
+\item{custom_var}{Either a \eqn{d \times d \times T} array of symmetric
+positive-definite matrices containing covariance matrices
+or a function producing such an array}
 
 \item{kernel}{If character, the identifier of the kernel function as used in
 \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
@@ -79,9 +66,7 @@ change in linear regression models.
 TODO: EXTENDED DESCRIPTION
 
 TODO: THIS FUNCTION DOES NOT WORK AS MARKETED BECAUSE WE'RE STILL WORKING ON
-THE THEORY; \code{use_kernel_var}, \code{kernel}, AND \code{bandwidth} ARE
-IGNORED AND \code{custom_var} SHOULD NOT BE NULL, BUT CREATE A MATRIX THE
-SAME DIMENSION AS THE REGRESSION MODEL.
+THE THEORY.
 }
 \examples{
 x <- rnorm(1000, mean = 4)

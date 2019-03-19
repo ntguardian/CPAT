@@ -17,17 +17,10 @@ HR.test(x, formula = NULL, kn = log, use_kernel_var = FALSE,
 default, the square root function}
 
 \item{use_kernel_var}{Set to \code{TRUE} to use kernel methods for long-run
-variance estimation (typically used when the data is
-believed to be correlated); if \code{FALSE}, then the
-long-run variance is estimated using
-\eqn{\hat{\sigma}^2_{T,t} = T^{-1}\left(
-\sum_{s = 1}^t \left(X_s - \bar{X}_t\right)^2 +
-\sum_{s = t + 1}^{T}\left(X_s -
-\tilde{X}_{T - t}\right)^2\right)}, where
-\eqn{\bar{X}_t = t^{-1}\sum_{s = 1}^t X_s} and
-\eqn{\tilde{X}_{T - t} = (T - t)^{-1}
-\sum_{s = t + 1}^{T} X_s}; if \code{custom_var} is not
-\code{NULL}, this argument is ignored}
+covariance matrix estimation (typically used when the
+data is believed to be correlated), and \code{FALSE} to
+use an estimator that assumes the data is uncorrelated;
+see \code{\link{get_lrv_arr}} for more details}
 
 \item{stat_plot}{Whether to create a plot of the values of the statistic at
 all potential change points}
@@ -64,7 +57,7 @@ HR.test(rnorm(1000), use_kernel_var = TRUE, kernel = "bo", bandwidth = "nw")
 x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
-HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = FALSE)
+HR.test(df, formula = y ~ x, kn = sqrt, kernel = "qs", bandwidth = "and")
 }
 \references{
 \insertAllCited{}

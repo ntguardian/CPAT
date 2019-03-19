@@ -108,6 +108,11 @@ test_that("stat_Zn_reg() functions properly", {
                                         custom_var = function(x, k) {diag(2)},
                                         get_all_vals = TRUE, estimate = TRUE)),
                c("statistic", "estimate", "stat_vals"))
+
+  check_cointReg()
+
+  expect_equal(CPAT:::stat_Zn_reg(y ~ x, data = df, use_kernel_var = TRUE),
+               6.08134617119088)
 })
 
 test_that("stat_Vn() functions properly", {
@@ -393,6 +398,7 @@ test_that("HR.test() functions properly", {
   expect_equal(HR.test(dat)$parameters, c(`log(T)` = 2.99573227355399))
   expect_equal(HR.test(dat, use_kernel_var = TRUE)$p.value,
                0.00349647304622447)
+  expect_equal(HR.test(df2, y ~ x)$p.value, 0.0457699073347345)
   expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE, kn = sqrt)$p.value,
                4.81098723914553e-06)
   expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE,

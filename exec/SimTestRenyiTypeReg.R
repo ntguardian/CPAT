@@ -1,12 +1,12 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimTestRenyiTypeRegNoKern.R
+# SimTestRenyiTypeReg.R
 ################################################################################
 # 2019-03-07
 # Curtis Miller
 ################################################################################
 # Define the Rényi-type test statistic for simulations that uses the full
-# regression model coefficients for the test and does not use kernel methods for
+# regression model coefficients for the test and uses kernel methods for
 # long-run variance estimation.
 ################################################################################
 
@@ -20,23 +20,23 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "SimTestRenyiTypeRegNoKern.Rda", linetype = "solid",
+main <- function(output = "SimTestRenyiTypeReg.Rda", linetype = "solid",
                  help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   renyi_reg_st <- function(formula, data) {
     CPAT:::stat_Zn_reg(formula = formula, data = data, kn = sqrt,
-                       use_kernel_var = FALSE)
+                       use_kernel_var = TRUE, kernel = "qs", bandwidth = "and")
   }
 
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
 
-  stat_functions <- c("ZnRegNoKern" = renyi_reg_st)
-  pval_functions <- c("ZnRegNoKern" = function(q) {1 - CPAT:::pZn(q, d = 2)})
-  plot_desc <- c("ZnRegNoKern" = linetype)
+  stat_functions <- c("ZnReg" = renyi_reg_st)
+  pval_functions <- c("ZnReg" = function(q) {1 - CPAT:::pZn(q, d = 2)})
+  plot_desc <- c("ZnReg" = linetype)
 
   save(stat_functions, pval_functions, plot_desc, file = output, ascii = TRUE)
 }
@@ -52,7 +52,7 @@ if (sys.nframe() == 0) {
                             "the test."),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "SimTestRenyiTypeRegNoKern.Rda",
+                      default = "SimTestRenyiTypeReg.Rda",
                       help = "Name of output .Rda file"),
           make_option(c("--linetype", "-l"), type = "character",
                       default = "solid",
