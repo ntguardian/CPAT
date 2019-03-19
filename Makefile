@@ -68,7 +68,7 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTARMAPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTGARCHPREFIX)*.pdf)
 
-VIGNETTES: doc/CollectedPlots.pdf
+VIGNETTES=doc/CollectedPlots.pdf
 
 .PHONY : all
 all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) $(VIGNETTES)
