@@ -17,41 +17,55 @@ SIMSEED=2019
 
 LEVEL=0.05
 
+SIMSNORMALRENYI=data/SimsNormalRenyiReg.Rda
 SIMSNORMALRENYIRESID=data/SimsNormalRenyiResid.Rda
+SIMSNORMALRENYINOKERN=data/SimsNormalRenyiRegNoKern.Rda
 SIMSNORMALCUSUM=data/SimsNormalCUSUM.Rda
 SIMSNORMALHS=data/SimsNormalHS.Rda
+SIMSARMARENYI=data/SimsARMARenyiReg.Rda
 SIMSARMARENYIRESID=data/SimsARMARenyiResid.Rda
 SIMSARMACUSUM=data/SimsARMACUSUM.Rda
 SIMSARMAHS=data/SimsARMAHS.Rda
+SIMSGARCHRENYI=data/SimsGARCHRenyiReg.Rda
 SIMSGARCHRENYIRESID=data/SimsGARCHRenyiResid.Rda
+SIMSGARCHRENYINOKERN=data/SimsGARCHRenyiRegNoKern.Rda
 SIMSGARCHCUSUM=data/SimsGARCHCUSUM.Rda
 SIMSGARCHHS=data/SimsGARCHHS.Rda
-ALLSIMS=$(SIMSNORMALRENYIRESID) $(SIMSNORMALCUSUM) $(SIMSNORMALHS) \
-        $(SIMSARMARENYIRESID) $(SIMSARMACUSUM) $(SIMSARMAHS) \
-        $(SIMSGARCHRENYIRESID) $(SIMSGARCHCUSUM) $(SIMSGARCHHS)
+ALLSIMS=$(SIMSNORMALRENYI) $(SIMSNORMALRENYIRESID) $(SIMSNORMALRENYINOKERN) \
+		$(SIMSNORMALCUSUM) $(SIMSNORMALHS) $(SIMSARMARENYI) \
+		$(SIMSARMARENYIRESID) $(SIMSARMACUSUM) $(SIMSARMAHS) $(SIMSGARCHRENYI) \
+		$(SIMSGARCHRENYIRESID) $(SIMSGARCHRENYINOKERN) $(SIMSGARCHCUSUM) \
+		$(SIMSGARCHHS)
 
+SIMSNORMALRENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYI))
 SIMSNORMALRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYIRESID))
+SIMSNORMALRENYINOKERNDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYINOKERN))
 SIMSNORMALCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALCUSUM))
 SIMSNORMALHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHS))
+SIMSARMARENYIDF=$(subst .Rda,DataFrame.Rda, $(SIMSARMARENYI))
 SIMSARMARENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSARMARENYIRESID))
 SIMSARMACUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSARMACUSUM))
 SIMSARMAHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSARMAHS))
+SIMSGARCHRENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHRENYI))
 SIMSGARCHRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHRENYIRESID))
+SIMSGARCHRENYINOKERNDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHRENYINOKERN))
 SIMSGARCHCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHCUSUM))
 SIMSGARCHHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHS))
 
-SIMSNORMALDFPREREQ=$(SIMSNORMALRENYIRESIDDF) $(SIMSNORMALCUSUMDF) \
-                   $(SIMSNORMALHSDF)
+SIMSNORMALDFPREREQ=$(SIMSNORMALRENYIRESIDDF) $(SIMSNORMALRENYINOKERNDF) \
+				   $(SIMSNORMALCUSUMDF) $(SIMSNORMALHSDF)
 SIMSNORMALDF=data/SimsNormal.Rda
-SIMSARMADFPREREQ=$(SIMSARMARENYIRESIDDF) $(SIMSARMACUSUMDF) $(SIMSARMAHSDF)
+SIMSARMADFPREREQ=$(SIMSARMARENYIRESIDDF) $(SIMSARMARENYIDF) $(SIMSARMACUSUMDF) \
+				 $(SIMSARMAHSDF)
 SIMSARMADF=data/SimsARMA.Rda
-SIMSGARCHDFPREREQ=$(SIMSGARCHRENYIRESIDDF) $(SIMSGARCHCUSUMDF) $(SIMSGARCHHSDF)
+SIMSGARCHDFPREREQ=$(SIMSGARCHRENYIRESIDDF) $(SIMSGARCHRENYINOKERNDF) \
+				  $(SIMSGARCHCUSUMDF) $(SIMSGARCHHSDF)
 SIMSGARCHDF=data/SimsGARCH.Rda
 
 ALLDISTDF=$(SIMSNORMALDF) $(SIMSARMADF) $(SIMSGARCHDF)
 
 ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
-POWERPLOTPREFIX=inst/plots/power_plot_
+POWERPLOTPREFIX=vignettes/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
 POWERPLOTARMAPREFIX=$(POWERPLOTPREFIX)ARMA_
 POWERPLOTGARCHPREFIX=$(POWERPLOTPREFIX)GARCH_
@@ -62,8 +76,10 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTARMAPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTGARCHPREFIX)*.pdf)
 
+VIGNETTES=doc/CollectedPlots.pdf
+
 .PHONY : all
-all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME)
+all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) $(VIGNETTES)
 
 .PRECIOUS : $(ALLSIMS)
 
@@ -82,15 +98,24 @@ data/$(SIMSTATPREFIX)%.Rda : exec/$(SIMSTATPREFIX)%.R R/Utils.R \
 	make package
 	$(RSCRIPT) $< -o $@
 
+$(SIMSNORMALRENYI) : data/$(CONTEXTPREFIX)Main.Rda \
+                     data/$(SIMDATAPREFIX)NormalXY.Rda \
+					 data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSNORMALRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMDATAPREFIX)NormalXY.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSNORMALRENYINOKERN) : data/$(CONTEXTPREFIX)Main.Rda \
+                           data/$(SIMDATAPREFIX)NormalXY.Rda \
+                           data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
 $(SIMSNORMALCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
                      data/$(SIMDATAPREFIX)NormalXY.Rda \
                      data/$(SIMSTATPREFIX)CUSUM.Rda
 $(SIMSNORMALHS) : data/$(CONTEXTPREFIX)Main.Rda \
                   data/$(SIMDATAPREFIX)NormalXY.Rda \
                   data/$(SIMSTATPREFIX)HS.Rda
+$(SIMSARMARENYI) : data/$(CONTEXTPREFIX)Main.Rda \
+                   data/$(SIMDATAPREFIX)ARMAXY.Rda \
+				   data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSARMARENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                         data/$(SIMDATAPREFIX)ARMAXY.Rda \
                         data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
@@ -100,9 +125,15 @@ $(SIMSARMACUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
 $(SIMSARMAHS) : data/$(CONTEXTPREFIX)Main.Rda \
                 data/$(SIMDATAPREFIX)ARMAXY.Rda \
                 data/$(SIMSTATPREFIX)HS.Rda
+$(SIMSGARCHRENYI) : data/$(CONTEXTPREFIX)Main.Rda \
+                    data/$(SIMDATAPREFIX)GARCHXY.Rda \
+					data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSGARCHRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                          data/$(SIMDATAPREFIX)GARCHXY.Rda \
                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSGARCHRENYINOKERN) : data/$(CONTEXTPREFIX)Main.Rda \
+                           data/$(SIMDATAPREFIX)GARCHXY.Rda \
+                           data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
 $(SIMSGARCHCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
                     data/$(SIMDATAPREFIX)GARCHXY.Rda \
                     data/$(SIMSTATPREFIX)CUSUM.Rda
@@ -118,13 +149,22 @@ $(ALLSIMS) :
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -v \
 		 -s $(SIMSEED)$(shell echo $@ $^ | md5sum | grep -Eo "[[:digit:]]{3,9}" | head -n1)
 
+$(SIMSNORMALRENYIDF) : $(SIMSNORMALRENYI) \
+                       data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+					   data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) \
                             data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                             data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMALRENYINOKERNDF) : $(SIMSNORMALRENYINOKERN) \
+                             data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
+							 data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALCUSUMDF) : $(SIMSNORMALCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
                        data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHSDF) : $(SIMSNORMALHS) data/$(SIMSTATPREFIX)HS.Rda \
                     data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSARMARENYIDF) : $(SIMSARMARENYI) \
+                     data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                     data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSARMARENYIRESIDDF) : $(SIMSARMARENYIRESID) \
                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                           data/$(CONTEXTPREFIX)Main.Rda
@@ -132,9 +172,15 @@ $(SIMSARMACUSUMDF) : $(SIMSARMACUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
                      data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSARMAHSDF) : $(SIMSARMAHS) data/$(SIMSTATPREFIX)HS.Rda \
                   data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSGARCHRENYIDF) : $(SIMSGARCHRENYI) \
+                      data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                      data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHRENYIRESIDDF) : $(SIMSGARCHRENYIRESID) \
                            data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                            data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSGARCHRENYINOKERNDF) : $(SIMSGARCHRENYINOKERN) \
+                             data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
+							 data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHCUSUMDF) : $(SIMSGARCHCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
                       data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHHSDF) : $(SIMSGARCHHS) data/$(SIMSTATPREFIX)HS.Rda \
@@ -177,6 +223,12 @@ $(POWERPLOTGARCHPREFIX)%.pdf : $(SIMSGARCHDF) exec/UnivariatePlotter.R \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
 
+doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
+
+$(VIGNETTES) :
+	$(RSCRIPT) exec/RemakePackage.R
+	touch package
+
 .PHONY : simconfig
 simconfig : $(CONTEXTGENERATORS) $(SIMDATAGENERATORS) $(SIMSTATGENERATORS)
 	make $(CONTEXTGENERATORS:exec/%.R=data/%.Rda)
@@ -211,7 +263,6 @@ clean :
 .PHONY : init
 init :
 	make simconfig
-	-mkdir inst/plots
 	echo "I'm empty for now" > $(POWERPLOTNORMALPREFIX)n50.pdf
 	echo "I'm empty for now" > $(POWERPLOTARMAPREFIX)n50.pdf
 	echo "I'm empty for now" > $(POWERPLOTGARCHPREFIX)n50.pdf
