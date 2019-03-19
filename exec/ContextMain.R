@@ -60,7 +60,7 @@ main <- function(output = "ContextMain.Rda", help = FALSE) {
   ##############################################################################
   
   n_values <- as.integer(c(50, 250, 1000))
-  kstar_functions <- c("c23rd" = function(n) {n^{2/3}})
+  kstar_functions <- c("c35rd" = function(n) {n^{3/5}})
   struc_models <- lapply(delta, grm_12)
   names(struc_models) <- "d" %s0% delta
   struc_name_conversion <- data.frame("d" = delta)
