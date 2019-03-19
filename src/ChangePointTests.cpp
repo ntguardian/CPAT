@@ -398,8 +398,10 @@ inline double th_kernel(const double& x) {
 // Quadratic spectral kernel
 inline double qs_kernel(const double& x) {
     const double spxd5 = 6 * L_PI * x / 5;
-    return 3750 * (std::sin(spxd5)/spxd5 - std::cos(spxd5)) / 
-        (2 * std::pow(spxd5, 2));
+    if (x == 0) {
+        return 1;
+    }
+    return (std::sin(spxd5)/spxd5 - std::cos(spxd5)) / (std::pow(spxd5, 2));
 }
 
 // Bandwidth functions, for getting the bandwidth
@@ -464,14 +466,14 @@ double get_bandwidth(const double& param, const unsigned int& n,
             break;
         default:
             throw std::domain_error("get_bandwidth() given bad kernel"
-                                    "identifier; should not be in default"
-                                    "case!");
+                                    " identifier; should not be in default"
+                                    " case!");
             return 1;
             break;
     }
 
     throw std::runtime_error("get_bandwidth() should not have left its switch!"
-                             "How did I get here?");
+                             " How did I get here?");
     return 1;
 }
 
@@ -495,14 +497,14 @@ double kernel_function(const double& x, const unsigned char& kernel) {
             break;
         default:
             throw std::domain_error("kernel_function() given bad kernel"
-                                    "identifier; should not be in default"
-                                    "case!");
+                                    " identifier; should not be in default"
+                                    " case!");
             return 1;
             break;
     }
 
     throw std::runtime_error("kernel_function() should not have left its"
-                             "switch! How did I get here?");
+                             " switch! How did I get here?");
     return 1;
 }
 
@@ -610,14 +612,16 @@ NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
     const arma::mat X = as<arma::mat>(X_input);
     arma::cube lrv_est(d, d, n, arma::fill::zeros);
 
-    lrv_est.slices(0, n/2) = lrv_matrix_cube_computer(X.rows(0, n/2), kernel,
-                                                      bandwidth_param,
-                                                      custom_bw, custom_kernel,
-                                                      use_custom_bw);
+    lrv_est.slices(0, n/2 - 1) = lrv_matrix_cube_computer(X.rows(0, n/2 - 1),
+                                                          kernel,
+                                                          bandwidth_param,
+                                                          custom_bw,
+                                                          custom_kernel,
+                                                          use_custom_bw);
     arma::cube last_cube_half = lrv_matrix_cube_computer(
-            arma::flipud(X.rows(n/2 + 1, n - 1)), kernel, bandwidth_param,
+            arma::flipud(X.rows(n/2, n - 1)), kernel, bandwidth_param,
             custom_bw, custom_kernel, use_custom_bw);
-    lrv_est.slices(n/2 + 1, n - 1) = flipfb(last_cube_half);
+    lrv_est.slices(n/2, n - 1) = flipfb(last_cube_half);
 
     return wrap(lrv_est);
 }

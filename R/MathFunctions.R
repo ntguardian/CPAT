@@ -73,6 +73,100 @@ a_n <- function(n, m) {
   x
 }
 
+#' Bartlett Kernel
+#'
+#' Pure R implementation of the Bartlett kernel.
+#'
+#' \deqn{k(x) = \begin{cases} 1 - |x| & |x| \leq 1 \\ 0 & \text{o.w.}
+#' \end{cases}}
+#'
+#' @param x Input to \eqn{k(x)}
+#' @return Value of kernel
+#' @examples
+#' CPAT:::ba_kernel_r(0.5)
+ba_kernel_r <- function(x) {
+  x <- abs(x)
+  ifelse(x <= 1, 1 - x, 0)
+}
+
+#' Truncated Kernel
+#'
+#' Pure R implementation of the truncated kernel.
+#'
+#' \deqn{k(x) = \begin{cases} 1 & |x| \leq 1 \\ 0 & \text{o.w.}
+#' \end{cases}}
+#'
+#' @param x Input to \eqn{k(x)}
+#' @return Value of kernel
+#' @examples
+#' CPAT:::tr_kernel_r(0.5)
+tr_kernel_r <- function(x) {
+  x <- abs(x)
+  ifelse(x <= 1, 1, 0)
+}
+
+#' Parzen Kernel
+#'
+#' Pure R implementation of the Parzen kernel.
+#'
+#' \deqn{k(x) = \begin{cases} 1 - 6x^2 + 6|x|^3 & |x| \leq 1/2 \\ 
+#' 2(1 - |x|)^3 & 1/2 < |x| \leq 1 \\ 0 & \text{o.w.}
+#' \end{cases}}
+#'
+#' @param x Input to \eqn{k(x)}
+#' @return Value of the kernel
+#' @examples
+#' CPAT:::pa_kernel_r(0)
+#' CPAT:::pa_kernel_r(0.4)
+#' CPAT:::pa_kernel_r(0.6)
+#' CPAT:::pa_kernel_r(1.4)
+pa_kernel_r <- function(x) {
+  x <- abs(x)
+  x <- ifelse(x <= 1/2, -x, x)
+  x <- ifelse(x > 1, Inf, x)
+  x <- ifelse(x <= 0, 1 - 6 * x^2 - 6 * x^3, -x)
+  x <- ifelse(x <= 0, 2 * (1 + x)^3, x)
+  x <- ifelse(is.infinite(x), 0, x)
+  x
+}
+
+#' Tukey-Hanning Kernel
+#'
+#' Pure R implementation of the Tukey-Hanning kernel.
+#'
+#' \deqn{k(x) = \begin{cases} (1 + \cos(\pi x))/2 & |x| \leq 1 \\ 0 &
+#' \text{o.w.} \end{cases}}
+#'
+#' @param x Input to \eqn{k(x)}
+#' @return Value of the kernel
+#' @examples
+#' CPAT:::th_kernel_r(0.5)
+th_kernel_r <- function(x) {
+  x <- abs(x)
+  ifelse(x <= 1, (1 + cos(pi * x))/2, 0)
+}
+
+#' Quadratic Spectral Kernel
+#'
+#' Pure R implementation of the quadratic spectral kernel.
+#'
+#' \deqn{k(x) = \frac{25}{12\pi^2 x^2} \left(\frac{\sin(6\pi x/5)}{6\pi x/5} -
+#' \cos(6\pi x / 5)\right)}
+#'
+#' @param x Input to \eqn{k(x)}
+#' @return Value of the kernel
+#' @examples
+#' CPAT:::qs_kernel_r(0.4)
+qs_kernel_r <- function(x) {
+  spxd5 <- 6 * pi * x / 5
+  x <- ifelse(x == -Inf, Inf, x)
+  x <- ifelse(x == 0, -Inf, x)
+  x <- ifelse(is.finite(x), 3 * (sin(spxd5)/spxd5 - cos(spxd5))/(spxd5^2), x)
+  x <- ifelse(x == Inf, 0, x)
+  x <- ifelse(x == -Inf, 1, x)
+  x
+}
+
 ################################################################################
 # MATH UTILITIES
 ################################################################################
