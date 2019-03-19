@@ -147,7 +147,7 @@ $(ALLSIMS) :
 	make package
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -v \
-		 -s $(SIMSEED)$(shell echo $@ $^ | md5sum | grep -Eo "[[:digit:]]{3,9}" | head -n1)
+		 -s $(SIMSEED)$(shell echo $@ $^ | md5sum | grep -Eo "[[:digit:]]{3,6}" | head -n1)
 
 $(SIMSNORMALRENYIDF) : $(SIMSNORMALRENYI) \
                        data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
