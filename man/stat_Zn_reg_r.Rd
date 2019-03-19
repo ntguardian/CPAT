@@ -29,7 +29,9 @@ see \code{\link{get_lrv_arr}} for more details}
 
 \item{custom_var}{Either a \eqn{d \times d \times T} array of symmetric
 positive-definite matrices containing covariance matrices
-or a function producing such an array}
+or a function producing such an array and having a
+parameter \code{x} for the data; if set,
+\code{use_kernel_var} is ignored}
 
 \item{kernel}{If character, the identifier of the kernel function as used in
 \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if

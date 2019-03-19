@@ -226,8 +226,7 @@ $(POWERPLOTGARCHPREFIX)%.pdf : $(SIMSGARCHDF) exec/UnivariatePlotter.R \
 doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
 
 $(VIGNETTES) :
-	$(RSCRIPT) exec/RemakePackage.R
-	touch package
+	$(RSCRIPT) -e "devtools::build_vignettes()"
 
 .PHONY : simconfig
 simconfig : $(CONTEXTGENERATORS) $(SIMDATAGENERATORS) $(SIMSTATGENERATORS)

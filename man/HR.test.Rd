@@ -42,14 +42,17 @@ A \code{htest}-class object containing the results of the test
 }
 \description{
 Performs the (univariate) Rényi-type test for change in mean, as described in
-\insertCite{horvathricemiller19}{CPAT}. This is effectively an interface to
-\code{\link{stat_Zn}}; see its documentation for more details. p-values are
-computed using \code{\link{pZn}}, which represents the limiting distribution
-of the test statistic under the null hypothesis, which represents the
-limiting distribution of the test statistic under the null hypothesis when
-\code{kn} represents a sequence \eqn{t_T} satisfying \eqn{t_T \to \infty}
-and \eqn{t_T/T \to 0} as \eqn{T \to \infty}. (\code{\link[base]{log}} and
-\code{\link[base]{sqrt}} should be good choices.)
+\insertCite{horvathricemiller19}{CPAT} or the Rényi-type test for regression
+models, as described in \insertCite{horvathmillerrice20}{CPAT}. This is
+effectively an interface to \code{\link{stat_Zn}} and
+\code{\link{stat_Zn_reg}}; see their documentation for more details. p-values
+are computed using \code{\link{pZn}}, which represents the limiting
+distribution of the test statistic under the null hypothesis, which
+represents the limiting distribution of the test statistic under the null
+hypothesis when \code{kn} represents a sequence \eqn{t_T} satisfying \eqn{t_T
+\to \infty} and \eqn{t_T/T \to 0} as \eqn{T \to \infty}.
+(\code{\link[base]{log}} and \code{\link[base]{sqrt}} should be good
+choices.)
 }
 \examples{
 HR.test(rnorm(1000))

@@ -31,6 +31,23 @@ block-heteroskedasticity context; see \insertCite{horvathmillerrice20}{CPAT}
 for more details.
 }
 \details{
+This function computes the matrix \eqn{\hat{Q}_{t,T} = I_{t \leq T/2}
+\hat{Q}_{t,1} + I_{t > T/2} \hat{Q}_{t,2}}, where \eqn{I} is the indicator
+function. Let \eqn{\hat{e}_t = x_t \hat{\epsilon}_t} where
+\eqn{\hat{\epsilon}_t} are the estimated residuals of the regression model.
+Then, if \eqn{K} is the kernel function, \eqn{h_t} the bandwidth for a
+sample of size \eqn{t}, and \eqn{\hat{V}_{t, u} = \hat{e}_t \hat{e}_{t + u}^T
++ \hat{e}_{t + u} \hat{e}_t^T},
+
+\deqn{\hat{Q}_{t,1} = \frac{1}{2t} \sum_{s = 1}^t \hat{V}_{s,0} + \sum_{u =
+1}^{t - 1} K(u/h_t) \frac{1}{t - u} \sum_{s = 1}^{t - u} \hat{V}_{s, u}}
+
+and
+
+\deqn{\hat{Q}_{t,2} = \frac{1}{2(T - t)} \sum_{s = t + 1}^T \hat{V}_{s,0} +
+\sum_{u = 1}^{T - t - 1} K(u/h_{T - t}) \frac{1}{T - t + u} \sum_{s = t +
+1}^{T - u} \hat{V}_{s, u}}
+
 \code{\link[cointReg]{getBandwidth}} is used to find the missing parameter in
 the bandwidth models as described by \insertCite{andrews91b}{CPAT} and
 \insertCite{neweywest94}{CPAT} but actual implementation details

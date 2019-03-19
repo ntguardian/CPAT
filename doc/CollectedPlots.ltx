@@ -42,6 +42,17 @@ statistic and CUSUM statistics are the univariate statistics computed on the
 estimated residuals of the regression model. The Hidalgo-Seo statistic was
 tailored to the regression context as described in their paper.
 
+These statistics do not all use the same LRV procedure. The Hidalgo-Seo
+statistic uses the periodogram matrix for LRV estimation. The univariate
+statistics use the procedure described in \cite{horvathricemiller19}, which uses
+the full sample but allows for changes in the mean of the univariate data. The
+regression-coefficient-based R\'enyi-type statistic uses either the long-run
+variance estimation procedure described in \cite{horvathmillerrice20} with
+kernel methods (in the case of the ARMA(2, 2) process) or a procedure that does
+not use kernel methods (for all other cases). Furthermore, the univariate
+statistics use the Bartlett kernel while the latter R\'enyi-type statistic uses
+the quadratic spectral kernel.
+
 For a sample size $T$, the change point occurs near $T^{2/3}$ if there is a
 change at all. If it does, the new model the data follows is $y_t = (1 +
 \frac{\delta}{\sqrt{2}}) + (2 + \frac{\delta}{\sqrt{2}}) x_t + \epsilon_t$,
@@ -59,9 +70,6 @@ and a GARCH(1, 1) process with $\omega = 0.2$, $\alpha = 0.3$, and $\beta = 0.5$
 For every combination of sample size, test statistic, $\delta$, and
 data-generating process for $\epsilon_t$, 20,000 independent test statistics
 were simulated, and their asymptotically-appropriate $p$-values were computed.
-(The R\'enyi-type statistic using the regression model coefficients, though, was
-not computed for when the residuals followed an ARMA(2, 2) process, since this
-would require long-run variance estimation procedures not yet implemented.)
 $H_0$ is rejected for $p$-values less than $\alpha = 0.05$; the value of
 $\alpha$ is signified with a dotted line (\tikz[baseline=-0.5ex]\draw[thick,
 dotted](0,0) -- (1,0);). Values of $\delta$ increment by $0.1$, and the sample
@@ -114,6 +122,9 @@ compared to the Hidalgo-Seo statistic). While all statistics seem to have
 appropriate power curves, the R\'enyi-type statistic often has the worst power,
 except for the version of the statistic that uses the residuals of the
 regression model only; that statistic seems to do well in the limit.
+
+\bibliography{../inst/REFERENCES.bib} 
+\bibliographystyle{ieeetr}
 
 \end{document}
 

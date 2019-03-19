@@ -29,7 +29,9 @@ see \code{\link{get_lrv_arr}} for more details}
 
 \item{custom_var}{Either a \eqn{d \times d \times T} array of symmetric
 positive-definite matrices containing covariance matrices
-or a function producing such an array}
+or a function producing such an array and having a
+parameter \code{x} for the data; if set,
+\code{use_kernel_var} is ignored}
 
 \item{kernel}{If character, the identifier of the kernel function as used in
 \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
@@ -60,17 +62,48 @@ If both \code{estimate} and \code{get_all_vals} are \code{FALSE}, the
 }
 \description{
 This function computes the Rényi-type statistic for detecting structural
-change in linear regression models.
+change in linear regression models. See
+\insertCite{horvathmillerrice20}{CPAT} for more details.
 }
 \details{
-TODO: EXTENDED DESCRIPTION
+Let \eqn{y_t = x_t^T \beta_t + \epsilon_t}. The definition of the statistic
+is
 
-TODO: THIS FUNCTION DOES NOT WORK AS MARKETED BECAUSE WE'RE STILL WORKING ON
-THE THEORY.
+\deqn{\sqrt{t_T} \max_{t_T \leq t \leq T} \sqrt{(\hat{\beta_{t,1} -
+\hat{\beta_{t,2}}})^T \hat{D}_{T,t}^{-1} (\hat{\beta}_{1,t} -
+\hat{\beta}_{2,t})}}
+
+where \eqn{t_T} is the trimming parameter, \eqn{\hat{\beta}_{1,t}} is the
+least-squares model fit for the first half of the data when split at \eqn{t},
+\eqn{\hat{\beta}_{2,t}} the same but for the upper half, and
+
+\deqn{\hat{D}_{t,T} = I_{t \leq T/2} (t^{-1} X_{t,1}^T X_{t,1})
+\hat{Q_{t,T}^{-1}} (t^{-1} X_{t,1}^T X_{t,1}) + I_{t > T/2} ((T - t)^{-1}
+X_{t,2}^T X_{t,2}) \hat{Q_{t,T}^{-1}} ((T - t)^{-1} X_{t,2}^T X_{t,2})}
+
+with \eqn{X_{t,1}} being the data matrix containing the data up to \eqn{t},
+\eqn{X_{t,2}} the data matrix containing the data after \eqn{t}, \eqn{I} the
+indicator function, and \eqn{Q_{t,T}} a matrix for long-run variance
+estimation of the process \eqn{\{x_t \epsilon_t\}}.
+
+Let \eqn{\hat{e}_t = x_t \hat{\epsilon}_t}. When \code{use_kernel_var} is
+\code{FALSE}, then the internal estimator for \eqn{Q} is used; it is
+
+\deqn{\hat{Q}_{t,T} = I_{t \leq T/2} \hat{Q}_{1,t} + I_{t > T/2}
+\hat{Q}_{t,2}}
+
+with \eqn{\hat{Q}_{1,t} = t^{-1} \sum_{s = 1}^t \hat{e}_s \hat{e}_s^T} and
+\eqn{\hat{Q}_{t,2} = (T - t)^{-1} \sum_{s = t + 1}^{T} \hat{e}_s
+\hat{e}_s^T}. Otherwise, \code{\link{get_lrv_arr}} is called to estimate this
+matrix using kernel methods (unless \code{custom_var} is set, which will then
+be used for estimation instead).
 }
 \examples{
 x <- rnorm(1000, mean = 4)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 CPAT:::stat_Zn_reg(y ~ x, data = df)
+}
+\references{
+\insertAllCited{}
 }
