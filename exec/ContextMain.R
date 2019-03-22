@@ -53,7 +53,7 @@ main <- function(output = "ContextMain.Rda", help = FALSE) {
   library(purrr)
 
   grm_12 <- partial(gen_regime_mat, base = 1:2)
-  delta <- (0:20)/10
+  delta <- ((-20):20)/10
 
   ##############################################################################
   # REQUIRED OBJECTS
