@@ -204,7 +204,8 @@ test_that("stat_hs_reg() functions properly", {
   expect_error(CPAT:::stat_hs_reg(dat), "Bad formula passed")
   expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df), 4.31295336184296)
   expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = 6), 1.90718155854372)
-  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = log), 45728821107836504)
+  expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, m = function(n) {n/2}),
+               3.8253699534694)
   expect_equal(CPAT:::stat_hs_reg(y ~ x, data = df, estimate = TRUE,
                                   get_all_vals = TRUE),
                list(statistic = 4.31295336184296, estimate = 1L,
