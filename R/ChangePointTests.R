@@ -1472,7 +1472,8 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #' x <- rnorm(1000)
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
-#' HR.test(df, formula = y ~ x, kn = sqrt, kernel = "qs", bandwidth = "and")
+#' HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = TRUE, kernel = "qs",
+#'         bandwidth = "and")
 #' @export
 HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
