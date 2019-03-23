@@ -45,9 +45,10 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, seed = 20190219,
     cores = max(1, detectCores() - 1)
   }
   registerDoParallel(cores = cores)
-  if (!seedless) {
-    set.seed(seed)
+  if (seedless) {
+    seed <- sample(1:99999999, 1)
   }
+  set.seed(seed)
 
   simulation_tools <- new.env()
   context_tools <- new.env()
