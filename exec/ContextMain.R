@@ -37,7 +37,7 @@ base_file_name <- CPAT:::base_file_name
 #' gen_regime_mat(1:2, 0.1)
 gen_regime_mat <- function(base, delta = 0) {
   d <- length(base)
-  delta_vec <- delta * rep(1/sqrt(d), times = d)
+  delta_vec <- delta * (-1)^(2:(d + 1))
 
   cbind(base, base + delta_vec)
 }
