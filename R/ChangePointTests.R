@@ -124,6 +124,8 @@ getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
 
 #' Long-Run Variance Estimation With Possible Change Points
 #'
+#' Deprecated version of \code{link{get_lrv_vec}}.
+#'
 #' Computes the estimates of the long-run variance in a change point context, as
 #' described in \insertCite{horvathricemiller19}{CPAT}. By default it uses
 #' kernel and bandwidth selection as used in the package \pkg{cointReg}, though

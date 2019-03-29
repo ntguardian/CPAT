@@ -476,8 +476,6 @@ double kernel_function(const double& x, const unsigned char& kernel) {
  * Function that computes a sequence of long-run variance matrices and returns
  * them in an armadillo cube.
  */
-// XXX: curtis: GIVES BAD RESULTS FOR QS KERNEL; PROBABLY MAKING CONSISTENT
-// ERROR -- Sun 17 Mar 2019 11:26:54 PM MDT
 arma::cube lrv_matrix_cube_computer(const arma::mat X,
                                     const unsigned char& kernel,
                                     const double& param,
@@ -524,7 +522,6 @@ arma::cube lrv_matrix_cube_computer(const arma::mat X,
             maxlag = std::min(int(bandwidth), k);
         }
 
-        // TODO: curtis: DO DETAILED CHECK FOR CORRECTNESS -- Sun 17 Mar 2019 11:27:14 PM MDT
         for (u = 0, li = mat_cum_sums.begin();
                 (li != mat_cum_sums.end()) && (u <= k);
                 ++u, ++li) {
@@ -590,7 +587,107 @@ NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
     return wrap(lrv_est);
 }
 
-// Function used for computing long-run variance; see R function get_lrv_vec()
+/* Function used for computing long-run variance of univariate data; see
+ * get_lrv_vec() for documentation. */
+// [[Rcpp::export]]
+NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
+                              const unsigned int& max_l) {
+    typedef struct tempXsum {
+        double lower_nolag;
+        double lower_lag;
+        double upper_nolag;
+        double upper_lag;
+    } Xsum;
+    typedef struct tempXmean {
+        double lower_mean;
+        double upper_mean;
+    } Xmean;
+    typedef std::list<Xsum> Xsum_list;
+    typedef Xsum_list::size_type Xsum_list_size;
+    typedef std::list<Xmean> Xmean_list;
+    typedef Xmean_list::size_type Xmean_list_size;
+
+    const unsigned int n = X.length();
+    /* Vector that will contain estimated variances at points t; 2 <= t <= n - 2
+     * (initialize with -1, an impossible value that indicates an error) */
+    NumericVector sigma = NumericVector(n - 1, -1);
+    // Storage for t sums and means
+    Xsum_list Xsums_data;
+    Xmean_list Xmeans_data;
+
+    // Intermediate variables
+    double sum = 0;
+    double lower_sum = 0;
+    double upper_sum = 0;
+    double lag_sum = 0;
+    double gamma = 0;
+    double m;
+    Xsum_list_size vecsize = n - 1;
+    // Loop variables
+    unsigned int u;
+    Xsum_list::iterator li;
+    Xmean_list::iterator mi;
+
+    // Initialize list
+    const Xsum Xsum_zero = {0, 0, 0, 0};
+    Xsums_data.resize(vecsize, Xsum_zero);
+
+    // Prepare upper sum
+    for (int i = 0; i < n; ++i) {
+        upper_sum += X[i];
+    }
+
+    for (int l = 0; l <= std::min(int(max_l), int(n - 1)); ++l) {
+        // TODO: curtis: LOOP COMPUTING LRV -- Thu 28 Mar 2019 11:05:10 PM MDT
+        if (l == 0) {
+            m = 1;
+        } else {
+            m = 2 * kern[l];
+        }
+        
+        // Compute lag_sum Σ X_s X_{s + l}
+        lag_sum = 0;
+        for (int i = 0; i < n - l; ++i) {
+            lag_sum += X[i] * X[i + l];
+        }
+
+        // Other initialization
+        mi = Xmeans_data.begin();
+        for (u = 0, li = Xsums.begin();
+                (li != Xsums.end()) && (u < n); ++u, ++li) {
+            if (l == 0) {
+                // First time through, this basically needs initialization
+                lower_sum += X[u];
+                upper_sum -= X[u];
+                (*li).lower_nolag = lower_sum;
+                (*li).lower_lag = lower_sum;
+                (*li).upper_nolag = upper_sum;
+                (*li).upper_lag = upper_sum;
+                Xmeans_data.push_back((Xmean){
+                        .lower_mean = (lower_sum / (u + 1)),
+                        .upper_mean = (upper_sum / (n - u))
+                        });
+                // TODO: curtis: COMPLETE ME (COMPUTE GAMMA) -- Fri 29 Mar 2019 12:25:27 AM MDT
+            } else {
+                (*li).lower_lag -= X[l - 1];
+                (*li).upper_nolag -= X[n - l];
+                if (u > l) {
+                    (*li).lower_nolag -= X[u - l];
+                    (*li).upper_nolag += X[u - l];
+                } else if (n - u > l) {
+                    (*li).lower_lag += X[u + l];
+                    (*li).upper_lag -= X[u + l];
+                }
+                // TODO: curtis: COMPLETE ME (COMPUTE GAMMA) -- Fri 29 Mar 2019 12:25:27 AM MDT
+
+                ++mi;
+            }
+        }
+    }
+}
+
+/* Function used for computing long-run variance; see R function
+ * get_lrv_vec_old1(); now deprecated in favor of get_lrv_vec_cpp() */
 // [[Rcpp::export]]
 NumericVector get_lrv_vec_old1_cpp(const NumericMatrix& Y,
                                    const NumericVector& kern,
