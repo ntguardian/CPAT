@@ -638,7 +638,6 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
     }
 
     for (int l = 0; l <= std::min(int(max_l), int(n - 1)); ++l) {
-        // TODO: curtis: LOOP COMPUTING LRV -- Thu 28 Mar 2019 11:05:10 PM MDT
         if (l == 0) {
             m = 1;
         } else {
@@ -653,8 +652,8 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
 
         // Other initialization
         mi = Xmeans_data.begin();
-        for (u = 0, li = Xsums.begin();
-                (li != Xsums.end()) && (u < n); ++u, ++li) {
+        for (u = 0, li = Xsums_data.begin();
+                (li != Xsums_data.end()) && (u < n); ++u, ++li) {
             if (l == 0) {
                 // First time through, this basically needs initialization
                 lower_sum += X[u];
@@ -667,7 +666,8 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                         .lower_mean = (lower_sum / (u + 1)),
                         .upper_mean = (upper_sum / (n - u))
                         });
-                // TODO: curtis: COMPLETE ME (COMPUTE GAMMA) -- Fri 29 Mar 2019 12:25:27 AM MDT
+                gamma = (lag_sum - std::pow(lower_sum / (u + 1), 2) -
+                         std::pow(upper_sum / (n - u), 2)) / (n);
             } else {
                 (*li).lower_lag -= X[l - 1];
                 (*li).upper_nolag -= X[n - l];
@@ -678,12 +678,22 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                     (*li).lower_lag += X[u + l];
                     (*li).upper_lag -= X[u + l];
                 }
-                // TODO: curtis: COMPLETE ME (COMPUTE GAMMA) -- Fri 29 Mar 2019 12:25:27 AM MDT
+                gamma = (lag_sum - (*mi).lower_mean * (*li).lower_nolag -
+                        (*mi).upper_mean * (*li).upper_nolag -
+                        (*mi).lower_mean * (*li).lower_lag - (*mi).upper_mean *
+                        (*li).upper_lag + (u + 1 - l) *
+                        std::pow((*mi).lower_mean, 2) + l * (*mi).lower_mean *
+                        (*mi).upper_mean + (n - l - u - 1) *
+                        std::pow((*mi).upper_mean, 2)) / (n - l);
 
                 ++mi;
             }
+
+            sigma[u] += m * gamma;
         }
     }
+
+    return sigma;
 }
 
 /* Function used for computing long-run variance; see R function
