@@ -679,10 +679,10 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                     (*li).lower_lag += X[u + l];
                     (*li).upper_lag -= X[u + l];
                 }
-                gamma = (lag_sum - (*mi).lower_mean * (*li).lower_nolag -
-                        (*mi).upper_mean * (*li).upper_nolag -
-                        (*mi).lower_mean * (*li).lower_lag - (*mi).upper_mean *
-                        (*li).upper_lag + (u + 1 - l) *
+                gamma = (lag_sum - (*mi).lower_mean * (*li).lower_lag -
+                        (*mi).upper_mean * (*li).upper_lag -
+                        (*mi).lower_mean * (*li).lower_nolag -
+                        (*mi).upper_mean * (*li).upper_nolag + (u + 1 - l) *
                         std::pow((*mi).lower_mean, 2) + l * (*mi).lower_mean *
                         (*mi).upper_mean + (n - l - u - 1) *
                         std::pow((*mi).upper_mean, 2)) / (n - l);
