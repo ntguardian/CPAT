@@ -27,7 +27,7 @@ main <- function(output = "SimTestRenyiTypeReg.Rda", linetype = "solid",
 
   renyi_reg_st <- function(formula, data) {
     CPAT:::stat_Zn_reg(formula = formula, data = data, kn = sqrt,
-                       use_kernel_var = TRUE, kernel = "pa", bandwidth = "and")
+                       use_kernel_var = TRUE, kernel = "qs", bandwidth = "and")
   }
 
   ##############################################################################
