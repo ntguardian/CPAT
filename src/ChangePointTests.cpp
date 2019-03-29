@@ -592,8 +592,9 @@ NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
 
 // Function used for computing long-run variance; see R function get_lrv_vec()
 // [[Rcpp::export]]
-NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
-                              const int& max_l) {
+NumericVector get_lrv_vec_old1_cpp(const NumericMatrix& Y,
+                                   const NumericVector& kern,
+                                   const int& max_l) {
     // Number of data points, inferred from Y
     double n = Y.nrow();
     /* Vector that will contain estimated variances at points t; 2 <= t <= n - 2

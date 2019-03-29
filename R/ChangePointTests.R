@@ -32,7 +32,8 @@
 #' @import stats
 #' @return The estimated change-consistent variance
 #' @examples
-#' CPAT:::cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)), k = 500)
+#' CPAT:::cpt_consistent_var(c(rnorm(500, mean = 0), rnorm(500, mean = 1)),
+#'                           k = 500)
 cpt_consistent_var <- function(x, k) {
   n <- length(x)
   if (n < k | k < 0) {stop("k must be an integer between 1 and length(x)")}
@@ -147,9 +148,9 @@ getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
 #'  \insertAllCited{}
 #' @examples
 #' x <- rnorm(1000)
-#' CPAT:::get_lrv_vec(x)
-#' CPAT:::get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
-get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
+#' CPAT:::get_lrv_vec_old1(x)
+#' CPAT:::get_lrv_vec_old1(x, kernel = "pa", bandwidth = "nw")
+get_lrv_vec_old1 <- function(dat, kernel = "ba", bandwidth = "and") {
   has_cointreg <- requireNamespace("cointReg", quietly = TRUE)
 
   n <- length(dat)
@@ -216,7 +217,7 @@ get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
   # It accepts the matrix y and the evaluation of the kernel function stored
   # in kern_vals, and returns a vector containing estimated long-run variances
   # at points t
-  sigma <- get_lrv_vec_cpp(y, kern_vals, max_l)
+  sigma <- get_lrv_vec_old1_cpp(y, kern_vals, max_l)
 
   # "Equivalent" R code (slower)
   # covs <- sapply(1:n, function(t) {
@@ -413,7 +414,8 @@ get_lrv_arr <- function(X, kernel = "ba", bandwidth = "and") {
 #' @examples
 #' CPAT:::stat_Vn(rnorm(1000))
 #' CPAT:::stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
-#' CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw",
+#'                kernel = "bo")
 stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
                    use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
                    bandwidth = "and", get_all_vals = FALSE) {
@@ -431,7 +433,7 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
   # )))
 
   if (use_kernel_var) {
-    lrv <- get_lrv_vec(dat, kernel, bandwidth)
+    lrv <- get_lrv_vec_old1(dat, kernel, bandwidth)
   } else if (!is.null(custom_var)) {
     use_kernel_var <- TRUE  # Otherwise stat_Vn_cpp() will ignore lrv
     if (is.function(custom_var)) {
@@ -535,7 +537,8 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
 #'  \insertAllCited{}
 #' @examples
 #' CPAT:::stat_de(rnorm(1000))
-#' CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+#' CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw",
+#'                kernel = "bo")
 stat_de <- function(dat, a = log, b = log, estimate = FALSE,
                     use_kernel_var = FALSE, custom_var = NULL, kernel = "ba",
                     bandwidth = "and", get_all_vals = FALSE) {
@@ -663,7 +666,7 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, m = sqrt,
   # functionality is implemented.
   if (is.null(custom_var)) {
     if (use_kernel_var) {
-      Delta <- get_lrv_vec(dat, kernel, bandwidth)
+      Delta <- get_lrv_vec_old1(dat, kernel, bandwidth)
     } else {
       Delta <- rep(Delta, length(dat))
     }
@@ -831,7 +834,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
                     bandwidth = "and", get_all_vals = FALSE) {
   # Formerly known as statZn()
   if (use_kernel_var) {
-    lrv <- get_lrv_vec(dat, kernel, bandwidth)
+    lrv <- get_lrv_vec_old1(dat, kernel, bandwidth)
   } else if (!is.null(custom_var)) {
     use_kernel_var <- TRUE  # Otherwise stat_Zn_cpp() will ignore lrv
     if (is.function(custom_var)) {

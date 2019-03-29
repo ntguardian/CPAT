@@ -246,8 +246,8 @@ test_that("andrews_test_reg() functions properly", {
 # LRV TEST
 ################################################################################
 
-test_that("get_lrv_vec() functions properly, interfaces where it should", {
-  expect_equal(CPAT:::get_lrv_vec(dat, kernel = ker_func, bandwidth = sqrt),
+test_that("get_lrv_vec_old1() functions properly, interfaces where it should", {
+  expect_equal(CPAT:::get_lrv_vec_old1(dat, kernel = ker_func, bandwidth = sqrt),
                c(0.581238887175265, 0.632229813007764, 0.681431014190319,
                  0.646220314031592, 0.611266882865371, 0.578769643980172,
                  0.582735929700783, 0.533450929616323, 0.522333689063721,
@@ -259,7 +259,7 @@ test_that("get_lrv_vec() functions properly, interfaces where it should", {
 
   check_cointReg()
 
-  expect_equal(CPAT:::get_lrv_vec(dat),
+  expect_equal(CPAT:::get_lrv_vec_old1(dat),
                c(0.944000055543033, 0.854345524470940, 0.938887787065566,
                  0.988543921777035, 0.950674807065429, 0.966696492122214,
                  0.977280759919950, 0.962346545793554, 0.963543535868417,
