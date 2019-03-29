@@ -240,6 +240,88 @@ get_lrv_vec_old1 <- function(dat, kernel = "ba", bandwidth = "and") {
   sigma
 }
 
+#' Long-Run Variance Estimation With Possible Change Points
+#'
+#' Computes the estimates of the long-run variance in a change point context, as
+#' described in \insertCite{horvathricemiller19}{CPAT}. By default it uses
+#' kernel and bandwidth selection as used in the package \pkg{cointReg}, though
+#' changing the parameters \code{kernel} and \code{bandwidth} can change this
+#' behavior. If \pkg{cointReg} is not installed, the Bartlett kernel (defined
+#' internally) will be used and the bandwidth will be the square root of the
+#' sample size.
+#'
+#' @param dat The data vector
+#' @param kernel If character, the identifier of the kernel function as used in
+#'               \pkg{cointReg} (see \code{\link[cointReg]{getLongRunVar}}); if
+#'               function, the kernel function to be used for long-run variance
+#'               estimation (default is the Bartlett kernel in \pkg{cointReg})
+#' @param bandwidth If character, the identifier for how to compute the
+#'               bandwidth as defined in \pkg{cointReg} (see
+#'               \code{\link[cointReg]{getBandwidth}}); if function, a function
+#'               to use for computing the bandwidth; if numeric, the bandwidth
+#'               value to use (the default is to use Andrews' method, as used in
+#'               \pkg{cointReg})
+#' @return A vector of estimates of the long-run variance
+#' @references
+#'  \insertAllCited{}
+#' @examples
+#' x <- rnorm(1000)
+#' CPAT:::get_lrv_vec(x)
+#' CPAT:::get_lrv_vec(x, kernel = "pa", bandwidth = "nw")
+get_lrv_vec <- function(dat, kernel = "ba", bandwidth = "and") {
+  has_cointreg <- requireNamespace("cointReg", quietly = TRUE)
+
+  n <- length(dat)
+
+  if (is.character(bandwidth)) {
+    if (!has_cointreg) {
+      warning("cointReg is not installed! Defaulting to sqrt.")
+      bandwidth <- sqrt
+    } else {
+      if (is.character(kernel) &&
+          kernel %in%  c("ba", "pa", "qs", "th", "tr")) {
+         kervar <- kernel
+      } else {
+         kervar = "ba"
+      }
+      h <- cointReg::getBandwidth(dat, bandwidth = bandwidth, kernel = kervar)
+    }
+  } else if (is.numeric(bandwidth)) {
+    if (bandwidth <= 0) {
+      stop("Bandwidth must be greater than zero.")
+    } else {
+      h <- bandwidth
+    }
+  } else if (!is.function(bandwidth)) {
+    stop(paste("bandwidth must be a function, a valid character string, or a",
+               "non-negative number."))
+  } else {
+    h <- bandwidth(n)
+  }
+
+  if (is.character(kernel)) {
+    kern_vals <- c(1, getLongRunWeights(n, kernel = kernel,
+                                        bandwidth = h)$w[-n])
+  } else if (!is.function(kernel)) {
+    stop("kernel must be a function or a valid character string.")
+  } else {
+    kern_vals <- c(1, vapply(1:(n - 1)/h, kernel, 0))
+  }
+
+  # The maximum lag that needs to be checked
+  max_l <- max(which(kern_vals != 0))
+
+  # Function implemented in Rcpp for speed
+  sigma <- get_lrv_vec_cpp(dat, kern_vals, max_l - 1)
+
+  if (any(sigma < 0)) {
+    warning(paste("A negative variance was computed! This may be due to a bad",
+                  "kernel being chosen."))
+  }
+
+  sigma
+}
+
 #' Long-Run Covariance Matrix Estimation for Early Change and Block
 #' Heteroskedasticity
 #'

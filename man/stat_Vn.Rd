@@ -90,7 +90,8 @@ See \insertCite{horvathricemiller19}{CPAT} for more details.
 \examples{
 CPAT:::stat_Vn(rnorm(1000))
 CPAT:::stat_Vn(rnorm(1000), kn = function(n) {0.1 * n}, tau = 1/2)
-CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_Vn(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw",
+               kernel = "bo")
 }
 \references{
 \insertAllCited{}

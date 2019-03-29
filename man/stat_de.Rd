@@ -84,7 +84,8 @@ See \insertCite{horvathricemiller19}{CPAT} to learn more.
 }
 \examples{
 CPAT:::stat_de(rnorm(1000))
-CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw", kernel = "bo")
+CPAT:::stat_de(rnorm(1000), use_kernel_var = TRUE, bandwidth = "nw",
+               kernel = "bo")
 }
 \references{
 \insertAllCited{}

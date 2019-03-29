@@ -17,12 +17,16 @@ stat_Zn_reg_cpp <- function(X_input, y_input, kn, use_kernel_var, lrv_est, get_a
     .Call('_CPAT_stat_Zn_reg_cpp', PACKAGE = 'CPAT', X_input, y_input, kn, use_kernel_var, lrv_est, get_all_vals, fast)
 }
 
-get_lrv_vec_cpp <- function(Y, kern, max_l) {
-    .Call('_CPAT_get_lrv_vec_cpp', PACKAGE = 'CPAT', Y, kern, max_l)
-}
-
 get_lrv_arr_cpp <- function(X_input, kernel, bandwidth_param, custom_bw, custom_kernel, use_custom_bw = FALSE) {
     .Call('_CPAT_get_lrv_arr_cpp', PACKAGE = 'CPAT', X_input, kernel, bandwidth_param, custom_bw, custom_kernel, use_custom_bw)
+}
+
+get_lrv_vec_cpp <- function(X, kern, max_l) {
+    .Call('_CPAT_get_lrv_vec_cpp', PACKAGE = 'CPAT', X, kern, max_l)
+}
+
+get_lrv_vec_old1_cpp <- function(Y, kern, max_l) {
+    .Call('_CPAT_get_lrv_vec_old1_cpp', PACKAGE = 'CPAT', Y, kern, max_l)
 }
 
 cond_var_gradient_hessian_cpp <- function(var, eps, omega, alpha, beta, init_vals) {

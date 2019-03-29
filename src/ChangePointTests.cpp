@@ -664,10 +664,11 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                 (*li).upper_lag = upper_sum;
                 Xmeans_data.push_back((Xmean){
                         .lower_mean = (lower_sum / (u + 1)),
-                        .upper_mean = (upper_sum / (n - u))
+                        .upper_mean = (upper_sum / (n - u - 1))
                         });
-                gamma = (lag_sum - std::pow(lower_sum / (u + 1), 2) -
-                         std::pow(upper_sum / (n - u), 2)) / (n);
+                gamma = (lag_sum - (u + 1) * std::pow(lower_sum / (u + 1), 2) -
+                        (n - u - 1) * std::pow(upper_sum / (n - u - 1), 2)) /
+                        (n);
             } else {
                 (*li).lower_lag -= X[l - 1];
                 (*li).upper_nolag -= X[n - l];

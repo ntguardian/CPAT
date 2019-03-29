@@ -67,19 +67,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_lrv_vec_cpp
-NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern, const int& max_l);
-RcppExport SEXP _CPAT_get_lrv_vec_cpp(SEXP YSEXP, SEXP kernSEXP, SEXP max_lSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type kern(kernSEXP);
-    Rcpp::traits::input_parameter< const int& >::type max_l(max_lSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_lrv_vec_cpp(Y, kern, max_l));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_lrv_arr_cpp
 NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input, const unsigned char& kernel, const double& bandwidth_param, const NumericVector& custom_bw, const Function& custom_kernel, const bool& use_custom_bw);
 RcppExport SEXP _CPAT_get_lrv_arr_cpp(SEXP X_inputSEXP, SEXP kernelSEXP, SEXP bandwidth_paramSEXP, SEXP custom_bwSEXP, SEXP custom_kernelSEXP, SEXP use_custom_bwSEXP) {
@@ -93,6 +80,32 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Function& >::type custom_kernel(custom_kernelSEXP);
     Rcpp::traits::input_parameter< const bool& >::type use_custom_bw(use_custom_bwSEXP);
     rcpp_result_gen = Rcpp::wrap(get_lrv_arr_cpp(X_input, kernel, bandwidth_param, custom_bw, custom_kernel, use_custom_bw));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_lrv_vec_cpp
+NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern, const unsigned int& max_l);
+RcppExport SEXP _CPAT_get_lrv_vec_cpp(SEXP XSEXP, SEXP kernSEXP, SEXP max_lSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type kern(kernSEXP);
+    Rcpp::traits::input_parameter< const unsigned int& >::type max_l(max_lSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_lrv_vec_cpp(X, kern, max_l));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_lrv_vec_old1_cpp
+NumericVector get_lrv_vec_old1_cpp(const NumericMatrix& Y, const NumericVector& kern, const int& max_l);
+RcppExport SEXP _CPAT_get_lrv_vec_old1_cpp(SEXP YSEXP, SEXP kernSEXP, SEXP max_lSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type kern(kernSEXP);
+    Rcpp::traits::input_parameter< const int& >::type max_l(max_lSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_lrv_vec_old1_cpp(Y, kern, max_l));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -118,8 +131,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_CPAT_stat_Vn_cpp", (DL_FUNC) &_CPAT_stat_Vn_cpp, 6},
     {"_CPAT_stat_Zn_cpp", (DL_FUNC) &_CPAT_stat_Zn_cpp, 5},
     {"_CPAT_stat_Zn_reg_cpp", (DL_FUNC) &_CPAT_stat_Zn_reg_cpp, 7},
-    {"_CPAT_get_lrv_vec_cpp", (DL_FUNC) &_CPAT_get_lrv_vec_cpp, 3},
     {"_CPAT_get_lrv_arr_cpp", (DL_FUNC) &_CPAT_get_lrv_arr_cpp, 6},
+    {"_CPAT_get_lrv_vec_cpp", (DL_FUNC) &_CPAT_get_lrv_vec_cpp, 3},
+    {"_CPAT_get_lrv_vec_old1_cpp", (DL_FUNC) &_CPAT_get_lrv_vec_old1_cpp, 3},
     {"_CPAT_cond_var_gradient_hessian_cpp", (DL_FUNC) &_CPAT_cond_var_gradient_hessian_cpp, 6},
     {NULL, NULL, 0}
 };
