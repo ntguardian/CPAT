@@ -318,42 +318,6 @@ List stat_Zn_reg_cpp(const NumericMatrix& X_input, const NumericVector& y_input,
                         Named("stat_vals") = all_vals);
 }
 
-// Function used for computing long-run variance; see R function get_lrv_vec()
-// [[Rcpp::export]]
-NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
-                              const int& max_l) {
-    // Number of data points, inferred from Y
-    double n = Y.nrow();
-    /* Vector that will contain estimated variances at points t; 2 <= t <= n - 2
-     * (initialize with -1, an impossible value that indicates an error) */
-    NumericVector sigma = NumericVector(n - 1, -1);
-    
-    // Start computing variances
-    for (int t = 1; t <= n - 1; ++t) {
-        /* Will be added over through the loop, and eventually added to sigma
-         * vector */
-        double sum = 0;     
-        // Iterate through lags
-        for (int l = 0; l <= std::min(double(max_l), n - 1); ++l) {
-            int m = 2;      // A multiplier used in the sum
-            if (l == 0) {
-                m = 1;
-            }
-            
-            // Iterate through sample
-            for (int i = 1; i <= n - l; ++i) {
-                // Next summand
-                sum += m * kern[l] * Y(i - 1, t - 1) * Y(i + l - 1, t - 1) /
-                       (n - l);
-            }
-        }
-        
-        sigma[t - 1] = sum;
-    }
-    
-    return sigma;
-}
-
 // Kernel functions used in LRV estimation
 // Truncated kernel
 inline double tr_kernel(const double& x) {
@@ -625,3 +589,40 @@ NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
 
     return wrap(lrv_est);
 }
+
+// Function used for computing long-run variance; see R function get_lrv_vec()
+// [[Rcpp::export]]
+NumericVector get_lrv_vec_cpp(const NumericMatrix& Y, const NumericVector& kern,
+                              const int& max_l) {
+    // Number of data points, inferred from Y
+    double n = Y.nrow();
+    /* Vector that will contain estimated variances at points t; 2 <= t <= n - 2
+     * (initialize with -1, an impossible value that indicates an error) */
+    NumericVector sigma = NumericVector(n - 1, -1);
+    
+    // Start computing variances
+    for (int t = 1; t <= n - 1; ++t) {
+        /* Will be added over through the loop, and eventually added to sigma
+         * vector */
+        double sum = 0;     
+        // Iterate through lags
+        for (int l = 0; l <= std::min(double(max_l), n - 1); ++l) {
+            int m = 2;      // A multiplier used in the sum
+            if (l == 0) {
+                m = 1;
+            }
+            
+            // Iterate through sample
+            for (int i = 1; i <= n - l; ++i) {
+                // Next summand
+                sum += m * kern[l] * Y(i - 1, t - 1) * Y(i + l - 1, t - 1) /
+                       (n - l);
+            }
+        }
+        
+        sigma[t - 1] = sum;
+    }
+    
+    return sigma;
+}
+
