@@ -517,7 +517,7 @@ stat_Vn <- function(dat, kn = function(n) {1}, tau = 0, estimate = FALSE,
   # )))
 
   if (use_kernel_var) {
-    lrv <- get_lrv_vec_old1(dat, kernel, bandwidth)
+    lrv <- get_lrv_vec(dat, kernel, bandwidth)
   } else if (!is.null(custom_var)) {
     use_kernel_var <- TRUE  # Otherwise stat_Vn_cpp() will ignore lrv
     if (is.function(custom_var)) {
@@ -750,7 +750,7 @@ stat_hs <- function(dat, estimate = FALSE, corr = TRUE, m = sqrt,
   # functionality is implemented.
   if (is.null(custom_var)) {
     if (use_kernel_var) {
-      Delta <- get_lrv_vec_old1(dat, kernel, bandwidth)
+      Delta <- get_lrv_vec(dat, kernel, bandwidth)
     } else {
       Delta <- rep(Delta, length(dat))
     }
@@ -918,7 +918,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
                     bandwidth = "and", get_all_vals = FALSE) {
   # Formerly known as statZn()
   if (use_kernel_var) {
-    lrv <- get_lrv_vec_old1(dat, kernel, bandwidth)
+    lrv <- get_lrv_vec(dat, kernel, bandwidth)
   } else if (!is.null(custom_var)) {
     use_kernel_var <- TRUE  # Otherwise stat_Zn_cpp() will ignore lrv
     if (is.function(custom_var)) {
