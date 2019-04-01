@@ -1,11 +1,11 @@
 /*******************************************************************************
-* ChangePointTests.cpp
-********************************************************************************
-* 2018-08-30
-* Curtis Miller
-********************************************************************************
-* C++ functions accompanying functions in R/ChangePointTests.R.
-*******************************************************************************/
+ * ChangePointTests.cpp
+ *******************************************************************************
+ * 2018-08-30
+ * Curtis Miller
+ *******************************************************************************
+ * C++ functions accompanying functions in R/ChangePointTests.R.
+ ******************************************************************************/
 
 // [[Rcpp::depends(BH)]]
 #include <boost/math/constants/constants.hpp>
@@ -593,14 +593,14 @@ NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
 NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                               const unsigned int& max_l) {
     typedef struct tempXsum {
-        double lower_nolag;
-        double lower_lag;
-        double upper_nolag;
+        long double lower_nolag;
+        long double lower_lag;
+        long double upper_nolag;
         double upper_lag;
     } Xsum;
     typedef struct tempXmean {
-        double lower_mean;
-        double upper_mean;
+        long double lower_mean;
+        long double upper_mean;
     } Xmean;
     typedef std::list<Xsum> Xsum_list;
     typedef Xsum_list::size_type Xsum_list_size;
@@ -610,18 +610,18 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
     const unsigned int n = X.length();
     /* Vector that will contain estimated variances at points t; 2 <= t <= n - 2
      * (initialize with -1, an impossible value that indicates an error) */
-    NumericVector sigma = NumericVector(n - 1, -1);
+    NumericVector sigma = NumericVector(n - 1, 0);
     // Storage for t sums and means
     Xsum_list Xsums_data;
     Xmean_list Xmeans_data;
 
     // Intermediate variables
-    double sum = 0;
-    double lower_sum = 0;
-    double upper_sum = 0;
-    double lag_sum = 0;
-    double gamma = 0;
-    double m;
+    long double sum = 0;
+    long double lower_sum = 0;
+    long double upper_sum = 0;
+    long double lag_sum = 0;
+    long double gamma = 0;
+    long double m;
     Xsum_list_size vecsize = n - 1;
     // Loop variables
     unsigned int u;
@@ -652,16 +652,17 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
 
         // Other initialization
         mi = Xmeans_data.begin();
+        // TODO: curtis: FIX THIS LOOP -- Sun 31 Mar 2019 01:32:53 AM MDT
         for (u = 0, li = Xsums_data.begin();
                 (li != Xsums_data.end()) && (u < n); ++u, ++li) {
             if (l == 0) {
                 // First time through, this basically needs initialization
                 lower_sum += X[u];
                 upper_sum -= X[u];
-                (*li).lower_nolag = lower_sum;
-                (*li).lower_lag = lower_sum;
-                (*li).upper_nolag = upper_sum;
-                (*li).upper_lag = upper_sum;
+                li->lower_nolag = lower_sum;
+                li->lower_lag = lower_sum;
+                li->upper_nolag = upper_sum;
+                li->upper_lag = upper_sum;
                 Xmeans_data.push_back((Xmean){
                         .lower_mean = (lower_sum / (u + 1)),
                         .upper_mean = (upper_sum / (n - u - 1))
@@ -669,28 +670,61 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                 gamma = (lag_sum - (u + 1) * std::pow(lower_sum / (u + 1), 2) -
                         (n - u - 1) * std::pow(upper_sum / (n - u - 1), 2)) /
                         (n);
-            } else {
-                (*li).lower_lag -= X[l - 1];
-                (*li).upper_nolag -= X[n - l];
-                if (u > l) {
-                    (*li).lower_nolag -= X[u - l];
-                    (*li).upper_nolag += X[u - l];
-                } else if (n - u > l) {
-                    (*li).lower_lag += X[u + l];
-                    (*li).upper_lag -= X[u + l];
-                }
-                gamma = (lag_sum - (*mi).lower_mean * (*li).lower_lag -
-                        (*mi).upper_mean * (*li).upper_lag -
-                        (*mi).lower_mean * (*li).lower_nolag -
-                        (*mi).upper_mean * (*li).upper_nolag + (u + 1 - l) *
-                        std::pow((*mi).lower_mean, 2) + l * (*mi).lower_mean *
-                        (*mi).upper_mean + (n - l - u - 1) *
-                        std::pow((*mi).upper_mean, 2)) / (n - l);
 
-                ++mi;
+            } else {
+                // TODO: curtis: FIX ME -- Sun 31 Mar 2019 01:32:59 AM MDT
+                li->lower_lag -= X[l - 1];
+                li->upper_nolag -= X[n - l];
+                if (u + 1 >= l) {
+                    li->lower_nolag -= X[u + 1 - l];
+                    li->upper_nolag += X[u + 1 - l];
+                }
+                if (u <= n - l) {
+                    li->lower_lag += X[u + l];
+                    if (u <= n - l - 1) {
+                        li->upper_lag -= X[u + l];
+                    } else {
+                        li->upper_lag = 0;
+                    }
+                } else {
+                    li->upper_lag = 0;
+                }
+                if ((l <= u) && (u <= n - l - 1)) {
+                    gamma = (lag_sum - mi->lower_mean * li->lower_lag -
+                            mi->upper_mean * li->upper_lag -
+                            mi->lower_mean * li->lower_nolag -
+                            mi->upper_mean * li->upper_nolag + (u + 1 - l) *
+                            std::pow(mi->lower_mean, 2) + l * mi->lower_mean *
+                            mi->upper_mean + (n - l - u - 1) *
+                            std::pow(mi->upper_mean, 2)) / (n - l);
+                } else if ((u < l) && (u <= n - l - 1)) {
+                    gamma = (lag_sum - mi->lower_mean * li->lower_lag -
+                            mi->upper_mean * li->upper_nolag -
+                            mi->upper_mean * li->upper_lag + (u + 1) *
+                            mi->upper_mean * mi->lower_mean + (n - l - u - 1) *
+                            std::pow(mi->upper_mean, 2)) / (n - l);
+                } else if ((u >= l) && (u > n - l - 1)) {
+                    gamma = (lag_sum - mi->lower_mean * li->lower_lag -
+                            mi->lower_mean * li->lower_nolag - mi->upper_mean *
+                            li->upper_nolag + (u + 1 - l) *
+                            std::pow(mi->lower_mean, 2) + (n - u - 1) *
+                            mi->lower_mean * mi->upper_mean) / (n - l);
+                } else if ((n - l - 1 < u) && (u < l)) {
+                    gamma = (lag_sum - mi->lower_mean * li->lower_lag -
+                            mi->upper_mean * li->upper_nolag + (n - l) *
+                            mi->lower_mean * mi->upper_mean) / (n - l);
+                } else {
+                    // THROW EXCEPTION; SHOULD NOT BE HERE!
+                    throw std::runtime_error("get_lrv_vec_cpp() should not have"
+                                             " reached the 'else' in the long "
+                                             "if/else statement; how did I get "
+                                             "here?");
+                    break;
+                }
             }
 
             sigma[u] += m * gamma;
+            ++mi;
         }
     }
 
