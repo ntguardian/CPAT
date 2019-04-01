@@ -72,7 +72,7 @@ test_that("stat_Zn() functions properly", {
                  0.1530582795440690))
 
   expect_equal(CPAT:::stat_Zn(dat, use_kernel_var = TRUE, kernel = ker_func,
-                              bandwidth = sqrt), 2.27610096950933)
+                              bandwidth = sqrt), 2.5519484773673)
   expect_equal(CPAT:::stat_Zn(dat, custom_var = function(x, k) {
                                 var(x[1:(min(k + 1, length(x)))])
                               }), 1.25197565798885)
@@ -131,7 +131,7 @@ test_that("stat_Vn() functions properly", {
                  0.1087825244876340))
 
   expect_equal(CPAT:::stat_Vn(dat, use_kernel_var = TRUE, kernel = ker_func,
-                              bandwidth = sqrt), 1.27237912286901)
+                              bandwidth = sqrt), 1.42658256761759)
   expect_equal(CPAT:::stat_Vn(dat, custom_var = function(x, k) {
       var(x[1:(min(k + 1, length(x)))])
                               }), 0.699875669359526)
@@ -159,7 +159,7 @@ test_that("stat_de() functions properly", {
                   0.3120835122629970))
 
   expect_equal(CPAT:::stat_de(dat, use_kernel_var = TRUE, kernel = ker_func,
-                              bandwidth = sqrt), 2.35771330424856)
+                              bandwidth = sqrt), 2.66612019374572)
   expect_equal(CPAT:::stat_de(dat, custom_var = function(x, k) {
       var(x[1:(min(k + 1, length(x)))])
                               }), 2.02497320978937)
@@ -187,7 +187,7 @@ test_that("stat_hs() functions properly", {
                  -1.954438886999530))
 
   expect_equal(CPAT:::stat_hs(dat, use_kernel_var = TRUE, kernel = ker_func,
-      bandwidth = sqrt), 3.99463145080931)
+               bandwidth = sqrt), 5.60479113740717)
   expect_equal(CPAT:::stat_hs(dat, custom_var = function(x, k) {
                  var(x[1:(min(k + 1, length(x)))])
                }), 2.46376948017636)
