@@ -17,6 +17,9 @@
 - `DE.test()`, `HS.test()`, `CUSUM.test()`, and `Andrews.test()` now need
     argument `x` to be either `numeric` or a `data.frame`, and will complain if
     this is not the case
+- Internal function `get_lrv_vec()` was rewritten; long-run variance estimation
+    for affected functions (`DE.test()`, `HS.test()`, `CUSUM.test()`) should now
+    be much faster, especially when `kernel = "qs"`
 
 ## Version 0.1.0
 ---
