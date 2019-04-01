@@ -189,7 +189,7 @@ get_lrv_vec_old1 <- function(dat, kernel = "ba", bandwidth = "and") {
   } else if (!is.function(kernel)) {
     stop("kernel must be a function or a valid character string.")
   } else {
-    kern_vals <- sapply(1:(n - 1)/h, kernel)
+    kern_vals <- c(1, sapply(1:(n - 1)/h, kernel))
   }
 
   # The maximum lag that needs to be checked

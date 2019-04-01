@@ -650,6 +650,11 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
             lag_sum += X[i] * X[i + l];
         }
 
+        /*
+        std::cout << "\nl = " << l << "; m = " << m << "; lag_su = " <<
+            lag_sum << '\n';
+        */
+
         // Other initialization
         mi = Xmeans_data.begin();
         // TODO: curtis: FIX THIS LOOP -- Sun 31 Mar 2019 01:32:53 AM MDT
@@ -722,6 +727,16 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                     break;
                 }
             }
+
+            /*
+            std::cout << "u = " << u << "; gamma = " << gamma << '\n';
+            std::cout << "lower_mean = " << mi->lower_mean << 
+                "; upper_mean = " << mi->upper_mean << '\n';
+            std::cout << "lower_lag = " << li->lower_lag <<
+                "; upper_lag = " << li->upper_lag << "; lower_nolag = " <<
+                li->lower_nolag << "; upper_nolag = " << li->upper_nolag <<
+                '\n';
+            */
 
             sigma[u] += m * gamma;
             ++mi;
