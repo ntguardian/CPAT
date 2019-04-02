@@ -13,7 +13,9 @@
 #include <iterator>
 // #include <Rcpp.h>
 #include <RcppArmadillo.h>
+
 // [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::plugins(cpp11)]]
 
 // Constants
 // For kernels
