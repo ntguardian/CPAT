@@ -23,6 +23,7 @@ SIMSNORMALRENYINOKERN=data/SimsNormalRenyiRegNoKern.Rda
 SIMSNORMALCUSUM=data/SimsNormalCUSUM.Rda
 SIMSNORMALHS=data/SimsNormalHS.Rda
 SIMSNORMALHETERORENYI=data/SimsNormalHeteroRenyiReg.Rda
+SIMSNORMALHETERORENYINOKERN=data/SimsNormalHeteroRenyiRegNoKern.Rda
 SIMSNORMALHETERORENYIRESID=data/SimsNormalHeteroRenyiResid.Rda
 SIMSNORMALHETEROCUSUM=data/SimsNormalHeteroCUSUM.Rda
 SIMSNORMALHETEROHS=data/SimsNormalHeteroHS.Rda
@@ -40,19 +41,21 @@ SIMSGARCHRENYINOKERN=data/SimsGARCHRenyiRegNoKern.Rda
 SIMSGARCHCUSUM=data/SimsGARCHCUSUM.Rda
 SIMSGARCHHS=data/SimsGARCHHS.Rda
 SIMSGARCHHETERORENYI=data/SimsGARCHHeteroRenyiReg.Rda
+SIMSGARCHHETERORENYINOKERN=data/SimsGARCHHeteroRenyiRegNoKern.Rda
 SIMSGARCHHETERORENYIRESID=data/SimsGARCHHeteroRenyiResid.Rda
 SIMSGARCHHETEROCUSUM=data/SimsGARCHHeteroCUSUM.Rda
 SIMSGARCHHETEROHS=data/SimsGARCHHeteroHS.Rda
 ALLSIMS=$(SIMSNORMALRENYI) $(SIMSNORMALRENYIRESID) $(SIMSNORMALRENYINOKERN) \
         $(SIMSNORMALCUSUM) $(SIMSNORMALHS) $(SIMSNORMALHETERORENYI) \
-        $(SIMSNORMALHETERORENYIRESID) $(SIMSNORMALHETEROCUSUM) \
-        $(SIMSNORMALHETEROHS) $(SIMSARMARENYI) $(SIMSARMARENYIRESID) \
-        $(SIMSARMACUSUM) $(SIMSARMAHS) $(SIMSARMAHETERORENYI) \
-        $(SIMSARMAHETERORENYIRESID) $(SIMSARMAHETEROCUSUM) \
-        $(SIMSARMAHETEROHS) $(SIMSGARCHRENYI) $(SIMSGARCHRENYIRESID) \
-        $(SIMSGARCHRENYINOKERN) $(SIMSGARCHCUSUM) $(SIMSGARCHHS) \
-        $(SIMSGARCHHETERORENYI) $(SIMSGARCHHETERORENYIRESID) \
-        $(SIMSGARCHHETEROCUSUM) $(SIMSGARCHHETEROHS)
+        $(SIMSNORMALHETERORENYINOKERN) $(SIMSNORMALHETERORENYIRESID) \
+        $(SIMSNORMALHETEROCUSUM) $(SIMSNORMALHETEROHS) $(SIMSARMARENYI) \
+        $(SIMSARMARENYIRESID) $(SIMSARMACUSUM) $(SIMSARMAHS) \
+        $(SIMSARMAHETERORENYI) $(SIMSARMAHETERORENYIRESID) \
+        $(SIMSARMAHETEROCUSUM) $(SIMSARMAHETEROHS) $(SIMSGARCHRENYI) \
+        $(SIMSGARCHRENYIRESID) $(SIMSGARCHRENYINOKERN) $(SIMSGARCHCUSUM) \
+        $(SIMSGARCHHS) $(SIMSGARCHHETERORENYI) $(SIMSGARCHHETERORENYINOKERN) \
+        $(SIMSGARCHHETERORENYIRESID) $(SIMSGARCHHETEROCUSUM) \
+        $(SIMSGARCHHETEROHS)
 
 SIMSNORMALRENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYI))
 SIMSNORMALRENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYIRESID))
@@ -60,6 +63,8 @@ SIMSNORMALRENYINOKERNDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYINOKERN))
 SIMSNORMALCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALCUSUM))
 SIMSNORMALHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHS))
 SIMSNORMALHETERORENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHETERORENYI))
+SIMSNORMALHETERORENYINOKERNDF=$(subst .Rda,DataFrame.Rda,
+                                      $(SIMSNORMALHETERORENYINOKERN))
 SIMSNORMALHETERORENYIRESIDDF=$(subst .Rda,DataFrame.Rda, \
                                      $(SIMSNORMALHETERORENYIRESID))
 SIMSNORMALHETEROCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHETEROCUSUM))
@@ -79,30 +84,32 @@ SIMSGARCHRENYINOKERNDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHRENYINOKERN))
 SIMSGARCHCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHCUSUM))
 SIMSGARCHHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHS))
 SIMSGARCHHETERORENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHETERORENYI))
+SIMSGARCHHETERORENYINOKERNDF=$(subst .Rda,DataFrame.Rda,
+                                     $(SIMSGARCHHETERORENYINOKERN))
 SIMSGARCHHETERORENYIRESIDDF=$(subst .Rda,DataFrame.Rda, \
                                      $(SIMSGARCHHETERORENYIRESID))
 SIMSGARCHHETEROCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHETEROCUSUM))
 SIMSGARCHHETEROHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHETEROHS))
 
 SIMSNORMALDFPREREQ=$(SIMSNORMALRENYIRESIDDF) $(SIMSNORMALRENYINOKERNDF) \
-				   $(SIMSNORMALCUSUMDF) $(SIMSNORMALHSDF)
+                   $(SIMSNORMALCUSUMDF) $(SIMSNORMALHSDF)
 SIMSNORMALDF=data/SimsNormal.Rda
-SIMSNORMALHETERODFPREREQ=$(SIMSNORMALHETERORENYIDF) \
+SIMSNORMALHETERODFPREREQ=$(SIMSNORMALHETERORENYINOKERNDF) \
                          $(SIMSNORMALHETERORENYIRESIDDF) \
-				         $(SIMSNORMALHETEROCUSUMDF) $(SIMSNORMALHETEROHSDF)
+                         $(SIMSNORMALHETEROCUSUMDF) $(SIMSNORMALHETEROHSDF)
 SIMSNORMALHETERODF=data/SimsNormalHetero.Rda
 SIMSARMADFPREREQ=$(SIMSARMARENYIRESIDDF) $(SIMSARMARENYIDF) $(SIMSARMACUSUMDF) \
-				 $(SIMSARMAHSDF)
+                 $(SIMSARMAHSDF)
 SIMSARMADF=data/SimsARMA.Rda
 SIMSARMAHETERODFPREREQ=$(SIMSARMAHETERORENYIRESIDDF) $(SIMSARMAHETERORENYIDF) \
-				       $(SIMSARMAHETEROCUSUMDF) $(SIMSARMAHETEROHSDF)
+                       $(SIMSARMAHETEROCUSUMDF) $(SIMSARMAHETEROHSDF)
 SIMSARMAHETERODF=data/SimsARMAHetero.Rda
 SIMSGARCHDFPREREQ=$(SIMSGARCHRENYIRESIDDF) $(SIMSGARCHRENYINOKERNDF) \
-				  $(SIMSGARCHCUSUMDF) $(SIMSGARCHHSDF)
+                  $(SIMSGARCHCUSUMDF) $(SIMSGARCHHSDF)
 SIMSGARCHDF=data/SimsGARCH.Rda
 SIMSGARCHHETERODFPREREQ=$(SIMSGARCHHETERORENYIRESIDDF) \
-				        $(SIMSGARCHHETERORENYIDF) \
-						$(SIMSGARCHHETEROCUSUMDF) $(SIMSGARCHHETEROHSDF)
+                        $(SIMSGARCHHETERORENYINOKERNDF) \
+                        $(SIMSGARCHHETEROCUSUMDF) $(SIMSGARCHHETEROHSDF)
 SIMSGARCHHETERODF=data/SimsGARCHHetero.Rda
 
 ALLDISTDF=$(SIMSNORMALDF) $(SIMSNORMALHETERODF) $(SIMSARMADF) \
@@ -150,7 +157,7 @@ data/$(SIMSTATPREFIX)%.Rda : exec/$(SIMSTATPREFIX)%.R R/Utils.R \
 
 $(SIMSNORMALRENYI) : data/$(CONTEXTPREFIX)Main.Rda \
                      data/$(SIMDATAPREFIX)NormalXY.Rda \
-					 data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                     data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSNORMALRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMDATAPREFIX)NormalXY.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
@@ -164,20 +171,23 @@ $(SIMSNORMALHS) : data/$(CONTEXTPREFIX)Main.Rda \
                   data/$(SIMDATAPREFIX)NormalXY.Rda \
                   data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSNORMALHETERORENYI) : data/$(CONTEXTPREFIX)Main.Rda \
-                     data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
-					 data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                           data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
+                           data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+$(SIMSNORMALHETERORENYINOKERN) : data/$(CONTEXTPREFIX)Main.Rda \
+                                 data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
+                                 data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
 $(SIMSNORMALHETERORENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
-                          data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
-                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+                                data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
+                                data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
 $(SIMSNORMALHETEROCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
                      data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
                      data/$(SIMSTATPREFIX)CUSUM.Rda
 $(SIMSNORMALHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
-                  data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
-                  data/$(SIMSTATPREFIX)HS.Rda
+                        data/$(SIMDATAPREFIX)NormalXYHetero.Rda \
+                        data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSARMARENYI) : data/$(CONTEXTPREFIX)Main.Rda \
                    data/$(SIMDATAPREFIX)ARMAXY.Rda \
-				   data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                   data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSARMARENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                         data/$(SIMDATAPREFIX)ARMAXY.Rda \
                         data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
@@ -189,7 +199,7 @@ $(SIMSARMAHS) : data/$(CONTEXTPREFIX)Main.Rda \
                 data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSARMAHETERORENYI) : data/$(CONTEXTPREFIX)Main.Rda \
                          data/$(SIMDATAPREFIX)ARMAXYHetero.Rda \
-				         data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                         data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSARMAHETERORENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                               data/$(SIMDATAPREFIX)ARMAXYHetero.Rda \
                               data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
@@ -201,7 +211,7 @@ $(SIMSARMAHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
                       data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSGARCHRENYI) : data/$(CONTEXTPREFIX)Main.Rda \
                     data/$(SIMDATAPREFIX)GARCHXY.Rda \
-					data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                    data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSGARCHRENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                          data/$(SIMDATAPREFIX)GARCHXY.Rda \
                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
@@ -216,7 +226,7 @@ $(SIMSGARCHHS) : data/$(CONTEXTPREFIX)Main.Rda \
                  data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSGARCHHETERORENYI) : data/$(CONTEXTPREFIX)Main.Rda \
                           data/$(SIMDATAPREFIX)GARCHXYHetero.Rda \
-					      data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                          data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSGARCHHETERORENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
                                data/$(SIMDATAPREFIX)GARCHXYHetero.Rda \
                                data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
@@ -240,20 +250,23 @@ $(ALLSIMS) :
 
 $(SIMSNORMALRENYIDF) : $(SIMSNORMALRENYI) \
                        data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
-					   data/$(CONTEXTPREFIX)Main.Rda
+                       data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALRENYIRESIDDF) : $(SIMSNORMALRENYIRESID) \
                             data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                             data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALRENYINOKERNDF) : $(SIMSNORMALRENYINOKERN) \
                              data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
-							 data/$(CONTEXTPREFIX)Main.Rda
+                             data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALCUSUMDF) : $(SIMSNORMALCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
                        data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHSDF) : $(SIMSNORMALHS) data/$(SIMSTATPREFIX)HS.Rda \
                     data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHETERORENYIDF) : $(SIMSNORMALHETERORENYI) \
                              data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
-					         data/$(CONTEXTPREFIX)Main.Rda
+                             data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMALHETERORENYINOKERNDF) : $(SIMSNORMALHETERORENYINOKERN) \
+                                   data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                                   data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHETERORENYIRESIDDF) : $(SIMSNORMALHETERORENYIRESID) \
                                   data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                                   data/$(CONTEXTPREFIX)Main.Rda
@@ -291,7 +304,7 @@ $(SIMSGARCHRENYIRESIDDF) : $(SIMSGARCHRENYIRESID) \
                            data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHRENYINOKERNDF) : $(SIMSGARCHRENYINOKERN) \
                              data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
-							 data/$(CONTEXTPREFIX)Main.Rda
+                             data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHCUSUMDF) : $(SIMSGARCHCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
                       data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHHSDF) : $(SIMSGARCHHS) data/$(SIMSTATPREFIX)HS.Rda \
@@ -299,6 +312,9 @@ $(SIMSGARCHHSDF) : $(SIMSGARCHHS) data/$(SIMSTATPREFIX)HS.Rda \
 $(SIMSGARCHHETERORENYIDF) : $(SIMSGARCHHETERORENYI) \
                             data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
                             data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSGARCHHETERORENYINOKERNDF) : $(SIMSGARCHHETERORENYINOKERN) \
+                                  data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                                  data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHHETERORENYIRESIDDF) : $(SIMSGARCHHETERORENYIRESID) \
                                  data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                                  data/$(CONTEXTPREFIX)Main.Rda
