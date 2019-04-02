@@ -137,13 +137,13 @@ test_that("Simulation functions work", {
 
   # Seed for testing
   set.seed(20180924)
-  if (has_parallel) {
-    library(doParallel)
-    library(doRNG)
+  # if (has_parallel) {
+  #   library(doParallel)
+  #   library(doRNG)
 
-    registerDoParallel(1)
-    registerDoRNG(20180924)
-  }
+  #   registerDoParallel(1)
+  #   registerDoRNG(20180924)
+  # }
 
   expect_equal(CPAT:::sim_Zn(5, kn = sqrt, gen_func = rexp),
                c(2.6981314379783, 0.772622685095958, 2.1563847758165,
@@ -166,9 +166,9 @@ test_that("Simulation functions work", {
                                                            mean2 = 1)),
                c(4.83580979058053, 4.25069707624916, 5.43730987094663,
                  5.1031300081116, 4.52958399617572))
-  expect_equal(CPAT:::sim_de_stat(5, use_kernel_var = TRUE,
-                                  gen_func = CPAT:::rchangepoint,
-                                  args = list(changepoint = 250, mean2 = 1)),
+  expect_equal(suppressWarnings(CPAT:::sim_de_stat(5, use_kernel_var = TRUE,
+               gen_func = CPAT:::rchangepoint,
+               args = list(changepoint = 250, mean2 = 1))),
                c(12.1043364689335, 9.19149382539082, 8.0625203122811,
                  8.99854428938811, 11.5682412119329))
   expect_equal(CPAT:::sim_hs_stat(5, use_kernel_var = TRUE,
