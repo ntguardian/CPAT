@@ -153,12 +153,10 @@ test_that("Simulation functions work", {
                                                     0.927274354357238,
                                                     0.678247700885792, 
                                                     0.500148950576251))
-  tmp <- suppressWarnings(CPAT:::sim_Vn_stat(5, kn = function(n) {
-                 floor(0.1 * n)
-               }, tau = 1/3, use_kernel_var = TRUE,
+  expect_equal(CPAT:::sim_Vn_stat(5, kn = function(n) {floor(0.1 * n)},
+               tau = 1/3, use_kernel_var = TRUE,
                gen_func = CPAT:::rchangepoint, args = list(changepoint = 250,
-                                                           mean2 = 1)))
-  expect_equal(tmp,
+               mean2 = 1)),
                c(8.88631874182875, 8.57621615408599, 9.36966953777968,
                  9.00622340555299, 9.23934329755456))
   expect_equal(CPAT:::sim_Zn_stat(5, kn = sqrt, use_kernel_var = TRUE,
@@ -166,9 +164,9 @@ test_that("Simulation functions work", {
                                                            mean2 = 1)),
                c(4.83580979058053, 4.25069707624916, 5.43730987094663,
                  5.1031300081116, 4.52958399617572))
-  expect_equal(suppressWarnings(CPAT:::sim_de_stat(5, use_kernel_var = TRUE,
+  expect_equal(CPAT:::sim_de_stat(5, use_kernel_var = TRUE,
                gen_func = CPAT:::rchangepoint,
-               args = list(changepoint = 250, mean2 = 1))),
+               args = list(changepoint = 250, mean2 = 1)),
                c(12.1043364689335, 9.19149382539082, 8.0625203122811,
                  8.99854428938811, 11.5682412119329))
   expect_equal(CPAT:::sim_hs_stat(5, use_kernel_var = TRUE,

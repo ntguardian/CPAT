@@ -689,13 +689,9 @@ NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                     li->lower_nolag -= X[u + 1 - l];
                     li->upper_nolag += X[u + 1 - l];
                 }
-                if (u <= n - l) {
+                if (u <= n - l - 1) {
                     li->lower_lag += X[u + l];
-                    if (u <= n - l - 1) {
-                        li->upper_lag -= X[u + l];
-                    } else {
-                        li->upper_lag = 0;
-                    }
+                    li->upper_lag -= X[u + l];
                 } else {
                     li->upper_lag = 0;
                 }
