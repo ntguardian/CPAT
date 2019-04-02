@@ -26,7 +26,7 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", linetype = "dashed",
 
   renyi_st <- function(formula, data) {
     res <- residuals(lm(formula = formula, data = data))
-    CPAT:::stat_Zn(res, use_kernel_var = TRUE, kernel = "pa", bandwidth = "and",
+    CPAT:::stat_Zn(res, use_kernel_var = TRUE, kernel = "qs", bandwidth = "and",
                    kn = sqrt)
   }
 

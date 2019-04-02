@@ -25,7 +25,7 @@ main <- function(output = "SimTestCUSUM.Rda", linetype = "longdash",
 
   cusum_st <- function(formula, data) {
     res <- residuals(lm(formula = formula, data = data))
-    CPAT:::stat_Vn(res, use_kernel_var = TRUE, kernel = "pa", bandwidth = "and")
+    CPAT:::stat_Vn(res, use_kernel_var = TRUE, kernel = "qs", bandwidth = "and")
   }
 
   ##############################################################################
