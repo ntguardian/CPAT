@@ -589,21 +589,24 @@ NumericVector get_lrv_arr_cpp(const NumericMatrix& X_input,
     return wrap(lrv_est);
 }
 
+// Type definitions used in get_lrv_vec_cpp()
+
+typedef struct tempXsum {
+    long double lower_nolag;
+    long double lower_lag;
+    long double upper_nolag;
+    double upper_lag;
+} Xsum;
+typedef struct tempXmean {
+    long double lower_mean;
+    long double upper_mean;
+} Xmean;
+
 /* Function used for computing long-run variance of univariate data; see
  * get_lrv_vec() for documentation. */
 // [[Rcpp::export]]
 NumericVector get_lrv_vec_cpp(const NumericVector& X, const NumericVector& kern,
                               const unsigned int& max_l) {
-    typedef struct tempXsum {
-        long double lower_nolag;
-        long double lower_lag;
-        long double upper_nolag;
-        double upper_lag;
-    } Xsum;
-    typedef struct tempXmean {
-        long double lower_mean;
-        long double upper_mean;
-    } Xmean;
     typedef std::list<Xsum> Xsum_list;
     typedef Xsum_list::size_type Xsum_list_size;
     typedef std::list<Xmean> Xmean_list;
