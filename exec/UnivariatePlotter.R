@@ -105,7 +105,8 @@ main <- function(input, prefix = "", variable = "", level = 0.05,
           filenames_tex[nch], filenames_pdf[nch], "\n")
     }
     p <- p_orig %+% df
-    tikz(filenames_tex[nch], width = width, height = height, standAlone = TRUE)
+    tikz(filenames_tex[nch], width = width, height = height, standAlone = TRUE,
+         sanitize = TRUE)
     print(p)
     dev.off()
     setwd(dirname(filenames_tex[[nch]]))
