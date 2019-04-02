@@ -153,11 +153,12 @@ test_that("Simulation functions work", {
                                                     0.927274354357238,
                                                     0.678247700885792, 
                                                     0.500148950576251))
-  expect_equal(suppressWarnings(CPAT:::sim_Vn_stat(5, kn = function(n) {
+  tmp <- suppressWarnings(CPAT:::sim_Vn_stat(5, kn = function(n) {
                  floor(0.1 * n)
                }, tau = 1/3, use_kernel_var = TRUE,
                gen_func = CPAT:::rchangepoint, args = list(changepoint = 250,
-                                                           mean2 = 1))),
+                                                           mean2 = 1)))
+  expect_equal(tmp,
                c(8.88631874182875, 8.57621615408599, 9.36966953777968,
                  9.00622340555299, 9.23934329755456))
   expect_equal(CPAT:::sim_Zn_stat(5, kn = sqrt, use_kernel_var = TRUE,
