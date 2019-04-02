@@ -265,7 +265,7 @@ $(SIMSNORMALHETERORENYIDF) : $(SIMSNORMALHETERORENYI) \
                              data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
                              data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHETERORENYINOKERNDF) : $(SIMSNORMALHETERORENYINOKERN) \
-                                   data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                                   data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
                                    data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHETERORENYIRESIDDF) : $(SIMSNORMALHETERORENYIRESID) \
                                   data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
@@ -313,7 +313,7 @@ $(SIMSGARCHHETERORENYIDF) : $(SIMSGARCHHETERORENYI) \
                             data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
                             data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHHETERORENYINOKERNDF) : $(SIMSGARCHHETERORENYINOKERN) \
-                                  data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                                  data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
                                   data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHHETERORENYIRESIDDF) : $(SIMSGARCHHETERORENYIRESID) \
                                  data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
