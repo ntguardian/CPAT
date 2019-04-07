@@ -16,7 +16,7 @@
     \usepackage{subcaption}
 
     \title{Preliminary Power Plots}
-    \date{March 14, 2019}
+    \date{\today}
     \author{Curtis Miller}
 
 \begin{document}
@@ -25,8 +25,8 @@
 The plots below are power simulations comparing the ability of different test
 statistics to detect structural change in linear regression models. Here, $\beta
 = (1, 2)^T$, so the regression model is $y_t = 1 + 2 x_t + \epsilon_t$, where
-$x_t$ was generated from a $N(1, 1)$ distribution and $\{\epsilon_t\}_{t \in
-\mathbb{N}}$ is a mean-zero stationary process.
+$\{\epsilon_t\}_{t \in \mathbb{N}}$ is a mean-zero stationary process and $x_t
+\sim \operatorname{N}(1, 1)$.
 
 The test statistics displayed include the R\'enyi-type statistic with trimming
 parameter $t_T = T^{1/2}$ computed with the regression model coefficients
@@ -49,23 +49,25 @@ the full sample but allows for changes in the mean of the univariate data. The
 regression-coefficient-based R\'enyi-type statistic uses either the long-run
 variance estimation procedure described in \cite{horvathmillerrice20} with
 kernel methods (in the case of the ARMA(2, 2) process) or a procedure that does
-not use kernel methods (for all other cases). Furthermore, the univariate
-statistics use the Bartlett kernel while the latter R\'enyi-type statistic uses
-the quadratic spectral kernel.
+not use kernel methods (for all other cases). The kernel used in the LRV
+estimation procedures for all statistics using kernel methods (the R\'enyi-type
+and CUSUM statistics) is the quadratic spectral kernel, and the bandwidth was
+selected using the procedure advocated by \cite{andrews91b} and implemented in
+\cite{cointReg16}.
 
-For a sample size $T$, the change point occurs near $T^{2/3}$ if there is a
-change at all. If it does, the new model the data follows is $y_t = (1 +
-\frac{\delta}{\sqrt{2}}) + (2 + \frac{\delta}{\sqrt{2}}) x_t + \epsilon_t$,
-where $\delta \in [0,2]$. One may then say that, if $\beta^{*}$ is the new model
-after the change, $\|\beta - \beta^{*}\| = \delta$. Thus the case $\delta = 0$
-represents no change in the model. $\epsilon_t$ is as before.
+Two different change point regimes are implemented. The first is an early change
+point context. For a sample size $T$, the change point occurs near $T^{3/5}$ if
+there is a change at all. If it does, the new model the data follows is $y_t =
+(1 + \delta) + (2 - \delta) x_t + \epsilon_t$, where $\delta \in [-2, 2]$. The
+second regime has the change occur near $\frac{T}{10}$.
 
 In this document, $\epsilon_t$ follows one of three models: independent and
 identically distributed $N(0, 1)$ random variables; an ARMA(2, 2) process with
 $\phi_1 = 0.4$, $\phi_2 = -0.03$, $\theta_1 = 0.5$, $\theta_2 = -0.06$, and the
 variance of the noise parameter is chosen so that the long-run variance is one;
 and a GARCH(1, 1) process with $\omega = 0.2$, $\alpha = 0.3$, and $\beta = 0.5$
-(again the long-run variance is one).
+(again the long-run variance is one). The proportional change point is
+investigated only when the residuals are \textit{iid} Normal.
 
 For every combination of sample size, test statistic, $\delta$, and
 data-generating process for $\epsilon_t$, 20,000 independent test statistics
@@ -108,20 +110,49 @@ sizes considered are $T \in \{50, 250, 1000\}$.
     \begin{subfigure}{.3\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_n1000.pdf}
     \end{subfigure}
-    \caption{Power plots; rows correspond to the sample sizes 50, 250, and 1000
+    \caption{Power plots for when the change occurs near  $T^{\frac{3}{5}}$;
+             rows correspond to the sample sizes 50, 250, and 1000
              respectively, the first column is for \textit{iid} Normal
              residuals, the second column ARMA(2, 2) residuals, and the third
              column GARCH(1, 1) residuals. The $x$-axis tracks values of
              $\delta$ and the $y$-axis tracks observed power.}
+    \label{fig:earlychangepower}
 \end{figure}
 
-The best-performing statistics use only the residuals of the estimated models;
-in many situations, the R\'enyi-type statistic that uses the regression model
-coefficients directly has the worst performance (except in smaller sample sizes
-compared to the Hidalgo-Seo statistic). While all statistics seem to have
-appropriate power curves, the R\'enyi-type statistic often has the worst power,
-except for the version of the statistic that uses the residuals of the
-regression model only; that statistic seems to do well in the limit.
+\begin{figure}
+    \centering
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_prop_norm_n50.pdf}
+    \end{subfigure}
+
+    \bigskip
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_prop_norm_n250.pdf}
+    \end{subfigure}
+
+    \bigskip
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_prop_norm_n1000.pdf}
+    \end{subfigure}
+    \caption{Power plots for when the change occurs near $\frac{T}{10}$; see
+             Figure \ref{fig:earlychangepower} for description.}
+    \label{fig:propchangepower}
+\end{figure}
+
+The best-performing test statistic in all plots is the Hidalgo-Seo statistic,
+but the statistic also always suffers from considerable size inflation even for
+large sample sizes. The univariate statistics (the CUSUM statistic and the
+univariate R\'enyi-type statistic) do not demonstrate good power properties;
+sometimes they experience size inflation, they have bad power for large sample
+sizes, and in the case of the ARMA(2, 2) residuals they even have power curves
+with the wrong shape. The CUSUM statistic is the worst performing while the
+univariate R\'enyi-type statistic sometimes has decent power for large sample
+sizes. On balance, though, the regression-based R\'enyi-type often has excellent
+power without suffering from size inflation; in fact, for the ARMA(2, 2)
+residuals, the statistic (using kernel methods for LRV estimation) has a smaller
+size than specified.
+
+
 
 \bibliography{../inst/REFERENCES.bib} 
 \bibliographystyle{ieeetr}

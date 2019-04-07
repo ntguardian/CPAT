@@ -51,3 +51,26 @@
 #'
 #' @source \url{http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}
 "banks"
+
+#' United States and United Kingdom CPI and Exchange Rates
+#'
+#' Data set containing the CPI of the United Kingdom and the United States and
+#' the exchange rate between the countries' currencies. Data is at monthly
+#' frequency starting January 1971 and ending February 2019.
+#'
+#' CPI data is from the OECD database (downloaded April 5th, 2019) and exchange
+#' rate data is from the FRED database (downloaded April 6th, 2019). 
+#'
+#' @format A data frame with 578 rows and 3 variables:
+#' \describe{
+#'   \item{USA_CPI}{United States CPI, with 2015 having an index of 100.}
+#'   \item{GBR_CPI}{United Kingdom CPI, with 2015 having an index of 100.}
+#'   \item{GBPUSD}{The exchange rate between the British pound sterling and the
+#'                 U.S. dollar, in pounds per dollar.}
+#' }
+#'
+#' Row names are month and year.
+#'
+#' @source \href{https://fred.stlouisfed.org/series/EXUSUK}{FRED},
+#'         \href{https://data.oecd.org/price/inflation-cpi.htm}{OECD}
+"usa_gbr_price"
