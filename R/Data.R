@@ -74,3 +74,17 @@
 #' @source \href{https://fred.stlouisfed.org/series/EXUSUK}{FRED},
 #'         \href{https://data.oecd.org/price/inflation-cpi.htm}{OECD}
 "usa_gbr_price"
+
+#' Productivity and Compensation Indices for the U.S. Economy
+#'
+#' Data containing indices for (hourly) productivity and compensation of U.S.
+#' workers from the U.S. Bureau of Labor Statistics. (2009 is 100.)
+#'
+#' @format A time series object with 279 rows and 2 variables:
+#' \describe{
+#'   \item{productivity}{Labor productivity (output per hour).}
+#'   \item{compensation}{Real hourly compensation in business sector}
+#' }
+#'
+#' @source \href{https://www.bls.gov/}{U.S. Bureau of Labor Statistics}
+"prod_comp"

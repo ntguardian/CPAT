@@ -20,6 +20,10 @@
 - Internal function `get_lrv_vec()` was rewritten; long-run variance estimation
     for affected functions (`DE.test()`, `HS.test()`, `CUSUM.test()`) should now
     be much faster, especially when `kernel = "qs"`
+- Added data set `usa_gbr_price` containing CPI and exchange rates of the United
+    States and Great Britain from January 1971 to February 2019.
+- Added data set `prod_comp` containing U.S. worker hourly productivity and
+    compensation indices from 1947 to 2016.
 
 ## Version 0.1.0
 ---
