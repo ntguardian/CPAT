@@ -295,7 +295,7 @@ if (sys.nframe() == 0) {
                              "(if any) in the data (from CONTEXTINPUT)"),
           make_option(c("--n", "-n"), type = "integer", default = NULL,
                       help = "The sample size to simulate"),
-          make_option(c("--case", "-e"), type = "character", default = NULL,
+          make_option(c("--case", "-d"), type = "character", default = NULL,
                       help = "The structural change situation to simulate" %s%
                              "(from CONTEXTINPUT)"),
           make_option(c("--alpha", "-a"), type = "double", default = NULL,
