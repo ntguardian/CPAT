@@ -166,6 +166,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
                     "one of the models in struc_models from" %s% CONTEXTINPUT)
 
   # Collecting parameters, now that condition checking is done
+  n_theta <- ceiling(n * heterobreak)
   kstar <- kstar_functions[[cpt]]
   k <- floor(kstar(n))
   stop_with_message(is.numeric(k) & k >= 1 & k <= n, "The function in" %s%
