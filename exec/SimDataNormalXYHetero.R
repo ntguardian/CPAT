@@ -28,12 +28,17 @@ main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
   # REQUIRED OBJECTS
   ##############################################################################
 
-  eps_generator <- function(n) {rnorm(n)}
+  eps_generator <- function(n) {
+    n1 <- ceiling(n/2)
+    n2 <- n - n1
+    c(rnorm(n1), rnorm(n2, sd = 10))
+  }
+
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
     if (d > 1) {
-      interim_mat <- matrix(rnorm(n * (d - 1), mean = 2, sd = 4), ncol = d - 1)
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 1), ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
       interim_mat <- as.matrix(const)

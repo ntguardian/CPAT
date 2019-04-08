@@ -24,14 +24,22 @@ main <- function(output) {
   # This function will be executed when the script is called from the command
   # line
 
-  spec <- rugarch::ugarchspec(mean.model = list(
-                               armaOrder = c(0, 0),
-                               include.mean = FALSE
-                             ), fixed.pars = list(
-                               "omega" = 0.2,
-                               "alpha1" = 0.3,
-                               "beta1" = 0.5
-                             ))
+  spec1 <- rugarch::ugarchspec(mean.model = list(
+                                 armaOrder = c(0, 0),
+                                 include.mean = FALSE
+                               ), fixed.pars = list(
+                                 "omega" = 0.2,
+                                 "alpha1" = 0.3,
+                                 "beta1" = 0.5
+                               ))
+  spec2 <- rugarch::ugarchspec(mean.model = list(
+                                 armaOrder = c(0, 0),
+                                 include.mean = FALSE
+                               ), fixed.pars = list(
+                                 "omega" = 1,
+                                 "alpha1" = 0.7,
+                                 "beta1" = 0.2
+                               ))
 
   ##############################################################################
   # REQUIRED OBJECTS
@@ -39,17 +47,23 @@ main <- function(output) {
 
   # GARCH(1, 1) model
   eps_generator <- function(n) {
-    x_obj <- rugarch::ugarchpath(spec, n.sim = n, n.start = 500,
-                                 # Must set seed for this function; don't trust
-                                 # without this
-                                 rseed = sample(1:9999999, 1))
-    as.numeric(x_obj@path$seriesSim)
+    n1 <- ceiling(n / 2)
+    n2 <- n - n1
+    x_obj_1 <- rugarch::ugarchpath(spec1, n.sim = n1, n.start = 500,
+                                   # Must set seed for this function; don't
+                                   # trust without this
+                                   rseed = sample(1:9999999, 1))
+    x_obj_2 <- rugarch::ugarchpath(spec2, n.sim = n2, n.start = 500,
+                                   # Must set seed for this function; don't
+                                   # trust without this
+                                   rseed = sample(1:9999999, 1))
+    c(as.numeric(x_obj_1@path$seriesSim), as.numeric(x_obj_2@path$seriesSim))
   }
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
     if (d > 1) {
-      interim_mat <- matrix(rnorm(n * (d - 1), mean = 2, sd = 4), ncol = d - 1)
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 1), ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
       interim_mat <- as.matrix(const)
