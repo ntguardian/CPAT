@@ -43,7 +43,7 @@ main <- function(output) {
                                             ar = c(0.4, 0.2),
                                             ma = c(-0.1, -0.42)),
                                # SD chosen so that LRV is 10
-                               sd = sqrt(61629875/50684712) * 10))
+                               sd = sqrt(61629875/50684712) * sqrt(10)))
     c(s1, s2)
   }
   df_generator <- function(n, beta, eps) {

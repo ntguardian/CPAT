@@ -31,7 +31,7 @@ main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
   eps_generator <- function(n) {
     n1 <- ceiling(n/2)
     n2 <- n - n1
-    c(rnorm(n1), rnorm(n2, sd = 10))
+    c(rnorm(n1), rnorm(n2, sd = sqrt(10)))
   }
 
   df_generator <- function(n, beta, eps) {
