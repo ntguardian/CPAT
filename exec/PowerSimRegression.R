@@ -70,10 +70,11 @@ progress_report <- function(n, cpt, stat, r, n_vector, cpt_vector, stat_vector,
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
-                 seed = 20190219, seedless = FALSE, replications = 5000,
-                 cores = NULL, verbose = FALSE, notsafe = FALSE,
-                 recovery = NULL, seewarnings = FALSE, help = FALSE) {
+main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
+                 heterobreak = 1, output = NULL, seed = 20190219,
+                 seedless = FALSE, replications = 5000, cores = NULL,
+                 verbose = FALSE, notsafe = FALSE, recovery = NULL,
+                 seewarnings = FALSE, help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -89,10 +90,16 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
     set.seed(seed)
   }
 
+  if (SIMINPUTPOST == "") {
+    SIMINPUTPOST <- SIMINPUT
+  }
+
   simulation_tools <- new.env()
+  simulation_post_tools <- new.env()
   context_tools <- new.env()
   test_tools <- new.env()
   load(SIMINPUT, envir = simulation_tools)
+  load(SIMINPUTPOST, envir = simulation_post_tools)
   load(CONTEXTINPUT, envir = context_tools)
   load(TESTINPUT, envir = test_tools)
   simulation_tools_expected_objects <- c("df_generator", "eps_generator")
@@ -101,6 +108,9 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
   test_tools_expected_objects <- c("stat_functions")
   check_envir_has_objects(simulation_tools_expected_objects,
                           envir = simulation_tools, blame_string = SIMINPUT)
+  check_envir_has_objects(simulation_tools_expected_objects,
+                          envir = simulation_post_tools,
+                          blame_string = SIMINPUTPOST)
   check_envir_has_objects(context_tools_expected_objects, envir = context_tools,
                           blame_string = CONTEXTINPUT)
   check_envir_has_objects(test_tools_expected_objects, envir = test_tools,
@@ -141,10 +151,25 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
                     "from" %s% SIMINPUT %s0% "; must be a function with" %s%
                     "arguments n, beta, and eps")
   eps_generator <- simulation_tools$eps_generator
-  stop_with_message(is.function(df_generator) & "n" %in%
+  stop_with_message(is.function(eps_generator) & "n" %in%
                     names(formals(eps_generator)), "Invalid eps_generator" %s%
                     "from" %s% SIMINPUT %s0% "; must be a function with" %s%
                     "argument n")
+  
+  df_generator_post <- simulation_post_tools$df_generator
+  stop_with_message(is.function(df_generator_post) & all(c("n", "beta",
+                      "eps") %in% names(formals(df_generator_post))),
+                    "Invalid df_generator from" %s% SIMINPUTPOST %s0%
+                    "; must be a function with" %s%
+                    "arguments n, beta, and eps")
+  eps_generator_post <- simulation_post_tools$eps_generator
+  stop_with_message(is.function(eps_generator_post) & "n" %in%
+                    names(formals(eps_generator_post)), "Invalid" %s%
+                    "eps_generator from" %s% SIMINPUTPOST %s0% "; must be a" %s%
+                    "function with argument n")
+
+  stop_with_message(heterobreak <= 1 & heterobreak >= 0, "heterobreak must" %s%
+                    "be a number between 0 and 1")
 
   # Create list for storing output
   if (!is.null(recovery)) {
@@ -212,6 +237,8 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
 
   for (n in n_values) {
     nname <- "n" %s0% n
+    n_theta <- ceiling(n * heterobreak)
+
     for (kstar_name in names(kstar_functions)) {
       kstar <- kstar_functions[[kstar_name]]
       k <- floor(kstar(n))
@@ -243,6 +270,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, output = NULL,
                 ]][[r_name]]))) {
             simulation <- foreach(throwaway = 1:replications,
                                   .options.RNG = seed, .combine = c) %dorng% {
+              # TODO: curtis: REDO TO ALLOW FOR HETEROSKEDASTICITY IN DATA -- Sun 07 Apr 2019 11:49:27 PM MDT
               eps <- eps_generator(n = n)
               df <- rbind(df_generator(n = k, beta = beta1, eps = eps[1:k]),
                           df_generator(n = (n - k), beta = beta2,
@@ -299,6 +327,17 @@ if (sys.nframe() == 0) {
           make_option(c("--TESTINPUT", "-T"), type = "character",
                       help = "Name of .Rda file defining statistical tests" %s%
                              "that are simulated"),
+          make_option(c("--SIMINPUTPOST", "-I"), type = "character",
+                      default = "", help = "Name of .Rda file defining how" %s%
+                                           "data simulations are to be" %s%
+                                           "performed post-change in second" %s%
+                                           "moment of data generating" %s%
+                                           "process; if not set, ignored"),
+          make_option(c("--heterobreak", "-e"), type = "numeric", default = 1,
+                      help = "Location (as proportion of sample) at which" %s%
+                             "to break from using SIMINPUT to generate data" %s%
+                             "and use SIMINPUTPOST instead; if 1," %s%
+                             "effectively ignored (always rounds up)")
           make_option(c("--output", "-o"), type = "character", default = NULL,
                       help = "Output .Rda file for saving simulated test" %s%
                              "statistics; if not specified, name" %s%
