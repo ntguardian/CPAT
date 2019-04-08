@@ -30,10 +30,11 @@ base_file_name <- CPAT:::base_file_name
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, seed = 20190219,
-                 seedless = FALSE, replications = 5000, cores = NULL,
-                 stat = NULL, cpt = NULL, n = NULL, case = NULL,
-                 alpha = 0.05, conflevel = .95, help = FALSE) {
+main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
+                 heterobreak = 1, seed = 20190219, seedless = FALSE,
+                 replications = 5000, cores = NULL, stat = NULL, cpt = NULL,
+                 n = NULL, case = NULL, alpha = 0.05, conflevel = .95,
+                 help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -50,18 +51,27 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, seed = 20190219,
   }
   set.seed(seed)
 
+  if (SIMINPUTPOST == "") {
+    SIMINPUTPOST <- SIMINPUT
+  }
+
   simulation_tools <- new.env()
+  simulation_post_tools <- new.env()
   context_tools <- new.env()
   test_tools <- new.env()
   load(SIMINPUT, envir = simulation_tools)
+  load(SIMINPUTPOST, envir = simulation_post_tools)
   load(CONTEXTINPUT, envir = context_tools)
   load(TESTINPUT, envir = test_tools)
   simulation_tools_expected_objects <- c("df_generator", "eps_generator")
   context_tools_expected_objects <- c("n_values", "kstar_functions",
                                       "struc_models")
-  test_tools_expected_objects <- c("stat_functions", "pval_functions")
+  test_tools_expected_objects <- c("stat_functions")
   check_envir_has_objects(simulation_tools_expected_objects,
                           envir = simulation_tools, blame_string = SIMINPUT)
+  check_envir_has_objects(simulation_tools_expected_objects,
+                          envir = simulation_post_tools,
+                          blame_string = SIMINPUTPOST)
   check_envir_has_objects(context_tools_expected_objects, envir = context_tools,
                           blame_string = CONTEXTINPUT)
   check_envir_has_objects(test_tools_expected_objects, envir = test_tools,
@@ -116,6 +126,21 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, seed = 20190219,
                     names(formals(eps_generator)), "Invalid eps_generator" %s%
                     "from" %s% SIMINPUT %s0% "; must be a function with" %s%
                     "argument n")
+  
+  df_generator_post <- simulation_post_tools$df_generator
+  stop_with_message(is.function(df_generator_post) & all(c("n", "beta",
+                      "eps") %in% names(formals(df_generator_post))),
+                    "Invalid df_generator from" %s% SIMINPUTPOST %s0%
+                    "; must be a function with" %s%
+                    "arguments n, beta, and eps")
+  eps_generator_post <- simulation_post_tools$eps_generator
+  stop_with_message(is.function(eps_generator_post) & "n" %in%
+                    names(formals(eps_generator_post)), "Invalid" %s%
+                    "eps_generator from" %s% SIMINPUTPOST %s0% "; must be a" %s%
+                    "function with argument n")
+
+  stop_with_message(heterobreak <= 1 & heterobreak >= 0, "heterobreak must" %s%
+                    "be a number between 0 and 1")
 
   if (is.null(stat)) {
     stat <- names(stat_functions)[[1]]
@@ -162,12 +187,34 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, seed = 20190219,
   # Now the simulations can commence
   old_seed <- seed
   seed <- seed + which(names(struc_models) == case)[[1]] - 1  # [[1]] is safe
-  simulation <- foreach(throwaway = 1:replications, .options.RNG = seed,
-                        .combine = c) %dorng% {
+  simulation <- foreach(throwaway = 1:replications,
+                        .options.RNG = seed, .combine = c) %dorng% {
     eps <- eps_generator(n = n)
-    df <- rbind(df_generator(n = k, beta = beta1, eps = eps[1:k]),
-                df_generator(n = (n - k), beta = beta2,
-                             eps = eps[min((k + 1), n):n]))
+    if (n_theta >= 1 & k >= 1) {
+      df1 <- df_generator(n = min(n_theta, k), beta = beta1,
+        eps = eps[1:min(n_theta, k)])
+    } else {
+      df1 <- data.frame()
+    }
+
+    if (n_theta == n) {
+      df3 <- data.frame()
+    } else {
+      df3 <- df_generator_post(n = n - max(n_theta, k), beta = beta2,
+                               eps = eps[(max(n_theta, k) + 1):n])
+    }
+
+    if (n_theta < k) {
+      df2 <- df_generator_post(n = k - n_theta, beta = beta1,
+                               eps = eps[(n_theta + 1):k])
+    } else if (n_theta > k){
+      df2 <- df_generator(n = n_theta - k, beta = beta2,
+                          eps = eps[(k + 1):n_theta])
+    } else {  # Equality
+      df2 <- data.frame()
+    }
+
+    df <- rbind(df1, df2, df3)
     stop_with_message("y" %in% names(df), "y must be one of the" %s%
                       "columns generated by the data frame" %s%
                       "returned by df_generator(); it is the" %s%
@@ -217,6 +264,17 @@ if (sys.nframe() == 0) {
           make_option(c("--TESTINPUT", "-T"), type = "character",
                       help = "Name of .Rda file defining statistical tests" %s%
                              "that are simulated"),
+          make_option(c("--SIMINPUTPOST", "-I"), type = "character",
+                      default = "", help = "Name of .Rda file defining how" %s%
+                                           "data simulations are to be" %s%
+                                           "performed post-change in second" %s%
+                                           "moment of data generating" %s%
+                                           "process; if not set, ignored"),
+          make_option(c("--heterobreak", "-e"), type = "numeric", default = 1,
+                      help = "Location (as proportion of sample) at which" %s%
+                             "to break from using SIMINPUT to generate data" %s%
+                             "and use SIMINPUTPOST instead; if 1," %s%
+                             "effectively ignored (always rounds up)"),
           make_option(c("--seed", "-s"), type = "integer", default = 20190219,
                       help = "The seed for simulations"),
           make_option(c("--seedless", "-R"), action = "store_true",

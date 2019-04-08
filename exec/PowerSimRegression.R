@@ -358,7 +358,7 @@ if (sys.nframe() == 0) {
                       help = "Location (as proportion of sample) at which" %s%
                              "to break from using SIMINPUT to generate data" %s%
                              "and use SIMINPUTPOST instead; if 1," %s%
-                             "effectively ignored (always rounds up)")
+                             "effectively ignored (always rounds up)"),
           make_option(c("--output", "-o"), type = "character", default = NULL,
                       help = "Output .Rda file for saving simulated test" %s%
                              "statistics; if not specified, name" %s%
