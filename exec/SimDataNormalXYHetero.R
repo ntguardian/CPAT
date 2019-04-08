@@ -32,12 +32,8 @@ main <- function(output = "SimDataNormalXY.Rda", help = FALSE) {
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
-    n1 <- floor(n/5)
-    n2 <- n - n1
     if (d > 1) {
-      interim_mat <- matrix(c(rnorm(n1 * (d - 1), mean = 1),
-                              rnorm(n2 * (d - 1), mean = 1, sd = 4)),
-                            ncol = d - 1)
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 2, sd = 4), ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
       interim_mat <- as.matrix(const)

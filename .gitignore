@@ -4,6 +4,7 @@ Meta
 .Rhistory
 .RData
 packrat/lib*/
+*~
 .*~
 *.swp
 *.o
