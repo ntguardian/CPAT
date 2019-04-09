@@ -88,3 +88,24 @@
 #'
 #' @source \href{https://www.bls.gov/}{U.S. Bureau of Labor Statistics}
 "prod_comp"
+
+#' U.S. Quarterly Energy Consumption, Prices, and GDP
+#'
+#' Data set containing U.S. total consumption of energy and average price per
+#' quarter, along with U.S. GDP. The period spans from Q1 1973 to Q4 2018.
+#'
+#' Raw data was obtained from the Federal Reserve Economic Database and from
+#' Data.gov.
+#'
+#' @format A time series object with 184 rows and 3 columns:
+#' \describe{
+#'   \item{gdp}{U.S. GDP in billions of dollars, from FRED}
+#'   \item{price}{Index of urban energy prices, from FRED, with 1982-1984 being
+#'                100; made quarterly by averaging the monthly index values}
+#'   \item{consumption}{Total U.S. primary energy consumption, from Data.gov, in
+#'                      trillions of Btu}
+#' }
+#' @source \href{https://fred.stlouisfed.org/series/GDP}{FRED: GDP}
+#'         \href{https://fred.stlouisfed.org/series/CPIENGSL}{FRED: Energy CPI}
+#'         \href{https://catalog.data.gov/dataset/monthly-energy-consumption-by-sector}{Data.gov}
+"energy_demand"
