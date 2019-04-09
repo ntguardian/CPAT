@@ -29,21 +29,28 @@ main <- function(output) {
   ##############################################################################
 
   # ARIMA(2, 2) model
-  eps_generator <- function(n) {as.numeric(
-                                  arima.sim(n = n, n.start = 500, model = list(
-                                    order = c(2, 0, 2),
-                                    ar = c(0.4, -0.03),
-                                    ma = c(0.5, -0.06)
-  ), sd = sqrt(2153/4042)))}  # SD chosen so that LRV is 1
+  eps_generator <- function(n) {
+    n1 <- ceiling(n/2)
+    n2 <- n - n1
+    s1 <- as.numeric(arima.sim(n = n1, n.start = 500,
+                               model = list(order = c(2, 0, 2),
+                                            ar = c(0.4, -0.03),
+                                            ma = c(0.5, -0.06)),
+                               # SD chosen so that LRV is 1
+                               sd = sqrt(2153/4042)))
+    s2 <- as.numeric(arima.sim(n = n2, n.start = 500,
+                               model = list(order = c(2, 0, 2),
+                                            ar = c(0.4, 0.2),
+                                            ma = c(-0.1, -0.42)),
+                               # SD chosen so that LRV is 10
+                               sd = sqrt(61629875/50684712) * sqrt(10)))
+    c(s1, s2)
+  }
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
     const <- rep(1, times = n)
-    n1 <- floor(n/5)
-    n2 <- n - n1
     if (d > 1) {
-      interim_mat <- matrix(c(rnorm(n1 * (d - 1), mean = 1),
-                              rnorm(n2 * (d - 1), mean = 1, sd = 4)),
-                            ncol = d - 1)
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 1), ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
       interim_mat <- as.matrix(const)
