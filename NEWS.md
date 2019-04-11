@@ -24,6 +24,8 @@
     States and Great Britain from January 1971 to February 2019.
 - Added data set `prod_comp` containing U.S. worker hourly productivity and
     compensation indices from 1947 to 2016.
+- Added data set `energy_demand` containing U.S. GDP, energy consumption, and
+    energy pricing from 1973 to 2018.
 
 ## Version 0.1.0
 ---

@@ -97,7 +97,7 @@
 #' Raw data was obtained from the Federal Reserve Economic Database and from
 #' Data.gov.
 #'
-#' @format A time series object with 184 rows and 3 columns:
+#' @format A time series object with 184 rows and 3 variables:
 #' \describe{
 #'   \item{gdp}{U.S. GDP in billions of dollars, from FRED}
 #'   \item{price}{Index of urban energy prices, from FRED, with 1982-1984 being
@@ -105,7 +105,29 @@
 #'   \item{consumption}{Total U.S. primary energy consumption, from Data.gov, in
 #'                      trillions of Btu}
 #' }
+#'
 #' @source \href{https://fred.stlouisfed.org/series/GDP}{FRED: GDP}
 #'         \href{https://fred.stlouisfed.org/series/CPIENGSL}{FRED: Energy CPI}
 #'         \href{https://catalog.data.gov/dataset/monthly-energy-consumption-by-sector}{Data.gov}
 "energy_demand"
+
+#' U.S. Natural Gas Consumption, Prices, and GDP
+#'
+#' Data set containing U.S. total consumption of natural gas and average price
+#' per quarter, along with U.S. GDP. The period spans from Q1 1976 to Q4 2012.
+#'
+#' Raw data was obtained from the Federal Reserve Economic Database and from the
+#' U.S. Energy Information Administration.
+#'
+#' @format A time series object with 148 rows and 3 variables:
+#' \describe{
+#'   \item{gdp}{U.S. GDP in millions of dollars, from FRED}
+#'   \item{price}{Average natural gas price in dollars per thousand cubic feet,
+#'                from the EIA}
+#'   \item{consumption}{Natural gas consumption in billions of cubic feet, from
+#'                      the EIA}
+#' }
+#' 
+#' @source \href{https://fred.stlouisfed.org/series/NA000334Q}{FRED}
+#'         \href{https://www.eia.gov/totalenergy/data/browser/}{EIA}
+"natural_gas_demand"
