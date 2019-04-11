@@ -126,8 +126,12 @@
 #'                from the EIA}
 #'   \item{consumption}{Natural gas consumption in billions of cubic feet, from
 #'                      the EIA}
+#'   \item{population}{U.S. quarterly population in thousands, from FRED}
+#'   \item{pcgdp}{U.S. quarterly per capita GDP}
 #' }
 #' 
-#' @source \href{https://fred.stlouisfed.org/series/NA000334Q}{FRED}
+#' @source \href{https://fred.stlouisfed.org/series/NA000334Q}{FRED: GDP}
+#'         \href{https://fred.stlouisfed.org/series/B230RC0Q173SBEA}{
+#'               FRED: Population}
 #'         \href{https://www.eia.gov/totalenergy/data/browser/}{EIA}
 "natural_gas_demand"

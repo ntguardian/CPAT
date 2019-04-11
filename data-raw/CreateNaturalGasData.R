@@ -21,7 +21,9 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
 ################################################################################
 
 main <- function(gas = "EIANaturalGasConsumptionPrice.csv",
-                 gdp = "UnadjustedGDP.csv", output = "natural_gas_demand.rda") {
+                 gdp = "UnadjustedGDP.csv",
+                 pop = "USPopulation.csv",
+                 output = "natural_gas_demand.rda") {
   # This function will be executed when the script is called from the command
   # line
 
@@ -29,6 +31,7 @@ main <- function(gas = "EIANaturalGasConsumptionPrice.csv",
 
   gas_raw <- read.csv(gas)
   gdp_raw <- read.csv(gdp)
+  pop_raw <- read.csv(pop)
   
   ptemp1 <- gas_raw %>% filter(!is.na(Price)) %>% .$Price %>% ts(start = 1976,
                                                                  end = 2012 +
@@ -38,11 +41,14 @@ main <- function(gas = "EIANaturalGasConsumptionPrice.csv",
                                        frequency = 12)
   gtemp1 <- gdp_raw$NA000334Q %>% ts(start = 1947, end = 2018 + 3/4,
                                      frequency = 4)
+  otemp1 <- pop_raw$B230RC0Q173SBEA %>% ts(start = 1947, end = 2018 + 3/4,
+                                           frequency = 4)
 
   ptemp2 <- aggregate(ptemp1, nfrequency = 4, mean)
   ctemp2 <- aggregate(ctemp1, nfrequency = 4, sum)
-  jtemp <- ts.intersect(gtemp1, ptemp2, ctemp2)
-  colnames(jtemp) <- c("gdp", "price", "consumption")
+  gdp_capita <- gtemp1 * 1000 / otemp1
+  jtemp <- ts.intersect(gtemp1, ptemp2, ctemp2, otemp1, gdp_capita)
+  colnames(jtemp) <- c("gdp", "price", "consumption", "population", "pcgdp")
   natural_gas_demand <- jtemp
   save(natural_gas_demand, file = output)
 }
@@ -60,6 +66,9 @@ if (sys.nframe() == 0) {
   p <- add_argument(p, "--gdp", type = "character",
                     default = "UnadjustedGDP.csv",
                     help = "Data set containing U.S. GDP")
+  p <- add_argument(p, "--pop", type = "character",
+                    default = "USPopulation.csv",
+                    help = "Data set containing U.S. quarterly population")
   p <- add_argument(p, "--output", type = "character",
                     default = "natural_gas_demand.rda",
                     help = "Name of output .rda file")
