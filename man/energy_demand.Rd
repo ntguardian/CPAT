@@ -4,7 +4,7 @@
 \name{energy_demand}
 \alias{energy_demand}
 \title{U.S. Quarterly Energy Consumption, Prices, and GDP}
-\format{A time series object with 184 rows and 3 columns:
+\format{A time series object with 184 rows and 3 variables:
 \describe{
   \item{gdp}{U.S. GDP in billions of dollars, from FRED}
   \item{price}{Index of urban energy prices, from FRED, with 1982-1984 being
