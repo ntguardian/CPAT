@@ -1038,8 +1038,9 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
                                              "argument \"formula\"")
 
-  y <- model.frame(formula, data = data)[[1]]
-  X <- model.matrix(formula, data = data)
+  fit <- dynlm::dynlm(formula = formula, data = data)
+  y <- stats::residuals(fit) + stats::predict(fit)
+  X <- model.matrix(fit)
   d <- ncol(X)
   n <- nrow(X)
   fit <- lm(formula = formula, data = data)
@@ -1224,7 +1225,7 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
 andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
   if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
                                     "argument \"formula\"")
-  fit <- lm(formula = formula, data = data)
+  fit <- dynlm::dynlm(formula = formula, data = data)
   beta <- coefficients(fit)
   d <- length(beta)
   X <- model.matrix(fit)
@@ -1334,7 +1335,7 @@ stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
                         get_all_vals = FALSE) {
   if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
                                     "argument \"formula\"")
-  fit <- lm(formula = formula, data = data)
+  fit <- dynlm::dynlm(formula = formula, data = data) # 
   X <- model.matrix(fit)
   d <- ncol(X)
   eps <- residuals(fit)
@@ -1418,7 +1419,7 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
   } else if (is.data.frame(x)) {
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "CUSUM Test for Structural Change"
-    fit <- lm(formula = formula, data = x)
+    fit <- dynlm::dynlm(formula = formula, data = x)
     x <- residuals(fit)
   } else {
     stop("Don't know how to handle x of type" %s% class(x))
@@ -1496,7 +1497,7 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
   } else if (is.data.frame(x)) {
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Darling-Erd\u00F6s Test for Structural Change"
-    fit <- lm(formula = formula, data = x)
+    fit <- dynlm::dynlm(formula = formula, data = x)
     x <- residuals(fit)
   } else {
     stop("Don't know how to handle x of type" %s% class(x))

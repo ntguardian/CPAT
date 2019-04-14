@@ -1,0 +1,21 @@
+\begin{thebibliography}{1}
+
+\bibitem{horvathricemiller19}
+G.~Rice, C.~Miller, and L.~Horváth, ``A new class of change point test of
+  rényi type.'' in-press.
+
+\bibitem{horvathmillerrice20}
+L.~Horváth, C.~Miller, and G.~Rice, ``Detecting early or late changes in
+  linear models.'' draft.
+
+\bibitem{andrews91b}
+D.~W.~K. Andrews, ``Heteroskedasticity and autocorrelation consistent
+  covariance matrix estimation,'' {\em Econometrica}, vol.~59, pp.~817--858,
+  May 1991.
+
+\bibitem{cointReg16}
+P.~Aschersleben and M.~Wagner, {\em cointReg: Parameter Estimation and
+  Inference in a Cointegrating Regression}, 2016.
+\newblock R package version 0.2.0.
+
+\end{thebibliography}
