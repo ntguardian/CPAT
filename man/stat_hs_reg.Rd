@@ -9,7 +9,7 @@ stat_hs_reg(formula, data, m = sqrt, estimate = FALSE,
 }
 \arguments{
 \item{formula}{A \code{\link[stats]{formula}} that describes the regression
-model}
+model; see \code{\link[dynlm]{dynlm}} for supported models}
 
 \item{data}{A \code{\link[base]{data.frame}}-like object containing the data
 set; should be able to be passed to the \code{data} argument of

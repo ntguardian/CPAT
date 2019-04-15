@@ -1025,7 +1025,7 @@ stat_Zn <- function(dat, kn = function(n) {floor(sqrt(n))}, estimate = FALSE,
 #' be used for estimation instead).
 #'
 #' @param formula The regression formula, which will be passed to
-#'        \code{\link[stats]{lm}}
+#'        \code{\link[dynlm]{dynlm}}
 #' @param data \code{data.frame} containing the data
 #' @param use_kernel_var Set to \code{TRUE} to use kernel methods for long-run
 #'                       covariance matrix estimation (typically used when the
@@ -1062,12 +1062,11 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
                                              "argument \"formula\"")
 
   fit <- wrapped_dynlm(formula = formula, data = data)
-  y <- stats::residuals(fit) + stats::predict(fit)
+  y <- as.vector(residuals(fit) + predict(fit))
   X <- model.matrix(fit)
   d <- ncol(X)
   n <- nrow(X)
-  fit <- lm(formula = formula, data = data)
-  eps <- residuals(fit)
+  eps <- as.vector(residuals(fit))
   eX <- X * eps
   if (use_kernel_var) {
     lrv <- get_lrv_arr(eX, kernel = kernel, bandwidth = bandwidth)
@@ -1232,7 +1231,7 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
 #' \insertCite{andrews03}{CPAT} for a description of the test.
 #'
 #' @param formula The regression formula, which will be passed to
-#'        \code{\link[stats]{lm}}
+#'        \code{\link[dynlm]{dynlm}}
 #' @param data \code{data.frame} containing the data
 #' @inheritParams andrews_test
 #' @return If both \code{pval} and \code{stat} are \code{TRUE}, a list
@@ -1331,7 +1330,7 @@ andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
 #' numeric values.
 #'
 #' @param formula A \code{\link[stats]{formula}} that describes the regression
-#'                model
+#'                model; see \code{\link[dynlm]{dynlm}} for supported models
 #' @param data A \code{\link[base]{data.frame}}-like object containing the data
 #'             set; should be able to be passed to the \code{data} argument of
 #'             \code{\link[stats]{lm}}
@@ -1361,7 +1360,7 @@ stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
   fit <- wrapped_dynlm(formula = formula, data = data)
   X <- model.matrix(fit)
   d <- ncol(X)
-  eps <- residuals(fit)
+  eps <- as.vector(residuals(fit))
   n <- length(eps)
   if (is.function(m)) {
     m <- m(n)
@@ -1416,11 +1415,13 @@ stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
 #'
 #' @param x Data to test for change in mean (either \code{\link[base]{numeric}}
 #'          or a \code{\link[base]{data.frame}})
-#' @param formula Formula used for defining the regression model, if applicable
+#' @param formula Formula used for defining the regression model, if applicable;
+#'                see \code{\link[dynlm]{dynlm}} for supported models
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'        all potential change points
 #' @inheritParams stat_Vn
 #' @return A \code{htest}-class object containing the results of the test
+#' @importFrom zoo is.zoo
 #' @references
 #'  \insertAllCited{}
 #' @examples
@@ -1431,19 +1432,25 @@ stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' CUSUM.test(df, formula = y ~ x, use_kernel_var = TRUE)
+#' z <- ts(rnorm(100))
+#' CUSUM.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
 #' @export
 CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
                        stat_plot = FALSE,
                        kernel = "ba", bandwidth = "and") {
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
+  if (is.zoo(x) & !is.null(formula)) {
+    x <- as.data.frame(x)
+  }
+  
   if (is.numeric(x)) {
     testobj$method <- "CUSUM Test for Change in Mean"
   } else if (is.data.frame(x)) {
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "CUSUM Test for Structural Change"
     fit <- wrapped_dynlm(formula = formula, data = x)
-    x <- residuals(fit)
+    x <- as.vector(residuals(fit))
   } else {
     stop("Don't know how to handle x of type" %s% class(x))
   }
@@ -1492,11 +1499,13 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
 #' @param x Data to test for change in mean (either a
 #'          \code{\link[base]{numeric}} vector or a
 #'          \code{\link[base]{data.frame}})
-#' @param formula Formula used for defining the regression model, if applicable
+#' @param formula Formula used for defining the regression model, if applicable;
+#'                see \code{\link[dynlm]{dynlm}} for supported models
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'                  all potential change points
 #' @inheritParams stat_de
 #' @return A \code{htest}-class object containing the results of the test
+#' @importFrom zoo is.zoo
 #' @references
 #'  \insertAllCited{}
 #' @examples
@@ -1506,6 +1515,8 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' DE.test(df, formula = y ~ x, use_kernel_var = TRUE)
+#' z <- ts(rnorm(100))
+#' DE.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
 #' @export
 DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
@@ -1515,13 +1526,17 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
 
+  if (is.zoo(x) & !is.null(formula)) {
+    x <- as.data.frame(x)
+  }
+  
   if (is.numeric(x)) {
     testobj$method <- "Darling-Erd\u00F6s Test for Change in Mean"
   } else if (is.data.frame(x)) {
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Darling-Erd\u00F6s Test for Structural Change"
     fit <- wrapped_dynlm(formula = formula, data = x)
-    x <- residuals(fit)
+    x <- as.vector(residuals(fit))
   } else {
     stop("Don't know how to handle x of type" %s% class(x))
   }
@@ -1575,6 +1590,7 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #'        all potential change points
 #' @inheritParams stat_Zn_reg
 #' @return A \code{htest}-class object containing the results of the test
+#' @importFrom zoo is.zoo
 #' @references
 #'  \insertAllCited{}
 #' @examples
@@ -1585,12 +1601,18 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #' df <- data.frame(x, y)
 #' HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = TRUE, kernel = "qs",
 #'         bandwidth = "and")
+#' z <- ts(rnorm(100))
+#' HR.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
 #' @export
 HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
 
+  if (is.zoo(x) & !is.null(formula)) {
+    x <- as.data.frame(x)
+  }
+  
   if (is.numeric(x)) {
     testobj$method <- "Horv\u00E1th-Rice Test for Change in Mean"
     res <- stat_Zn(x,
@@ -1614,7 +1636,8 @@ HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                        bandwidth = bandwidth,
                        get_all_vals = stat_plot,
                        fast = FALSE)
-    d <- ncol(model.matrix(formula, data = x[1,]))
+    fit <- wrapped_dynlm(formula = formula, data = x[1,])
+    d <- ncol(model.matrix(fit))
     kn_val <- kn(nrow(x))
   } else {
     stop("Don't know how to handle x of type" %s% class(x))
@@ -1666,11 +1689,13 @@ HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
 #' @param x Data to test for change in mean (either a vector or
 #'          \code{\link[base]{data.frame}})
 #' @param formula The \code{\link[stats]{formula}} defining the regression
-#'                model, when applicable
+#'                model, when applicable; see \code{\link[dynlm]{dynlm}} for
+#'                supported models
 #' @param stat_plot Whether to create a plot of the values of the statistic at
 #'        all potential change points
 #' @inheritParams stat_hs
 #' @return A \code{htest}-class object containing the results of the test
+#' @importFrom zoo is.zoo
 #' @references
 #'  \insertAllCited{}
 #' @examples
@@ -1680,12 +1705,18 @@ HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
 #' y <- 1 + 2 * x + rnorm(1000)
 #' df <- data.frame(x, y)
 #' HS.test(df, formula = y ~ x)
+#' z <- ts(rnorm(100))
+#' HS.test(z ~ L(z), x = data.frame(z))
 #' @export
 HS.test <- function(x, formula = NULL, m = sqrt, corr = TRUE,
                     stat_plot = FALSE) {
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
 
+  if (is.zoo(x) & !is.null(formula)) {
+    x <- as.data.frame(x)
+  }
+  
   if (is.numeric(x)) {
     testobj$method <- "Hidalgo-Seo Test for Change in Mean"
     params <- c(corr)

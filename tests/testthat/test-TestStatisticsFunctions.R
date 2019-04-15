@@ -54,6 +54,8 @@ df2 <- data.frame(x = dat2, y = 1 + 2 * dat2 + dat)
 X <- model.matrix(y ~ x, data = df2)
 eX <- X * residuals(lm(y ~ x, data = df2))
 
+z <- ts(dat2)
+
 ################################################################################
 # UNDERLYING FUNCTION TESTING
 ################################################################################
@@ -108,6 +110,9 @@ test_that("stat_Zn_reg() functions properly", {
                                         custom_var = function(x, k) {diag(2)},
                                         get_all_vals = TRUE, estimate = TRUE)),
                c("statistic", "estimate", "stat_vals"))
+
+  expect_equal(CPAT:::stat_Zn_reg(z ~ L(z), data = as.data.frame(z)),
+               1.74130001642033)
 
   check_cointReg()
 
@@ -217,6 +222,8 @@ test_that("stat_hs_reg() functions properly", {
                                   -0.422480788176892, -1.476981256289980,
                                   -0.937368463192843, -0.636798519922383,
                                   -1.379690943378280, -2.284485815966370)))
+  expect_equal(CPAT:::stat_hs_reg(z ~ L(z), data = data.frame(z)),
+               15.4008420246824)
 })
 
 test_that("andrews_test() functions properly", {
@@ -411,6 +418,8 @@ test_that("CUSUM.test() functions properly", {
                                         "character")
   expect_error(CUSUM.test(df), "Formula needed")
   expect_equal(CUSUM.test(df, y ~ x)$statistic, c(A = 0.677882334483995))
+  expect_equal(CUSUM.test(z ~ L(z), x = as.zoo(z))$statistic,
+               c(A = 0.717933532160508))
 })
 
 test_that("HR.test() functions properly", {
@@ -428,6 +437,8 @@ test_that("HR.test() functions properly", {
   expect_equal(HR.test(df2, y ~ x, use_kernel_var = FALSE,
                        kn = sqrt)$parameters,
                c(`sqrt(T)` = 4.47213595499958))
+  expect_equal(HR.test(z ~ L(z), x = as.zoo(z))$statistic,
+               c(D = 1.85352673756093))
 })
 
 test_that("DE.test() functions properly", {
@@ -444,6 +455,8 @@ test_that("DE.test() functions properly", {
                                      "character")
   expect_error(DE.test(df), "Formula needed")
   expect_equal(DE.test(df, y ~ x)$statistic, c(A = 2.07256284012386))
+  expect_equal(DE.test(z ~ L(z), x = as.zoo(z))$statistic,
+               c(A = 1.53567676001081))
 })
 
 test_that("HS.test() functions properly", {
@@ -458,6 +471,8 @@ test_that("HS.test() functions properly", {
   expect_error(HS.test(df), "Formula needed")
   expect_equal(HS.test(df, y ~ x)$statistic, c(A = 4.31295336184296))
   expect_equal(HS.test(df, y ~ x, m = 6)$statistic, c(A = 1.90718155854372))
+  expect_equal(HS.test(z ~ L(z), x = as.zoo(z))$statistic,
+               c(A = 15.4008420246824))
 })
 
 test_that("Andrews.test() functions properly", {

@@ -11,7 +11,8 @@ CUSUM.test(x, formula = NULL, use_kernel_var = FALSE,
 \item{x}{Data to test for change in mean (either \code{\link[base]{numeric}}
 or a \code{\link[base]{data.frame}})}
 
-\item{formula}{Formula used for defining the regression model, if applicable}
+\item{formula}{Formula used for defining the regression model, if applicable;
+see \code{\link[dynlm]{dynlm}} for supported models}
 
 \item{use_kernel_var}{Set to \code{TRUE} to use kernel methods for long-run
 variance estimation (typically used when the data is
@@ -68,6 +69,8 @@ x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 CUSUM.test(df, formula = y ~ x, use_kernel_var = TRUE)
+z <- ts(rnorm(100))
+CUSUM.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
 }
 \references{
 \insertAllCited{}

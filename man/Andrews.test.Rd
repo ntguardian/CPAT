@@ -13,7 +13,7 @@ Andrews.test(x, M, formula = NULL)
 \item{M}{Numeric index of the location of the first potential change point}
 
 \item{formula}{The regression formula, which will be passed to
-\code{\link[stats]{lm}}}
+\code{\link[dynlm]{dynlm}}}
 }
 \value{
 A \code{htest}-class object containing the results of the test

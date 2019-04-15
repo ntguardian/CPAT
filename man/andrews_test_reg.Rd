@@ -8,7 +8,7 @@ andrews_test_reg(formula, data, M, pval = TRUE, stat = TRUE)
 }
 \arguments{
 \item{formula}{The regression formula, which will be passed to
-\code{\link[stats]{lm}}}
+\code{\link[dynlm]{dynlm}}}
 
 \item{data}{\code{data.frame} containing the data}
 

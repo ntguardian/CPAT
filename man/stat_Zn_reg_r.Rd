@@ -11,7 +11,7 @@ stat_Zn_reg_r(formula, data, kn = function(n) {     floor(sqrt(n)) },
 }
 \arguments{
 \item{formula}{The regression formula, which will be passed to
-\code{\link[stats]{lm}}}
+\code{\link[dynlm]{dynlm}}}
 
 \item{data}{\code{data.frame} containing the data}
 

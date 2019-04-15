@@ -11,7 +11,7 @@ HR.test(x, formula = NULL, kn = log, use_kernel_var = FALSE,
 \item{x}{Data to test for change in mean}
 
 \item{formula}{The regression formula, which will be passed to
-\code{\link[stats]{lm}}}
+\code{\link[dynlm]{dynlm}}}
 
 \item{kn}{A function corresponding to the trimming parameter \eqn{t_T}; by
 default, the square root function}
@@ -62,6 +62,8 @@ y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = TRUE, kernel = "qs",
         bandwidth = "and")
+z <- ts(rnorm(100))
+HR.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
 }
 \references{
 \insertAllCited{}

@@ -13,7 +13,8 @@ DE.test(x, formula = NULL, a = log, b = log,
 \code{\link[base]{numeric}} vector or a
 \code{\link[base]{data.frame}})}
 
-\item{formula}{Formula used for defining the regression model, if applicable}
+\item{formula}{Formula used for defining the regression model, if applicable;
+see \code{\link[dynlm]{dynlm}} for supported models}
 
 \item{a}{The function that will be composed with
 \eqn{l(x) = (2 \log x)^{1/2}}}
@@ -78,6 +79,8 @@ x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 DE.test(df, formula = y ~ x, use_kernel_var = TRUE)
+z <- ts(rnorm(100))
+DE.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
 }
 \references{
 \insertAllCited{}

@@ -12,7 +12,8 @@ HS.test(x, formula = NULL, m = sqrt, corr = TRUE,
 \code{\link[base]{data.frame}})}
 
 \item{formula}{The \code{\link[stats]{formula}} defining the regression
-model, when applicable}
+model, when applicable; see \code{\link[dynlm]{dynlm}} for
+supported models}
 
 \item{m}{Either numeric or a function that returns numeric; corresponds to
 \eqn{m} used in computing the estimate of the long-run variance}
@@ -56,6 +57,8 @@ x <- rnorm(1000)
 y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 HS.test(df, formula = y ~ x)
+z <- ts(rnorm(100))
+HS.test(z ~ L(z), x = data.frame(z))
 }
 \references{
 \insertAllCited{}
