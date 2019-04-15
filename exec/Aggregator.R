@@ -42,7 +42,7 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
   load(CONTEXTINPUT, envir = context_tools)
   test_tools_expected_objects <- c("pval_functions", "plot_desc")
   input_objects_expected_objects <- c("res_list")
-  context_tools_expected_objects <- c("struc_name_conversion")
+  context_tools_expected_objects <- c("struc_name_conversion", "struc_models")
   check_envir_has_objects(test_tools_expected_objects, envir = test_tools,
                           blame_string = TESTINPUT)
   check_envir_has_objects(input_objects_expected_objects, envir = input_objects,
@@ -59,6 +59,14 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                     "; must be a data.frame with numeric columns and" %s%
                     "all rows named, with names corresponding to names" %s0%
                     "struc_models")
+  struc_models <- context_tools$struc_models
+  # TODO: curtis: MAKE THIS MORE GENERAL -- Mon 15 Apr 2019 05:09:05 PM MDT
+  stop_with_message(is.matrix(struc_models[[1]]) &
+                    is.numeric(struc_models[[1]]) &
+                    ncol(struc_models[[1]]) == 2,
+                    "Invalid struc_models from" %s% CONTEXTINPUT %s0% ";" %s%
+                    "must be a numeric matrix with two columns")
+
   res_list <- input_objects$res_list
   stop_with_message(is.list(res_list) & all(sapply(res_list, is.list)) &
                     all(sapply(res_list,
@@ -102,6 +110,12 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                     ", and all test statistics in res_list must be present" %s%
                     "in the names of pval_functions")
 
+  # TODO: curtis: THIS IS A CRUDE SOLUTION TO THE PROBLEM OF COMMUNICATING WHAT
+  #               d IS TO THE P-VALUE FUNCTIONS; A MORE FLEXIBL, ROBUST, AND
+  #               GENERAL SOLUTION IS NEEDED IN MORE COMPLEX SIMULATIONS.
+  #               EFFECTIVELY ASSUMING THAT d IS CONSTANT, WHICH MAY NOT BE
+  #               ALWAYS THE CASE -- Mon 15 Apr 2019 05:11:35 PM MDT
+  d <- nrow(struc_models[[1]])
   # Create long-form data frame
   res_list_collapsed <- lapply(res_list,
                                function(l) {
@@ -113,7 +127,10 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                                             vals <- m[[q]]  # Change level
                                             pval_f <- Vectorize(
                                               pval_functions[[q]])
-                                            pvals <- lapply(vals, pval_f)
+                                            pvals <- lapply(vals,
+                                                            function(z) {
+                                                              pval_f(z, d = d)
+                                                            })
                                             sig_prop <- sapply(pvals,
                                                                function(v) {
                                                                  mean(v <= alpha)

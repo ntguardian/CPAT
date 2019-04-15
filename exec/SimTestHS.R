@@ -31,7 +31,7 @@ main <- function(output, linetype = "dotdash") {
   ################################################################################
 
   stat_functions <- c("HS" = hs_st)
-  pval_functions <- c("HS" = function(q) {1 - CPAT:::phidalgo_seo(q)})
+  pval_functions <- c("HS" = function(q, d) {1 - CPAT:::phidalgo_seo(q)})
   plot_desc <- c("HS" = linetype)
 
   save(stat_functions, pval_functions, plot_desc, file = output, ascii = TRUE)

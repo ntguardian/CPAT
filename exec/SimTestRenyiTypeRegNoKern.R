@@ -36,7 +36,7 @@ main <- function(output = "SimTestRenyiTypeRegNoKern.Rda", linetype = "solid",
   ##############################################################################
 
   stat_functions <- c("ZnRegNoKern" = renyi_reg_st)
-  pval_functions <- c("ZnRegNoKern" = function(q) {1 - CPAT:::pZn(q, d = 2)})
+  pval_functions <- c("ZnRegNoKern" = function(q, d) {1 - CPAT:::pZn(q, d = d)})
   plot_desc <- c("ZnRegNoKern" = linetype)
 
   save(stat_functions, pval_functions, plot_desc, file = output, ascii = TRUE)
