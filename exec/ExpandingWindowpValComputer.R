@@ -76,9 +76,60 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
                     "stat_functions from" %s% statistics[[1]] %s0% "; must" %s%
                     "be a named vector of functions")
 
+  plot_desc <- temp_env$plot_desc
+  stop_with_message(is.vector(plot_desc) & is.character(plot_desc) &
+                    all(!is.null(names(plot_desc))),
+                    "Invalid plot_desc from" %s% statistics[[1]] %s0% ";" %s%
+                    "must be a named character vector")
+
   pval_functions <- temp_env$pval_functions
-  # TODO: FINISH PROGRAM; ALSO, IMPLEMENT SUPPORT FOR DIMENSION PARAMETERS
-  stop_with_message(is.vector(pval_functions) &)
+  stop_with_message(is.vector(pval_functions) &
+                    all(sapply(pval_functions,
+                               function(f) {all(c("q", "d") %in%
+                                 names(formals(f)))})) &
+                    all(!is.null(names(pval_functions))),
+                    "Invalid pval_functions from" %s% statistics[[1]] %s0%
+                    "; must be a vector of functions that all take input" %s0%
+                    "'q' and 'd'")
+
+  for (f in statistics[2:length(statistics)]) {
+    load(f, envir = temp_env)
+    # Import and check for errors
+    check_envir_has_objects(temp_env_expected_objects, envir = temp_env,
+                            blame_string = f)
+    temp_stat <- temp_env$stat_functions
+    stop_with_message(is.vector(temp_stat) &
+                      is.function(temp_stat[[1]]) &
+                      !any(is.null(names(temp_stat))), "Invalid" %s%
+                      "stat_functions from" %s% f %s0% "; must be a named" %s%
+                      "vector of functions")
+
+    temp_desc <- temp_env$plot_desc
+    stop_with_message(is.vector(temp_desc) & is.character(temp_desc) &
+                      all(!is.null(names(temp_desc))),
+                      "Invalid plot_desc from" %s% f %s0% "; must be a" %s%
+                      "named character vector")
+
+    temp_pval <- temp_env$pval_functions
+    stop_with_message(is.vector(temp_pval) &
+                      all(sapply(temp_pval,
+                                 function(g) {all(c("q", "d") %in%
+                                   names(formals(g)))})) &
+                      all(!is.null(names(temp_pval))),
+                      "Invalid pval_functions from" %s% f %s0% "; must be" %s%
+                      "a vector of functions that all take input 'q' and" %s0%
+                      "'d'")
+
+    # Merge statistics, desc, and objects
+    plot_desc <- c(plot_desc, temp_desc[which(
+        !(names(temp_desc) %in% names(plot_desc)))])
+    stat_functions <- c(stat_functions, temp_stat[which(
+        !(names(temp_stat) %in% names(stat_functions)))])
+    pval_functions <- c(pval_functions, temp_pval[which(
+        !(names(temp_pval) %in% names(pval_functions)))])
+  }
+
+  # TODO: curtis: EXPANDING WINDOW STATISTIC COMPUTATION LOOP -- Mon 15 Apr 2019 05:47:44 PM MDT
 }
 
 ################################################################################

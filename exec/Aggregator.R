@@ -96,7 +96,8 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
   pval_functions <- test_tools$pval_functions
   stop_with_message(is.vector(pval_functions) &
                     all(sapply(pval_functions,
-                               function(f) {"q" %in% names(formals(f))})) &
+                               function(f) {all(c("q", "d") %in%
+                                 names(formals(f)))})) &
                     all(!is.null(names(pval_functions))) &
                     all(sapply(res_list,
                                function(l) {
@@ -107,8 +108,8 @@ main <- function(input, output = NULL, TESTINPUT, CONTEXTINPUT, alpha = 0.05,
                                      }))})),
                     "Invalid pval_functions from" %s% TESTINPUT %s0% ";" %s%
                     "must be a vector of functions that all take input 'q'" %s0%
-                    ", and all test statistics in res_list must be present" %s%
-                    "in the names of pval_functions")
+                    "and 'd', and all test statistics in res_list must be" %s%
+                    "present in the names of pval_functions")
 
   # TODO: curtis: THIS IS A CRUDE SOLUTION TO THE PROBLEM OF COMMUNICATING WHAT
   #               d IS TO THE P-VALUE FUNCTIONS; A MORE FLEXIBL, ROBUST, AND
