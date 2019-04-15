@@ -122,6 +122,29 @@ getLongRunWeights <- function(n, bandwidth, kernel = "ba") {
   list(w = w, upper = upper)
 }
 
+#' Dynamic Linear Models and Time Series Regression
+#'
+#' Interface to \code{\link[stats]{lm.wfit}} for fitting dynamic linear models
+#' and time series regression relationships; a wrapping of the function
+#' \code{\link[dynlm]{dynlm}} from \pkg{dynlm}.
+#'
+#' @param formula A \code{\link[stats]{formula}} describing the linear model to
+#'                be fit
+#' @param data A \code{\link[base]{data.frame}} or time series object (e.g.,
+#'             \code{\link[stats]{ts}} or \code{\link[zoo]{zoo}}), containing
+#'             the variables in the model
+#' @return The result of the call \code{dynlm(formula, data)}
+#' @importFrom dynlm dynlm
+#' @importFrom zoo merge.zoo
+#' @examples
+#' y <- ts(rnorm(100))
+#' CPAT:::wrapped_dynlm(y ~ L(y), data = y)
+wrapped_dynlm <- function(formula, data) {
+  merge.zoo <- zoo::merge.zoo
+  eval(substitute(dynlm(formula = f, data = d),
+                  list("f" = formula, "d" = data)))
+}
+
 #' Long-Run Variance Estimation With Possible Change Points
 #'
 #' Deprecated version of \code{link{get_lrv_vec}}.
@@ -1038,7 +1061,7 @@ stat_Zn_reg <- function(formula, data, kn = function(n) {floor(sqrt(n))},
   if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
                                              "argument \"formula\"")
 
-  fit <- dynlm::dynlm(formula = formula, data = data)
+  fit <- wrapped_dynlm(formula = formula, data = data)
   y <- stats::residuals(fit) + stats::predict(fit)
   X <- model.matrix(fit)
   d <- ncol(X)
@@ -1225,7 +1248,7 @@ stat_Zn_reg_r <- function(formula, data, kn = function(n) {floor(sqrt(n))},
 andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
   if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
                                     "argument \"formula\"")
-  fit <- dynlm::dynlm(formula = formula, data = data)
+  fit <- wrapped_dynlm(formula = formula, data = data)
   beta <- coefficients(fit)
   d <- length(beta)
   X <- model.matrix(fit)
@@ -1333,9 +1356,9 @@ andrews_test_reg <- function(formula, data, M, pval = TRUE, stat = TRUE) {
 #' CPAT:::stat_hs_reg(y ~ x, data = df)
 stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
                         get_all_vals = FALSE) {
-  if (!methods::is(formula, "formula")) stop("Bad formula passed to" %s%
-                                    "argument \"formula\"")
-  fit <- dynlm::dynlm(formula = formula, data = data) # 
+  if (!(class(formula) == "formula")) stop("Bad formula passed to" %s%
+                                           "argument \"formula\"")
+  fit <- wrapped_dynlm(formula = formula, data = data)
   X <- model.matrix(fit)
   d <- ncol(X)
   eps <- residuals(fit)
@@ -1419,7 +1442,7 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
   } else if (is.data.frame(x)) {
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "CUSUM Test for Structural Change"
-    fit <- dynlm::dynlm(formula = formula, data = x)
+    fit <- wrapped_dynlm(formula = formula, data = x)
     x <- residuals(fit)
   } else {
     stop("Don't know how to handle x of type" %s% class(x))
@@ -1497,7 +1520,7 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
   } else if (is.data.frame(x)) {
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Darling-Erd\u00F6s Test for Structural Change"
-    fit <- dynlm::dynlm(formula = formula, data = x)
+    fit <- wrapped_dynlm(formula = formula, data = x)
     x <- residuals(fit)
   } else {
     stop("Don't know how to handle x of type" %s% class(x))

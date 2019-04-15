@@ -6,7 +6,8 @@ Authors@R: person("Curtis", "Miller", email = "cmiller@math.utah.edu", role = c(
 Maintainer: Curtis Miller <cmiller@math.utah.edu>
 Description: Implements several statistical tests for structural change.
 Depends:
-    R (>= 3.2)
+    R (>= 3.2),
+    dynlm
 Suggests:
     cointReg (>= 0.2),
     foreach (>= 1.4),
@@ -24,8 +25,7 @@ Imports:
     Rdpack (>= 0.9),
     methods (>= 3.2),
     Rcpp (>= 0.12),
-    purrr (>= 0.2),
-    dynlm
+    purrr (>= 0.2)
 RdMacros:
     Rdpack
 VignetteBuilder: R.rsp
