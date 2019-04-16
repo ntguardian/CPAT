@@ -66,6 +66,7 @@ main <- function(inputs, output = "Appended.Rda") {
   }
   
   for (f in inputs[2:length(inputs)]) {
+    if (is.na(f)) break
     load(f, envir = temp_env)
     # Import and check for errors
     check_envir_has_objects(temp_env_expected_objects, envir = temp_env,

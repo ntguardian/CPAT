@@ -25,7 +25,7 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", linetype = "dashed",
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   renyi_st <- function(formula, data) {
-    res <- residuals(lm(formula = formula, data = data))
+    res <- residuals(CPAT:::wrapped_dynlm(formula = formula, data = data))
     CPAT:::stat_Zn(res, use_kernel_var = TRUE, kernel = "qs", bandwidth = "and",
                    kn = sqrt)
   }

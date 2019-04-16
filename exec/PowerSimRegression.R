@@ -83,7 +83,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
   suppressPackageStartupMessages(library(purrr))
 
   if (is.null(cores)) {
-    cores = max(1, detectCores() - 1)
+    cores <- max(1, detectCores() - 1)
   }
   registerDoParallel(cores = cores)
   if (!seedless) {

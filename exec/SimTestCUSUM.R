@@ -24,7 +24,7 @@ main <- function(output = "SimTestCUSUM.Rda", linetype = "longdash",
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   cusum_st <- function(formula, data) {
-    res <- residuals(lm(formula = formula, data = data))
+    res <- residuals(CPAT:::wrapped_dynlm(formula = formula, data = data))
     CPAT:::stat_Vn(res, use_kernel_var = TRUE, kernel = "qs", bandwidth = "and")
   }
 

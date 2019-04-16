@@ -20,16 +20,27 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
 `%s0%` <- CPAT:::`%s0%`
 check_envir_has_objects <- CPAT:::check_envir_has_objects
 stop_with_message <- CPAT:::stop_with_message
-is.formula <- function(x) {is(x, "formula")}
+is.formula <- function(x) {inherits(x, "formula")}
 
 ################################################################################
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
 main <- function(input, statistics, output = "out.Rda", left = 1,
-                 firstright = NULL, lastright = NULL, cores = NULL) {
+                 firstright = NULL, lastright = NULL, cores = NA) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
+
+  suppressPackageStartupMessages(library(doParallel))
+  suppressPackageStartupMessages(library(doRNG))
+  suppressPackageStartupMessages(library(formula.tools))
+  suppressPackageStartupMessages(library(zoo))
+  suppressPackageStartupMessages(library(purrr))
+
+  if (is.na(cores)) {
+    cores <- max(1, detectCores() - 1)
+  }
+  registerDoParallel(cores = cores)
 
   input_env <- new.env()
   load(input, envir = input_env)
@@ -47,11 +58,12 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
 
   # Load objects and check assumptions
   model <- input_env$model
-  stop_with_message(!is.formula(model), "Invalid model from" %s% input %s0%
+  stop_with_message(is.formula(model), "Invalid model from" %s% input %s0%
                     "; must be a formula")
 
   data_set <- input_env$data_set
-  stop_with_message(is.data.frame(data_set) &
+  stop_with_message((is.data.frame(data_set) |
+                      (is.zoo(data_set) & length(dim(data_set)) == 2)) &
                     all(all.vars(model) %in% names(data_set)),
                     "Invalid data_set from" %s% input %s0% "; must be a" %s%
                     "data frame containing the variables listed in model")
@@ -93,6 +105,7 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
                     "'q' and 'd'")
 
   for (f in statistics[2:length(statistics)]) {
+    if (is.na(f)) break
     load(f, envir = temp_env)
     # Import and check for errors
     check_envir_has_objects(temp_env_expected_objects, envir = temp_env,
@@ -129,7 +142,44 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
         !(names(temp_pval) %in% names(pval_functions)))])
   }
 
-  # TODO: curtis: EXPANDING WINDOW STATISTIC COMPUTATION LOOP -- Mon 15 Apr 2019 05:47:44 PM MDT
+  # Initialization
+  n <- nrow(data_set)
+  if (is.null(lastright)) {
+    lastright <- n
+  }
+  if (is.null(firstright)) {
+    firstright <- min(n, left + length(get.vars(model)) + 1)
+  }
+  stop_with_message(firstright >= left & lastright >= left &
+                    firstright <= lastright, "Must have left <= firstright" %s%
+                                             "<= lastright")
+
+  if (is_ts) {
+    idx <- time(data_set)[firstright:lastright]
+    starttime <- time(data_set)[left]
+  } else {
+    idx <- firstright:lastright
+    starttime <- left
+  }
+
+  temp_reg <- CPAT:::wrapped_dynlm(formula = model,
+                                   data = data_set[left:firstright, ])
+  d <- ncol(model.matrix(temp_reg))
+
+  stat_pvals <- lapply(names(stat_functions), function(s) {
+    stat <- stat_functions[[s]]
+    pval <- partial(pval_functions[[s]], d = d)
+
+    foreach(t = firstright:lastright, .combine = c) %dorng% {
+      stat_val <- stat(formula = model, data = data_set[left:t, ])
+      pval(stat_val)
+    }
+  })
+
+  names(stat_pvals) <- names(stat_functions)
+  stat_pvals <- data.frame(stat_pvals)
+  stat_pvals <- cbind(stat_pvals, "End" = idx)
+  save(stat_pvals, plot_desc, events, file = output, ascii = TRUE)
 }
 
 ################################################################################
@@ -142,7 +192,7 @@ if (sys.nframe() == 0) {
                   "and returns a data set containing those p-values")
   p <- add_argument(p, "input", type = "character",
                     help = "Input file containing data set for analysis")
-  p <- add_argument(p, "output", type = "character", default = "out.Rda",
+  p <- add_argument(p, "--output", type = "character", default = "out.Rda",
                     help = "Output file containing p-values and events")
   p <- add_argument(p, "--statistics", type = "character", 
                     nargs = Inf,
@@ -155,7 +205,7 @@ if (sys.nframe() == 0) {
   p <- add_argument(p, "--lastright", type = "integer", default = NULL,
                     help = "The last right anchor of windows; by default," %s%
                            "the last point in the data set")
-  p <- add_argument(p, "--cores", type = "integer", default = NULL,
+  p <- add_argument(p, "--cores", type = "integer", default = NA,
                     help = "The number of cores for parallel computation;" %s%
                            "by default, all but one, or one if only one")
 

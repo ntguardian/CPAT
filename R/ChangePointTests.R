@@ -1441,6 +1441,7 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
   if (is.zoo(x) & !is.null(formula)) {
+    # TODO: curtis: DON'T DO THIS! -- Tue 16 Apr 2019 12:48:03 AM MDT
     x <- as.data.frame(x)
   }
   

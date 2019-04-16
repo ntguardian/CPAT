@@ -15,6 +15,7 @@
 # COLLECTION-DF-VARS
 # POWER-PLOT-VARS
 # VIGNETTE-VARS
+# EXAMPLE-VARS
 # RECIPES
 # CONFIG-RECIPES
 # SIMULATION-DATA-DEPENDS
@@ -24,6 +25,7 @@
 # COLLECTION-DF-DEPENDS
 # COLLECTION-DF-RECIPE
 # POWER-PLOT-RECIPE
+# EXAMPLE-RECIPES
 # VIGNETTE-DEPENDS-RECIPE
 # MISC-RECIPE
 ################################################################################
@@ -255,6 +257,15 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTGARCHHETEROPREFIX)*.pdf)
 
 ################################################################################
+# EXAMPLE-VARS
+################################################################################
+
+# Data example definition files
+EXAMPLEPREFIX=RealData
+EXAMPLEGERMANM1=data/$(EXAMPLEPREFIX)M1Germany.Rda
+ALLEXAMPLES=$(EXAMPLEGERMANM1)
+
+################################################################################
 # VIGNETTE-VARS
 ################################################################################
 
@@ -267,7 +278,8 @@ VIGNETTES=doc/CollectedPlots.pdf
 
 # Recipes
 .PHONY : all
-all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) $(VIGNETTES)
+all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) \
+      $(ALLEXAMPLES) $(VIGNETTES)
 
 .PRECIOUS : $(ALLSIMS)
 
@@ -640,6 +652,13 @@ $(POWERPLOTGARCHHETEROPREFIX)%.pdf : $(SIMSGARCHHETERODF) \
 	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTGARCHHETEROPREFIX) \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
+################################################################################
+# EXAMPLE-RECIPES
+################################################################################
+
+data/$(EXAMPLEPREFIX)%.Rda : exec/$(EXAMPLEPREFIX)%.R
+	$(RSCRIPT) $< $@
 
 ################################################################################
 # VIGNETTE-DEPENDS-RECIPE
