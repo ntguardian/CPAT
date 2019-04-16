@@ -265,6 +265,10 @@ EXAMPLEPREFIX=RealData
 EXAMPLEGERMANM1=data/$(EXAMPLEPREFIX)M1Germany.Rda
 ALLEXAMPLES=$(EXAMPLEGERMANM1)
 
+# Processed data examples
+EXAMPLEGERMANM1PVALS=data/$(EXAMPLEPREFIX)M1GermanypVals.Rda
+ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS)
+
 ################################################################################
 # VIGNETTE-VARS
 ################################################################################
@@ -279,7 +283,7 @@ VIGNETTES=doc/CollectedPlots.pdf
 # Recipes
 .PHONY : all
 all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) \
-      $(ALLEXAMPLES) $(VIGNETTES)
+      $(ALLEXAMPLESPVALS) $(VIGNETTES)
 
 .PRECIOUS : $(ALLSIMS)
 
@@ -659,6 +663,12 @@ $(POWERPLOTGARCHHETEROPREFIX)%.pdf : $(SIMSGARCHHETERODF) \
 
 data/$(EXAMPLEPREFIX)%.Rda : exec/$(EXAMPLEPREFIX)%.R
 	$(RSCRIPT) $< $@
+
+$(EXAMPLEGERMANM1PVALS) : $(EXAMPLEGERMANM1) \
+                          data/$(SIMSTATPREFIX)CUSUM.Rda \
+                          exec/ExpandingWindowpValComputer.R
+	$(RSCRIPT) $(lastword $^) --output $@ \
+		 --statistics $(filter-out $< $(lastword $^), $^) --firstright 100 $<
 
 ################################################################################
 # VIGNETTE-DEPENDS-RECIPE

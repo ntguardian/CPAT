@@ -27,7 +27,7 @@ is.formula <- function(x) {inherits(x, "formula")}
 ################################################################################
 
 main <- function(input, statistics, output = "out.Rda", left = 1,
-                 firstright = NULL, lastright = NULL, cores = NA) {
+                 firstright = NA, lastright = NA, cores = NA) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
@@ -144,10 +144,10 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
 
   # Initialization
   n <- nrow(data_set)
-  if (is.null(lastright)) {
+  if (is.na(lastright)) {
     lastright <- n
   }
-  if (is.null(firstright)) {
+  if (is.na(firstright)) {
     firstright <- min(n, left + length(get.vars(model)) + 1)
   }
   stop_with_message(firstright >= left & lastright >= left &
@@ -199,10 +199,10 @@ if (sys.nframe() == 0) {
                     help = "Files containing tests to apply to data")
   p <- add_argument(p, "--left", type = "integer", default = 1,
                     help = "The left anchor of all windows of data")
-  p <- add_argument(p, "--firstright", type = "integer", default = NULL,
+  p <- add_argument(p, "--firstright", type = "integer", default = NA,
                     help = "The first right anchor of windows; by default," %s%
                            "the input to left plus the dimension of the model")
-  p <- add_argument(p, "--lastright", type = "integer", default = NULL,
+  p <- add_argument(p, "--lastright", type = "integer", default = NA,
                     help = "The last right anchor of windows; by default," %s%
                            "the last point in the data set")
   p <- add_argument(p, "--cores", type = "integer", default = NA,
