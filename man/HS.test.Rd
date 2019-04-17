@@ -58,7 +58,7 @@ y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 HS.test(df, formula = y ~ x)
 z <- ts(rnorm(100))
-HS.test(z ~ L(z), x = data.frame(z))
+HS.test(z ~ L(z), x = zoo(z))
 }
 \references{
 \insertAllCited{}

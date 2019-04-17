@@ -70,7 +70,7 @@ y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 CUSUM.test(df, formula = y ~ x, use_kernel_var = TRUE)
 z <- ts(rnorm(100))
-CUSUM.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
+CUSUM.test(z ~ L(z), x = zoo(z), use_kernel_var = TRUE, kernel = "qs")
 }
 \references{
 \insertAllCited{}

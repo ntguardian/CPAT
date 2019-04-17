@@ -80,7 +80,7 @@ y <- 1 + 2 * x + rnorm(1000)
 df <- data.frame(x, y)
 DE.test(df, formula = y ~ x, use_kernel_var = TRUE)
 z <- ts(rnorm(100))
-DE.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
+DE.test(z ~ L(z), x = zoo(z), use_kernel_var = TRUE, kernel = "qs")
 }
 \references{
 \insertAllCited{}

@@ -665,6 +665,7 @@ data/$(EXAMPLEPREFIX)%.Rda : exec/$(EXAMPLEPREFIX)%.R
 	$(RSCRIPT) $< $@
 
 $(EXAMPLEGERMANM1PVALS) : $(EXAMPLEGERMANM1) \
+                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                           data/$(SIMSTATPREFIX)CUSUM.Rda \
                           exec/ExpandingWindowpValComputer.R
 	$(RSCRIPT) $(lastword $^) --output $@ \

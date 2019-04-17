@@ -170,10 +170,12 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
     stat <- stat_functions[[s]]
     pval <- partial(pval_functions[[s]], d = d)
 
-    foreach(t = firstright:lastright, .combine = c) %dorng% {
+    res <- foreach(t = firstright:lastright, .combine = c) %dorng% {
       stat_val <- stat(formula = model, data = data_set[left:t, ])
       pval(stat_val)
     }
+    attributes(res) <- NULL
+    res
   })
 
   names(stat_pvals) <- names(stat_functions)

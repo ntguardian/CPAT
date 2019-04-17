@@ -63,7 +63,7 @@ df <- data.frame(x, y)
 HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = TRUE, kernel = "qs",
         bandwidth = "and")
 z <- ts(rnorm(100))
-HR.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
+HR.test(z ~ L(z), x = zoo(z), use_kernel_var = TRUE, kernel = "qs")
 }
 \references{
 \insertAllCited{}

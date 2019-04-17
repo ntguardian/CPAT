@@ -1433,21 +1433,20 @@ stat_hs_reg <- function(formula, data, m = sqrt, estimate = FALSE,
 #' df <- data.frame(x, y)
 #' CUSUM.test(df, formula = y ~ x, use_kernel_var = TRUE)
 #' z <- ts(rnorm(100))
-#' CUSUM.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
+#' CUSUM.test(z ~ L(z), x = zoo(z), use_kernel_var = TRUE, kernel = "qs")
 #' @export
 CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
                        stat_plot = FALSE,
                        kernel = "ba", bandwidth = "and") {
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
-  if (is.zoo(x) & !is.null(formula)) {
-    # TODO: curtis: DON'T DO THIS! -- Tue 16 Apr 2019 12:48:03 AM MDT
-    x <- as.data.frame(x)
-  }
   
-  if (is.numeric(x)) {
+  if (is.numeric(x) & !(is.zoo(x) & is.formula(formula))) {
     testobj$method <- "CUSUM Test for Change in Mean"
-  } else if (is.data.frame(x)) {
+  } else if (is.data.frame(x) | (is.zoo(x) & is.formula(formula))) {
+    if (is.zoo(x) & length(dim(x)) != 2) {
+      x <- zoo(matrix(x), time(x))
+    }
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "CUSUM Test for Structural Change"
     fit <- wrapped_dynlm(formula = formula, data = x)
@@ -1517,7 +1516,7 @@ CUSUM.test <- function(x, formula = NULL, use_kernel_var = FALSE,
 #' df <- data.frame(x, y)
 #' DE.test(df, formula = y ~ x, use_kernel_var = TRUE)
 #' z <- ts(rnorm(100))
-#' DE.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
+#' DE.test(z ~ L(z), x = zoo(z), use_kernel_var = TRUE, kernel = "qs")
 #' @export
 DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
@@ -1526,14 +1525,13 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
-
-  if (is.zoo(x) & !is.null(formula)) {
-    x <- as.data.frame(x)
-  }
   
-  if (is.numeric(x)) {
+  if (is.numeric(x) & !(is.zoo(x) & is.formula(formula))) {
     testobj$method <- "Darling-Erd\u00F6s Test for Change in Mean"
-  } else if (is.data.frame(x)) {
+  } else if (is.data.frame(x) | (is.zoo(x) & is.formula(formula))) {
+    if (is.zoo(x) & length(dim(x)) != 2) {
+      x <- zoo(matrix(x), time(x))
+    }
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Darling-Erd\u00F6s Test for Structural Change"
     fit <- wrapped_dynlm(formula = formula, data = x)
@@ -1603,18 +1601,14 @@ DE.test <- function(x, formula = NULL, a = log, b = log, use_kernel_var = FALSE,
 #' HR.test(df, formula = y ~ x, kn = sqrt, use_kernel_var = TRUE, kernel = "qs",
 #'         bandwidth = "and")
 #' z <- ts(rnorm(100))
-#' HR.test(z ~ L(z), x = data.frame(z), use_kernel_var = TRUE, kernel = "qs")
+#' HR.test(z ~ L(z), x = zoo(z), use_kernel_var = TRUE, kernel = "qs")
 #' @export
 HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                     stat_plot = FALSE, kernel = "ba", bandwidth = "and") {
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
-
-  if (is.zoo(x) & !is.null(formula)) {
-    x <- as.data.frame(x)
-  }
   
-  if (is.numeric(x)) {
+  if (is.numeric(x) & !(is.zoo(x) & is.formula(formula))) {
     testobj$method <- "Horv\u00E1th-Rice Test for Change in Mean"
     res <- stat_Zn(x,
                    kn = kn,
@@ -1625,7 +1619,10 @@ HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                    get_all_vals = stat_plot)
     d <- 1
     kn_val <- kn(length(x))
-  } else if (is.data.frame(x)) {
+  } else if (is.data.frame(x) | (is.zoo(x) & is.formula(formula))) {
+    if (is.zoo(x) & length(dim(x)) != 2) {
+      x <- zoo(matrix(x), time(x))
+    }
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Horv\u00E1th-Rice-Miller Test for Structural Change"
     res <- stat_Zn_reg(formula = formula,
@@ -1637,7 +1634,7 @@ HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
                        bandwidth = bandwidth,
                        get_all_vals = stat_plot,
                        fast = FALSE)
-    fit <- wrapped_dynlm(formula = formula, data = x[1,])
+    fit <- wrapped_dynlm(formula = formula, data = x)
     d <- ncol(model.matrix(fit))
     kn_val <- kn(nrow(x))
   } else {
@@ -1707,18 +1704,14 @@ HR.test <- function(x, formula = NULL, kn = log, use_kernel_var = FALSE,
 #' df <- data.frame(x, y)
 #' HS.test(df, formula = y ~ x)
 #' z <- ts(rnorm(100))
-#' HS.test(z ~ L(z), x = data.frame(z))
+#' HS.test(z ~ L(z), x = zoo(z))
 #' @export
 HS.test <- function(x, formula = NULL, m = sqrt, corr = TRUE,
                     stat_plot = FALSE) {
   testobj <- list()
   testobj$data.name <- deparse(substitute(x))
-
-  if (is.zoo(x) & !is.null(formula)) {
-    x <- as.data.frame(x)
-  }
   
-  if (is.numeric(x)) {
+  if (is.numeric(x) & !(is.zoo(x) & is.formula(formula))) {
     testobj$method <- "Hidalgo-Seo Test for Change in Mean"
     params <- c(corr)
     names(params) <- c("Correlated Residuals")
@@ -1726,7 +1719,10 @@ HS.test <- function(x, formula = NULL, m = sqrt, corr = TRUE,
 
     res <- stat_hs(x, m = m, estimate = TRUE, corr = corr,
                    get_all_vals = stat_plot)
-  } else if (is.data.frame(x)) {
+  } else if (is.data.frame(x) | (is.zoo(x) & is.formula(formula))) {
+    if (is.zoo(x) & length(dim(x)) != 2) {
+      x <- zoo(matrix(x), time(x))
+    }
     if (!is.formula(formula)) {stop("Formula needed for data.frame input")}
     testobj$method <- "Hidalgo-Seo Test for Structural Change"
 
