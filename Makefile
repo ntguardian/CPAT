@@ -832,15 +832,17 @@ clean :
 # Make empty plots to be recognized as needing updated
 .PHONY : init
 init :
-	make simconfig
-	echo "I'm empty for now" > $(POWERPLOTNORMALPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTPROPNORMALPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTNORMALHETEROPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTPROPNORMALHETEROPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTARMAPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTARMAHETEROPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTGARCHPREFIX)n50.pdf
-	echo "I'm empty for now" > $(POWERPLOTGARCHHETEROPREFIX)n50.pdf
+	touch $(POWERPLOTNORMALPREFIX)n50.pdf
+	touch $(POWERPLOTPROPNORMALPREFIX)n50.pdf
+	touch $(POWERPLOTNORMALHETEROPREFIX)n50.pdf
+	touch $(POWERPLOTPROPNORMALHETEROPREFIX)n50.pdf
+	touch $(POWERPLOTARMAPREFIX)n50.pdf
+	touch $(POWERPLOTARMAHETEROPREFIX)n50.pdf
+	touch $(POWERPLOTAR1PREFIX)n50.pdf
+	touch $(POWERPLOTAR1HETEROPREFIX)n50.pdf
+	touch $(POWERPLOTGARCHPREFIX)n50.pdf
+	touch $(POWERPLOTGARCHHETEROPREFIX)n50.pdf
+	make simconfig -b
 
 # Get package dependencies
 .PHONY : dependencies
