@@ -41,6 +41,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
   suppressPackageStartupMessages(library(doParallel))
   suppressPackageStartupMessages(library(doRNG))
   suppressPackageStartupMessages(library(purrr))
+  suppressPackageStartupMessages(library(CPAT))
 
   if (is.null(cores)) {
     cores = max(1, detectCores() - 1)
