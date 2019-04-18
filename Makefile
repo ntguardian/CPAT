@@ -842,7 +842,7 @@ init :
 	touch $(POWERPLOTAR1HETEROPREFIX)n50.pdf
 	touch $(POWERPLOTGARCHPREFIX)n50.pdf
 	touch $(POWERPLOTGARCHHETEROPREFIX)n50.pdf
-	make simconfig -b
+	make simconfig -B
 
 # Get package dependencies
 .PHONY : dependencies
