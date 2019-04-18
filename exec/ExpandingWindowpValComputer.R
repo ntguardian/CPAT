@@ -70,10 +70,10 @@ main <- function(input, statistics, output = "out.Rda", left = 1,
 
   events <- input_env$events
   stop_with_message(is.data.frame(events) &
-                    all(c("idx", "event") %in% names(events)) &
-                    (is.character(events[["event"]]) | nrow(events) == 0),
+                    all(c("Time", "Event") %in% names(events)) &
+                    (is.character(events[["Event"]]) | nrow(events) == 0),
                     "Invalid events from" %s% input %s0% "; must be a" %s%
-                    "data frame with columns named idx and event and event" %s%
+                    "data frame with columns named Time and Event and Event" %s%
                     "is character data")
 
   is_ts <- input_env$is_ts

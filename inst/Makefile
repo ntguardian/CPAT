@@ -265,6 +265,14 @@ EXAMPLEPREFIX=RealData
 EXAMPLEGERMANM1=data/$(EXAMPLEPREFIX)M1Germany.Rda
 ALLEXAMPLES=$(EXAMPLEGERMANM1)
 
+# Processed data examples
+EXAMPLEGERMANM1PVALS=data/$(EXAMPLEPREFIX)M1GermanypVals.Rda
+ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS)
+
+# Data example plots
+EXAMPLEGERMANM1PLOT=vignettes/$(EXAMPLEPREFIX)M1Germany
+ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT)
+
 ################################################################################
 # VIGNETTE-VARS
 ################################################################################
@@ -279,7 +287,7 @@ VIGNETTES=doc/CollectedPlots.pdf
 # Recipes
 .PHONY : all
 all : inst/Makefile inst/package $(POWERPLOTS) $(ALLSIMSDATAFRAME) \
-      $(ALLEXAMPLES) $(VIGNETTES)
+      $(ALLEXAMPLEPLOTS:=.pdf) $(VIGNETTES)
 
 .PRECIOUS : $(ALLSIMS)
 
@@ -659,6 +667,18 @@ $(POWERPLOTGARCHHETEROPREFIX)%.pdf : $(SIMSGARCHHETERODF) \
 
 data/$(EXAMPLEPREFIX)%.Rda : exec/$(EXAMPLEPREFIX)%.R
 	$(RSCRIPT) $< $@
+
+$(EXAMPLEGERMANM1PVALS) : $(EXAMPLEGERMANM1) \
+                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                          data/$(SIMSTATPREFIX)CUSUM.Rda \
+                          exec/ExpandingWindowpValComputer.R
+	$(RSCRIPT) $(lastword $^) --output $@ \
+		 --statistics $(filter-out $< $(lastword $^), $^) --firstright 100 $<
+
+$(ALLEXAMPLEPLOTS:=.pdf) : exec/TimeSeriespValPlotter.R
+
+$(EXAMPLEGERMANM1PLOT).pdf : $(EXAMPLEGERMANM1PVALS)
+	$(RSCRIPT) $(lastword $^) $< -o $(basename $@) -d -t
 
 ################################################################################
 # VIGNETTE-DEPENDS-RECIPE

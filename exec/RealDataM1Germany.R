@@ -27,7 +27,8 @@ main <- function(output = "RealDataM1Germany.Rda") {
   data("M1Germany")
 
   data_set <- M1Germany
-  events <- data.frame("idx" = 122, "event" = "Monetary union",
+  events <- data.frame("Time" = as.yearqtr("1990 Q2"),
+                       "Event" = "Monetary union",
                        stringsAsFactors = FALSE)
   model <- d(logm1) ~ d(L(loggnp, 2)) + d(interest) + d(L(interest)) +
                       d(logprice) + L(logm1) + L(loggnp) + L(interest) +

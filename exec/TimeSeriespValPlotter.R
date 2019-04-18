@@ -26,30 +26,32 @@ stop_with_message <- CPAT:::stop_with_message
 ################################################################################
 
 main <- function(input, output = "out", variable = "", level = 0.05,
-                 levellinetype = "dotted", width = 6, height = 4) {
+                 levellinetype = "dotted", width = 6, height = 4, dates = FALSE,
+                 trans = FALSE) {
   # This function will be executed when the script is called from the command
   # line
 
   suppressPackageStartupMessages(library(ggplot2))
   suppressPackageStartupMessages(library(tikzDevice))
   suppressPackageStartupMessages(library(tools))
+  suppressPackageStartupMessages(library(reshape2))
+  suppressPackageStartupMessages(library(zoo))
 
   input_env <- new.env()
   load(input, envir = input_env)
 
   # Assumption checking
   input_env_expected_objects <- c("events", "plot_desc", "stat_pvals")
-  ckeck_envir_has_objects(input_env_expected_objects, envir = input_env,
+  check_envir_has_objects(input_env_expected_objects, envir = input_env,
                           blame_string = input)
   
   events <- input_env$events
   stop_with_message(is.data.frame(events) &
-                    all(c("idx", "event") %in% names(events)) & 
-                    class(events$idx) == numeric &
-                    class(events$event) == "character",
+                    all(c("Time", "Event") %in% names(events)) & 
+                    is.character(events$Event),
                     "Invalid events from" %s% input %s0% "; must be data" %s%
-                    "frame with character column 'event' and numeric column" %s%
-                    "idx")
+                    "frame with character column 'Event' and numeric column" %s%
+                    "Time")
 
   plot_desc <- input_env$plot_desc
   stop_with_message(is.character(plot_desc) & all(!is.null(names(plot_desc))),
@@ -67,11 +69,47 @@ main <- function(input, output = "out", variable = "", level = 0.05,
     variable = setdiff(names(stat_pvals), names(plot_desc))[[1]]
   }
   names(stat_pvals)[which(names(stat_pvals) == variable)] <- "Time"
-  stop_with_message(is.numeric(stat_pvals$Time), "The variable" %s% variable %s%
-                    "is interpreted as \"time\" and needs to be numeric")
 
   # Create data frame for plot
-  # TODO: curtis: FINISH ME -- Wed 17 Apr 2019 05:02:06 PM MDT
+  stat_pvals_long <- melt(stat_pvals, id.vars = "Time", variable.name = "Stat",
+                          value.name = "pval")
+  if (trans) {
+    stat_pvals_long$pval <- -log10(stat_pvals_long$pval)
+    level <- -log10(level)
+    leveltex <- "$-\\log_{10}(\\alpha)$"
+  } else {
+    leveltex <- "$\\alpha$"
+  }
+
+  if (dates) {
+    stat_pvals_long$Time <- as.POSIXct(stat_pvals_long$Time)
+    events$Time <- as.POSIXct(events$Time)
+  }
+
+  q <- ggplot(stat_pvals_long, aes(x = Time, y = pval, group = Stat,
+                                   linetype = Stat)) +
+       geom_line(size = 0.85) +
+       scale_linetype_manual(values = plot_desc) +
+       xlab("") + ylab("") +
+       geom_hline(yintercept = level, linetype = levellinetype) +
+       geom_vline(xintercept = events$Time, linetype = "solid") +
+       geom_text(label = events$Event, x = events$Time,
+                 y = median(c(pretty(stat_pvals_long$pval), level)),
+                 angle = 90, vjust = -0.5, size = rel(4)) +
+       scale_y_continuous(breaks = c(pretty(stat_pvals_long$pval), level),
+                          labels = c(pretty(stat_pvals_long$pval), leveltex)) +
+       theme_bw() +
+       theme(legend.position = "none")
+
+  filename_tex <- output %s0% ".tex"
+  filename_pdf <- output %s0% ".pdf"
+  tikz(filename_tex, width = width, height = height, standAlone = TRUE)
+  print(q)
+  dev.off()
+  cwd <- getwd()
+  setwd(dirname(filename_tex))
+  texi2pdf(basename(filename_tex), clean = TRUE)
+  setwd(cwd)
 }
 
 ################################################################################
@@ -100,6 +138,10 @@ if (sys.nframe() == 0) {
                     help = "Width of each plot")
   p <- add_argument(p, "--height", type = "double", default = 4,
                     help = "Height of each plot")
+  p <- add_argument(p, "--dates", flag = TRUE,
+                    help = "Interpret variable as dates")
+  p <- add_argument(p, "--trans", flag = TRUE, help = "Apply log transform" %s%
+                    "to p-values")
 
   cl_args <- parse_args(p)
   cl_args <- cl_args[!(names(cl_args) %in% c("help", "opts"))]
