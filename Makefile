@@ -257,7 +257,7 @@ SIMSGARCHHETERODF=data/SimsGARCHHetero.Rda
 # All DGP power collections in one location
 ALLDISTDF=$(SIMSNORMALDF) $(SIMSNORMALHETERODF) $(SIMSPROPNORMALDF) \
           $(SIMSPROPNORMALHETERODF) $(SIMSARMADF) $(SIMSARMAHETERODF) \
-          $(SIMSGARCHDF) $(SIMSGARCHHETERODF)
+          $(SIMSAR1DF) $(SIMSAR1HETERODF) $(SIMSGARCHDF) $(SIMSGARCHHETERODF)
 
 ################################################################################
 # POWER-PLOT-VARS
@@ -842,7 +842,7 @@ init :
 	touch $(POWERPLOTAR1HETEROPREFIX)n50.pdf
 	touch $(POWERPLOTGARCHPREFIX)n50.pdf
 	touch $(POWERPLOTGARCHHETEROPREFIX)n50.pdf
-	make simconfig -B
+	make simconfig
 
 # Get package dependencies
 .PHONY : dependencies
