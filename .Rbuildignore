@@ -15,5 +15,5 @@ XOUT.*$
 ^data-raw/
 ^svgs/
 ^MakeOutput.txt$
-^vignettes/power_plot_.*.tex$
+^vignettes/.*.tex$
 ^data/.*\.Rda
