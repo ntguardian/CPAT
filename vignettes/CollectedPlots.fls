@@ -213,6 +213,9 @@ INPUT power_plot_norm_n50.pdf
 INPUT ./power_plot_norm_n50.pdf
 OUTPUT CollectedPlots.pdf
 INPUT ./power_plot_norm_n50.pdf
+INPUT power_plot_AR1_n50.pdf
+INPUT ./power_plot_AR1_n50.pdf
+INPUT ./power_plot_AR1_n50.pdf
 INPUT power_plot_ARMA_n50.pdf
 INPUT ./power_plot_ARMA_n50.pdf
 INPUT ./power_plot_ARMA_n50.pdf
@@ -222,6 +225,9 @@ INPUT ./power_plot_GARCH_n50.pdf
 INPUT power_plot_norm_n250.pdf
 INPUT ./power_plot_norm_n250.pdf
 INPUT ./power_plot_norm_n250.pdf
+INPUT power_plot_AR1_n250.pdf
+INPUT ./power_plot_AR1_n250.pdf
+INPUT ./power_plot_AR1_n250.pdf
 INPUT power_plot_ARMA_n250.pdf
 INPUT ./power_plot_ARMA_n250.pdf
 INPUT ./power_plot_ARMA_n250.pdf
@@ -231,6 +237,9 @@ INPUT ./power_plot_GARCH_n250.pdf
 INPUT power_plot_norm_n1000.pdf
 INPUT ./power_plot_norm_n1000.pdf
 INPUT ./power_plot_norm_n1000.pdf
+INPUT power_plot_AR1_n1000.pdf
+INPUT ./power_plot_AR1_n1000.pdf
+INPUT ./power_plot_AR1_n1000.pdf
 INPUT power_plot_ARMA_n1000.pdf
 INPUT ./power_plot_ARMA_n1000.pdf
 INPUT ./power_plot_ARMA_n1000.pdf
@@ -240,6 +249,9 @@ INPUT ./power_plot_GARCH_n1000.pdf
 INPUT power_plot_norm_hetero_n50.pdf
 INPUT ./power_plot_norm_hetero_n50.pdf
 INPUT ./power_plot_norm_hetero_n50.pdf
+INPUT power_plot_AR1_hetero_n50.pdf
+INPUT ./power_plot_AR1_hetero_n50.pdf
+INPUT ./power_plot_AR1_hetero_n50.pdf
 INPUT power_plot_ARMA_hetero_n50.pdf
 INPUT ./power_plot_ARMA_hetero_n50.pdf
 INPUT ./power_plot_ARMA_hetero_n50.pdf
@@ -249,6 +261,9 @@ INPUT ./power_plot_GARCH_hetero_n50.pdf
 INPUT power_plot_norm_hetero_n250.pdf
 INPUT ./power_plot_norm_hetero_n250.pdf
 INPUT ./power_plot_norm_hetero_n250.pdf
+INPUT power_plot_AR1_hetero_n250.pdf
+INPUT ./power_plot_AR1_hetero_n250.pdf
+INPUT ./power_plot_AR1_hetero_n250.pdf
 INPUT power_plot_ARMA_hetero_n250.pdf
 INPUT ./power_plot_ARMA_hetero_n250.pdf
 INPUT ./power_plot_ARMA_hetero_n250.pdf
@@ -258,6 +273,9 @@ INPUT ./power_plot_GARCH_hetero_n250.pdf
 INPUT power_plot_norm_hetero_n1000.pdf
 INPUT ./power_plot_norm_hetero_n1000.pdf
 INPUT ./power_plot_norm_hetero_n1000.pdf
+INPUT power_plot_AR1_hetero_n1000.pdf
+INPUT ./power_plot_AR1_hetero_n1000.pdf
+INPUT ./power_plot_AR1_hetero_n1000.pdf
 INPUT power_plot_ARMA_hetero_n1000.pdf
 INPUT ./power_plot_ARMA_hetero_n1000.pdf
 INPUT ./power_plot_ARMA_hetero_n1000.pdf
@@ -273,9 +291,9 @@ INPUT ./power_plot_prop_norm_n250.pdf
 INPUT power_plot_prop_norm_n1000.pdf
 INPUT ./power_plot_prop_norm_n1000.pdf
 INPUT ./power_plot_prop_norm_n1000.pdf
-INPUT CollectedPlots.bbl
-INPUT CollectedPlots.bbl
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+INPUT CollectedPlots.bbl
+INPUT CollectedPlots.bbl
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT CollectedPlots.aux

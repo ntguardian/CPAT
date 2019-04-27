@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{Preliminary Power Plots}
+%\VignetteIndexEntry{Power Plots}
 %\VignetteEngine{R.rsp::tex}
 %\VignetteKeyword{power}
 
@@ -15,7 +15,7 @@
     \usepackage{graphicx}
     \usepackage{subcaption}
 
-    \title{Preliminary Power Plots}
+    \title{Power Plots}
     \date{\today}
     \author{Curtis Miller}
 
@@ -62,25 +62,26 @@ there is a change at all. If it does, the new model the data follows is $y_t =
 second regime has the change occur near $\frac{T}{10}$.
 
 In this document, $\epsilon_t$ is either homoskedastic or heteroskedastic. If
-$\epsilon_t$ is homoskedastic, it follows one of three DGPs: independent and
-identically distributed $N(0, 1)$ random variables; an ARMA(2, 2) process with
-$\phi_1 = 0.4$, $\phi_2 = -0.03$, $\theta_1 = 0.5$, $\theta_2 = -0.06$, and the
-variance of the noise parameter is chosen so that the long-run variance is one;
-and a GARCH(1, 1) process with $\omega = 0.2$, $\alpha = 0.3$, and $\beta = 0.5$
-(again the long-run variance is one). The proportional change point is
-investigated only when the residuals are \textit{iid} Normal.
+$\epsilon_t$ is homoskedastic, it follows one of four DGPs: independent and
+identically distributed $N(0, 1)$ random variables; an AR(1) process with
+autocorrelation coefficient $\phi = \sqrt{0.5} \approx 0.71$; an ARMA(2, 2)
+process with $\phi_1 = 0.4$, $\phi_2 = -0.03$, $\theta_1 = 0.5$, $\theta_2 = 
+0.06$, and the variance of the noise parameter is chosen so that the long-run
+variance is one; and a GARCH(1, 1) process with $\omega = 0.2$, $\alpha = 0.2$,
+and $\beta = 0.5$ (again the long-run variance is one). The proportional change
+point is investigated only when the residuals are \textit{i.i.d.} Normal.
 
-If $\epsilon_t$ is heteroskedastic, then it follows one of the three DGPs
+If $\epsilon_t$ is heteroskedastic, then it follows one of the four DGPs
 followed by one of the homoskedastic versions for the first half of the sample.
 In the second half of the sample, the model switches. In all cases, the LRV
-scales from 1 to 10. If the data was \textit{i.i.d.} Normal, that's all that
-changes. In the ARMA(2, 2) and GARCH(1, 1) cases, though, the structure of the
-dependency on past values changes as well, in addition to the LRV change. For
-the ARMA(2, 2) case, the post-change process has parameters $\phi_1 = 0.4$,
-$\phi_2 = 0.2$, $\theta_1 = -0.1$, $\theta_2 = -0.42$. For the GARCH(1, 1)
-case, the post-change process has parameters $\omega = 1$, $\alpha = 0.7$,
-$\beta = 0.2$. (The proportional change point was not investigated in the
-heteroskedastic case.)
+scales from 1 to 10. If the data was \textit{i.i.d.} Normal or AR(1), that's
+all that changes. In the ARMA(2, 2) and GARCH(1, 1) cases, though, the
+structure of the dependency on past values changes as well, in addition to
+the LRV change. For the ARMA(2, 2) case, the post-change process has
+parameters $\phi_1 = 0.4$, $\phi_2 = 0.2$, $\theta_1 = -0.1$, $\theta_2 =
+-0.42$. For the GARCH(1, 1) case, the post-change process has parameters
+$\omega = 1$, $\alpha = 0.7$, $\beta = 0.2$. (The proportional change point was
+not investigated in the heteroskedastic case.)
 
 For every combination of sample size, test statistic, $\delta$, and
 data-generating process for $\epsilon_t$, 20,000 independent test statistics
@@ -92,77 +93,96 @@ sizes considered are $T \in \{50, 250, 1000\}$.
 
 \begin{figure}
     \centering
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_norm_n50.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_AR1_n50.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_ARMA_n50.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_n50.pdf}
     \end{subfigure}
 
     \bigskip
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_norm_n250.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_AR1_n250.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_ARMA_n250.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_n250.pdf}
     \end{subfigure}
 
     \bigskip
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_norm_n1000.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_AR1_n1000.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_ARMA_n1000.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_n1000.pdf}
     \end{subfigure}
     \caption{Power plots for when the change occurs near  $T^{3/5}$;
              rows correspond to the sample sizes 50, 250, and 1000
              respectively, the first column is for \textit{iid} Normal
-             residuals, the second column ARMA(2, 2) residuals, and the third
-             column GARCH(1, 1) residuals. The $x$-axis tracks values of
-         $\delta$ and the $y$-axis tracks observed power.}
+             residuals, the second column AR(1) residuals, the third column
+             ARMA(2, 2) residuals, and the fourth column GARCH(1, 1) residuals.
+             The $x$-axis tracks values of $\delta$ and the $y$-axis tracks
+            observed power.}
          \label{fig:earlychangepower}
 \end{figure}
 
 \begin{figure}
     \centering
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_norm_hetero_n50.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_AR1_hetero_n50.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_ARMA_hetero_n50.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_hetero_n50.pdf}
     \end{subfigure}
 
     \bigskip
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_norm_hetero_n250.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_AR1_hetero_n250.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_ARMA_hetero_n250.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_hetero_n250.pdf}
     \end{subfigure}
 
     \bigskip
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_norm_hetero_n1000.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_AR1_hetero_n1000.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_ARMA_hetero_n1000.pdf}
     \end{subfigure}
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_GARCH_hetero_n1000.pdf}
     \end{subfigure}
     \caption{Power plots for change with heteroskedasticity in residuals. The
@@ -172,17 +192,17 @@ sizes considered are $T \in \{50, 250, 1000\}$.
 
 \begin{figure}
     \centering
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_prop_norm_n50.pdf}
     \end{subfigure}
 
     \bigskip
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_prop_norm_n250.pdf}
     \end{subfigure}
 
     \bigskip
-    \begin{subfigure}{.3\textwidth}
+    \begin{subfigure}{.2\textwidth}
         \includegraphics[width=\textwidth]{power_plot_prop_norm_n1000.pdf}
     \end{subfigure}
     \caption{Power plots for when the change occurs near $\frac{T}{10}$; see
@@ -196,11 +216,11 @@ from considerable size inflation even for large sample sizes. The univariate
 statistics (the CUSUM statistic and the univariate R\'enyi-type statistic) do
 not demonstrate good power properties; sometimes they experience size
 inflation, they have bad power for large sample sizes, and in the case of the
-ARMA(2, 2) residuals they even have power curves with the wrong shape. The
+ARMA-type residuals models they even have power curves with the wrong shape. The
 CUSUM statistic is the worst performing while the univariate R\'enyi-type
 statistic sometimes has decent power for large sample sizes. On balance,
 though, the regression-based R\'enyi-type often has excellent power without
-suffering from size inflation; in fact, for the ARMA(2, 2) residuals, the
+suffering from size inflation; in fact, for the ARMA-type residuals, the
 statistic (using kernel methods for LRV estimation) has a smaller size than
 specified.  
 
