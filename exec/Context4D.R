@@ -80,7 +80,7 @@ if (sys.nframe() == 0) {
                             "change in regression models"),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "ContextMain.Rda", help = "Output .Rda file")
+                      default = "Context4D.Rda", help = "Output .Rda file")
         )
       ))
 
