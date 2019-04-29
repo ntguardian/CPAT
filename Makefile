@@ -85,6 +85,16 @@ SIMSPROPNORMALHETERORENYIRESID=data-sim/PropNormal/SimsPropNormalHeteroRenyiResi
 SIMSPROPNORMALHETERORENYINOKERN=data-sim/PropNormal/SimsPropNormalHeteroRenyiRegNoKern.Rda
 SIMSPROPNORMALHETEROCUSUM=data-sim/PropNormal/SimsPropNormalHeteroCUSUM.Rda
 SIMSPROPNORMALHETEROHS=data-sim/PropNormal/SimsPropNormalHeteroHS.Rda
+SIMS4DNORMALRENYI=data-sim/4DNormal/Sims4DNormalRenyiReg.Rda
+SIMS4DNORMALRENYIRESID=data-sim/4DNormal/Sims4DNormalRenyiResid.Rda
+SIMS4DNORMALRENYINOKERN=data-sim/4DNormal/Sims4DNormalRenyiRegNoKern.Rda
+SIMS4DNORMALCUSUM=data-sim/4DNormal/Sims4DNormalCUSUM.Rda
+SIMS4DNORMALHS=data-sim/4DNormal/Sims4DNormalHS.Rda
+SIMS4DNORMALHETERORENYI=data-sim/4DNormal/Sims4DNormalHeteroRenyiReg.Rda
+SIMS4DNORMALHETERORENYIRESID=data-sim/4DNormal/Sims4DNormalHeteroRenyiResid.Rda
+SIMS4DNORMALHETERORENYINOKERN=data-sim/4DNormal/Sims4DNormalHeteroRenyiRegNoKern.Rda
+SIMS4DNORMALHETEROCUSUM=data-sim/4DNormal/Sims4DNormalHeteroCUSUM.Rda
+SIMS4DNORMALHETEROHS=data-sim/4DNormal/Sims4DNormalHeteroHS.Rda
 # AR1
 SIMSAR1RENYI=data-sim/AR1/SimsAR1RenyiReg.Rda
 SIMSAR1RENYIRESID=data-sim/AR1/SimsAR1RenyiResid.Rda
@@ -503,7 +513,7 @@ $(ALLSIMS) :
 	make package
 	$(RSCRIPT) exec/PowerSimRegression.R -C $(word 1, $^) -S $(word 2, $^) \
 		 -T $(word 3, $^) -o $@ -N $(POWERREPLICATIONS) -v \
-		 -s $(SIMSEED)$(shell echo $@ $^ | md5sum | grep -Eo "[[:digit:]]{3,6}" | head -n1)
+		 -s $(SIMSEED)$(shell echo "data/$(notdir $@) $^" | md5sum | grep -Eo "[[:digit:]]{3,6}" | head -n1)
 
 ################################################################################
 # POWER-DF-DEPENDS
