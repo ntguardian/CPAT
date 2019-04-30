@@ -230,6 +230,49 @@ massive size inflation. All statistics struggle at smaller sample sizes, but the
 R\'enyi-type statistic shines for larger sample sizes, being both appropriately
 sized and having good power, sometimes even beating the ill-sized Hidalgo-Seo
 statistic.
+
+Now consider a three-variable regression model $y_t = \beta_0 + \beta_1 x_{1t} +
+\beta_2 x_{2t} + \beta_3 x_{3t} + \epsilon_t$. We wish to see how well the
+methods considered here can detect changes in this higher-dimensional model.
+Under the null hypothesis, $\beta = (1, 2, 3, 4)^T$, while under the
+alternative, $\beta = \left( (1 + \delta), (2 - \delta), (3 + \delta),
+(4 - \delta) \right)^T $, with $\delta \in [-2, 2]$ after the change point. The
+setup is otherwise the same (including $x_{jt} \sim \operatorname{N}(1, 1)$),
+but we only consider Normal error terms.
+
+The results are shown in Figure \ref{fig:4Dchange}. Higher dimension does appear
+to have an effect on the power of all the statistics considered. Power appears
+to be worse and often has undesirable properties; all statistics for a sample
+size of 50 are effectively junk. In all cases, the size inflation of the
+Hidalgo-Seo statistic appears to have become even worse. But when the sample
+size is 250, the new statistic appears to have desirable power properties, and
+for a sample size of 1000 the statistic performs well. These plots should serve
+as a warning against attempting to detect changes in higher-dimensional
+regression models when the sample size is not large.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_4D_norm_n50.pdf}
+        \includegraphics[width=\textwidth]{power_plot_4D_norm_hetero_n50.pdf}
+    \end{subfigure}
+
+    \bigskip
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_4D_norm_n250.pdf}
+        \includegraphics[width=\textwidth]{power_plot_4D_norm_hetero_n250.pdf}
+    \end{subfigure}
+
+    \bigskip
+    \begin{subfigure}{.2\textwidth}
+        \includegraphics[width=\textwidth]{power_plot_4D_norm_n1000.pdf}
+        \includegraphics[width=\textwidth]{power_plot_4D_norm_hetero_n1000.pdf}
+    \end{subfigure}
+    \caption{Power plots for change in a three-variable regression model; see
+             Figure \ref{fig:earlychangepower} for description.}
+    \label{fig:4Dchange}
+\end{figure}
+
 \bibliography{../inst/REFERENCES.bib} 
 \bibliographystyle{ieeetr}
 
