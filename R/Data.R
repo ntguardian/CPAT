@@ -135,3 +135,19 @@
 #'               FRED: Population}
 #'         \href{https://www.eia.gov/totalenergy/data/browser/}{EIA}
 "natural_gas_demand"
+
+#' Daily Log Returns of Corrections Corporation of America/CoreCivic Stock (CXW)
+#'
+#' Data set containing daily log returns (as a percentage) for the stock of
+#' Corrections Corporation of America/CoreCivic, a private prison company, from
+#' July 16, 1997 to October 31, 2017. Stock prices are adjusted for stock splits
+#' and dividends and was obtained from Quandl, via the command
+#' \code{Quandl::Quandl("WIKI/CXW")} (see \code{\link[Quandl]{Quandl}}).
+#'
+#' @format A \code{link[zoo]{zoo}} time series object with 5109 rows and 1
+#'         variable:
+#' \describe{
+#'   \item{CXW}{The daily (natural) log return of CXW, as a percentage}
+#' }
+#' @source \href{https://www.quandl.com/}
+"CXW"
