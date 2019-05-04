@@ -144,10 +144,10 @@
 #' and dividends and was obtained from Quandl, via the command
 #' \code{Quandl::Quandl("WIKI/CXW")} (see \code{\link[Quandl]{Quandl}}).
 #'
-#' @format A \code{link[zoo]{zoo}} time series object with 5109 rows and 1
+#' @format A \code{\link[zoo]{zoo}} time series object with 5109 rows and 1
 #'         variable:
 #' \describe{
 #'   \item{CXW}{The daily (natural) log return of CXW, as a percentage}
 #' }
-#' @source \href{https://www.quandl.com/}
+#' @source \href{https://www.quandl.com}{Quandl}
 "CXW"

@@ -4,13 +4,13 @@
 \name{CXW}
 \alias{CXW}
 \title{Daily Log Returns of Corrections Corporation of America/CoreCivic Stock (CXW)}
-\format{A \code{link[zoo]{zoo}} time series object with 5109 rows and 1
+\format{A \code{\link[zoo]{zoo}} time series object with 5109 rows and 1
         variable:
 \describe{
   \item{CXW}{The daily (natural) log return of CXW, as a percentage}
 }}
 \source{
-\href{https://www.quandl.com/}
+\href{https://www.quandl.com}{Quandl}
 }
 \usage{
 CXW
