@@ -1,0 +1,127 @@
+%\VignetteIndexEntry{CXW and Donald Trump's Election; Power Demonstration}
+%\VignetteEngine{R.rsp::tex}
+%\VignetteKeyword{CXW}
+
+\documentclass{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\title{CXW and Donald Trump's Election; Power Demonstration}
+\date{\today}
+\author{Curtis Miller}
+
+\begin{document}
+\maketitle
+
+In 2016, Donald J. Trump was elected President of the United States of America.
+This event shocked spectators in the financial market, many of whom believed
+that Hillary Clinton was likely to be elected. Thus President Trump's election
+can be seen as a market shock, and should be analyzed as such.
+
+Investors reevaluated several companies and industries in response to Trump's
+election, one of which was the private prison industry. Hillary Clinton called
+for ending private prisons, and private prison stocks dropped as a result
+\cite{lamonica16}. Donald Trump, in comparison, supported private prisons, and
+private prison stocks rose in value after his election \cite{sommer16}. Thus we
+should see shock dynamics around the time of Donald Trump's election, on
+November 8, 2016.
+
+CoreCivic, formerly known as the Corrections Corporation of America (CCA), is a
+major publicly owned private prison company, listed on the New York Stock
+Exchange under the ticker symbol CXW. CoreCivic was exposed to the political
+winds of 2016 and we would expect the behavior of the stock to change after the
+surprise election of Donald Trump. Specifically, we would expect the Fama-French
+\cite{famafrench15} adjusted returns to change. In order to detect such a
+change, we need to fit the Fama-French 5-factor model to the daily returns of
+CXW, which involves fitting the linear model
+
+\begin{align}\label{ff5f}
+	\begin{split}
+		R_{t} - R_{Ft} &= \alpha + \beta_{Mt}(R_{Mt} - R_{Ft}) + \beta_{SMB} SMB_t \\
+		& + \beta_{HML} HML_{t} + \beta_{RMW} RMW_t + \beta_{CMA} CMA_t + \epsilon_t
+	\end{split}
+\end{align}
+
+In \eqref{ff5f}, $R_t$ is the return of the security or portfolio at time $t$;
+$R_{Ft}$ is the risk-free rate of return; $R_{Mt}$ is the market return; $SMB_t$
+is the return on a diversified portfolio of small stocks minus the return on a
+diversified portfolio of big stocks; $HML_t$ is the return of a portfolio of
+stocks with a high book-to-market (B/M) ratio minus the return of a portfolio of
+stocks with a low B/M ratio; $RMW_t$ is the returns of a portfolio of stocks
+with robust profitability minus a portfolio of stocks with weak profitability;
+and finally $CMA_t$ is the return of a portfolio of stocks with conservative
+investment minus the return of a portfolio of stocks with aggressive investment.
+
+Kenneth French published data for estimating these coefficients on his website
+\cite{french17}, and also comes with the package \textbf{CPAT} \cite{miller18}.
+The data website Quandl provides free public historical daily stock price time
+series, including the time series for CXW prices adjusted for stock splits and
+dividends; Quandl was our source for CXW data. Thus, $R_t$ in \eqref{ff5f} is
+the daily log returns of CXW.
+
+We hypothesize that the Fama-French model parameters describing the behavior of
+CXW changed around the time of Donald Trump's election to the U.S. Presidency,
+and furthermore that the R\'enyi-type statistic designed for regression models
+better detects this change than the univariate version of the R\'enyi-statistic
+introduced in \cite{horvathricemiller19} or the other tests considered in our
+power simulations. To check this, we not only performed these tests around the
+time of the election but considered an expanding window of data, computing the
+respective test statistics on each window of data as done in
+\cite{horvathricemiller19}. All data sets start on the first trading day of 2016
+(January 4) but the end point varies, being each trading day from October to
+December 2016. All statistics except for the Hidalgo-Seo statistic use kernel
+methods for estimating the long-run variance, as described in the simulations.
+The trimming parameter for the R\'enyi-type statistics is $T^{\frac{1}{2}}$. We
+consider $p$-values less than 0.05 to be statistically significant.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{RealDataCXW.pdf}
+    \caption{$-\log_{10}{p}$-values of test statistics checking for structural
+    change in the regression model described in \eqref{ff5f} computed on an
+    expanding window of data, ranging from October 2 to December 30, 2016. The
+    $y$-axis can be interpreted as tracking the number of zeros after the
+    decimal point before the first significant digit of the $p$-value. The test
+    statistics displayed include the R\'enyi-type statistic with trimming
+    parameter $t_T = T^{1/2}$ computed with the regression model
+    coefficients directly (\tikz[baseline=-0.5ex] \draw[thick](0,0) -- (1,0);)
+    the R\'enyi-type statistic with trimming parameter $t_T = T^{1/2}$ computed
+    on the residuals (\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 4pt
+    off 4pt](0,0) -- (1,0);), the CUSUM statistic
+    (\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 8pt off 4pt](0,0) --
+    (1,0);), and the Hidalgo-Seo statistic
+    (\tikz[baseline=-0.5ex]\draw[thick, dash dot](0,0) -- (1,0);). The
+    R\'enyi-type statistic and CUSUM statistics are the univariate statistics
+    computed on the estimated residuals of the regression model. The Hidalgo-Seo
+    statistic was tailored to the regression context as described in their
+    paper.}
+    \label{fig:cxwpvalplot}
+\end{figure}
+
+We present the results of this analysis in Figure \ref{fig:cxwpvalplot}. We see
+that the Hidalgo-Seo statistical always rejects the null hypothesis. While it is
+possible that there was a change point prior to the election in 2016, we do not
+believe that this is the reason the Hidalso-Seo statistic is rejecting the
+null-hypothesis; given the results of our simulations, we believe the
+Hidalgo-Seo statistic is showing signs of size inflation and making numerous
+Type I errors. That said, we do see large changes to the $p$-values after the
+election. The univariate R\'enyi-type statistic rejects the null hypothesis
+prior to the election but suddenly does not reject the null hypothesis
+afterwords; on the other hand, the CUSUM statistic doesn't reject the null
+hypothesis prior to the election, then rejects it throughout the remainder of
+November, then no longer rejects for most of December. The new R\'enyi-type
+statistic for regression models does not reject prior to the election, rejects
+the day after, hovers near the threshold of rejection throughout November, then
+resumes rejection of the null hypothesis in December. Of all the statistics
+listed here, this seems like the most reasonable behavior.
+
+\bibliography{../inst/REFERENCES.bib}
+\bibliographystyle{ieeetr}
+
+\end{document}
