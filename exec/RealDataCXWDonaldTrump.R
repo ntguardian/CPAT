@@ -1,11 +1,12 @@
 #!/usr/bin/Rscript
 ################################################################################
-# RealDataM1Germany.R
+# RealDataCXWDonaldTrump.R
 ################################################################################
-# 2019-04-15
+# 2019-05-04
 # Curtis Miller
 ################################################################################
-# A file containing data for data example involving the M1 supply of Germany.
+# A file containing data for data example involving the behavior of CXW around
+# the election of Donald Trump.
 ################################################################################
 
 # argparser: A package for handling command line arguments
@@ -14,25 +15,28 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
   require("argparser")
 }
 
+`%s%` <- CPAT:::`%s%`
+
 ################################################################################
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(output = "RealDataM1Germany.Rda") {
+main <- function(output = "RealDataCXWDonaldTrump.Rda") {
   # This function will be executed when the script is called from the command
   # line
 
-  suppressPackageStartupMessages(library(dynlm))
+  suppressPackageStartupMessages(library(CPAT))
 
-  data("M1Germany")
+  data("ff")
+  data("CXW")
 
-  data_set <- M1Germany
-  events <- data.frame("Time" = as.yearqtr("1990 Q2"),
-                       "Event" = "Monetary union",
+  ff <- as.zoo(ff, order.by = as.Date(rownames(ff), format = "%Y%m%d"))
+
+  data_set <- merge(ff, CXW)
+  events <- data.frame("Time" = as.Date("2016-11-08"),
+                       "Event" = "Donald Trump Elected U.S. President",
                        stringsAsFactors = FALSE)
-  model <- d(logm1) ~ d(L(loggnp, 2)) + d(interest) + d(L(interest)) +
-                      d(logprice) + L(logm1) + L(loggnp) + L(interest) +
-                      season(logm1, ref = 4)
+  model <- I(CXW - RF) ~ Mkt.RF + SMB + HML + RMW + CMA
   is_ts <- TRUE
 
   save(data_set, events, model, is_ts, file = output, ascii = TRUE)
@@ -43,9 +47,10 @@ main <- function(output = "RealDataM1Germany.Rda") {
 ################################################################################
 
 if (sys.nframe() == 0) {
-  p <- arg_parser("This is a template for executable R scripts.")
+  p <- arg_parser("Generate file for data example involving the behavior" %s%
+                  "of stock CXW around the election of Donald Trump")
   p <- add_argument(p, "output", type = "character",
-                    default = "RealDataM1Germany.Rda",
+                    default = "RealDataCXWDonaldTrump.Rda",
                     help = "Name of output .Rda file")
 
   cl_args <- parse_args(p)
