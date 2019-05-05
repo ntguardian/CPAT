@@ -1,12 +1,11 @@
 #!/usr/bin/Rscript
 ################################################################################
-# RealDataCXWDonaldTrump.R
+# RealDataM1Germany.R
 ################################################################################
-# 2019-05-04
+# 2019-04-15
 # Curtis Miller
 ################################################################################
-# A file containing data for data example involving the behavior of CXW around
-# the election of Donald Trump.
+# A file containing data for data example involving the M1 supply of Germany.
 ################################################################################
 
 # argparser: A package for handling command line arguments
@@ -15,22 +14,17 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
   require("argparser")
 }
 
-`%s%` <- CPAT:::`%s%`
-
 ################################################################################
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(output = "RealDataCXWDonaldTrump.Rda") {
+main <- function(output = "RealDataM1Germany.Rda") {
   # This function will be executed when the script is called from the command
   # line
 
-  suppressPackageStartupMessages(library(CPAT))
+  suppressPackageStartupMessages(library(dynlm))
 
-  data("ff")
-  data("CXW")
-
-  ff <- as.zoo(ff, order.by = as.Date(rownames(ff)))
+  data("M1Germany")
 
   data_set <- M1Germany
   events <- data.frame("Time" = as.yearqtr("1990 Q2"),
@@ -49,10 +43,9 @@ main <- function(output = "RealDataCXWDonaldTrump.Rda") {
 ################################################################################
 
 if (sys.nframe() == 0) {
-  p <- arg_parser("Generate file for data example involving the behavior" %s%
-                  "of stock CXW around the election of Donald Trump")
+  p <- arg_parser("This is a template for executable R scripts.")
   p <- add_argument(p, "output", type = "character",
-                    default = "RealDataCXWDonaldTrump.Rda",
+                    default = "RealDataM1Germany.Rda",
                     help = "Name of output .Rda file")
 
   cl_args <- parse_args(p)
