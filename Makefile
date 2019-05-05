@@ -342,22 +342,25 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
 # Data example definition files
 EXAMPLEPREFIX=RealData
 EXAMPLEGERMANM1=data/$(EXAMPLEPREFIX)M1Germany.Rda
-ALLEXAMPLES=$(EXAMPLEGERMANM1)
+EXAMPLECXW=data/$(EXAMPLEPREFIX)CXWDonaldTrump.Rda
+ALLEXAMPLES=$(EXAMPLEGERMANM1) $(EXAMPLECXW)
 
 # Processed data examples
 EXAMPLEGERMANM1PVALS=data/$(EXAMPLEPREFIX)M1GermanypVals.Rda
-ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS)
+EXAMPLECXWPVALS=data/$(EXAMPLEPREFIX)CXWDonaldTrumppVals.Rda
+ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS) $(EXAMPLECXWPVALS)
 
 # Data example plots
 EXAMPLEGERMANM1PLOT=vignettes/$(EXAMPLEPREFIX)M1Germany
-ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT)
+EXAMPLECXWPLOT=vignettes/$(EXAMPLEPREFIX)CXW
+ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT)
 
 ################################################################################
 # VIGNETTE-VARS
 ################################################################################
 
 # Vignettes to be created
-VIGNETTES=doc/CollectedPlots.pdf
+VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf
 
 ################################################################################
 # RECIPES
@@ -894,9 +897,20 @@ $(EXAMPLEGERMANM1PVALS) : $(EXAMPLEGERMANM1) \
 	$(RSCRIPT) $(lastword $^) --output $@ \
 		 --statistics $(filter-out $< $(lastword $^), $^) --firstright 100 $<
 
-$(ALLEXAMPLEPLOTS:=.pdf) : exec/TimeSeriespValPlotter.R
+$(EXAMPLECXWPVALS) : $(EXAMPLECXW) data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                     data/$(SIMSTATPREFIX)CUSUM.Rda \
+                     data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                     data/$(SIMSTATPREFIX)HS.Rda \
+                     exec/ExpandingWindowpValComputer.R
+	$(RSCRIPT) $(lastword $^) --output $@ \
+		 --statistics $(filter-out $< $(lastword $^), $^) --left 13218 \
+		 --firstright 13407 --lastright 13469 $<
 
 $(EXAMPLEGERMANM1PLOT).pdf : $(EXAMPLEGERMANM1PVALS)
+$(EXAMPLECXWPLOT).pdf : $(EXAMPLECXWPVALS)
+$(ALLEXAMPLEPLOTS:=.pdf) : exec/TimeSeriespValPlotter.R
+
+$(ALLEXAMPLEPLOTS:=.pdf) :
 	$(RSCRIPT) $(lastword $^) $< -o $(basename $@) -d -t
 
 ################################################################################
@@ -905,6 +919,7 @@ $(EXAMPLEGERMANM1PLOT).pdf : $(EXAMPLEGERMANM1PVALS)
 
 # Vignette dependencies
 doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
+doc/ZnTable.pdf : vignettes/ZnTable.ltx
 
 # Vignette recipe
 $(VIGNETTES) :

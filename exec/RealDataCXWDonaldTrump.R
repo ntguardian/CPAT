@@ -34,7 +34,7 @@ main <- function(output = "RealDataCXWDonaldTrump.Rda") {
 
   data_set <- merge(ff, CXW)
   events <- data.frame("Time" = as.Date("2016-11-08"),
-                       "Event" = "Donald Trump Elected U.S. President",
+                       "Event" = "U.S. Election",
                        stringsAsFactors = FALSE)
   model <- I(CXW - RF) ~ Mkt.RF + SMB + HML + RMW + CMA
   is_ts <- TRUE
