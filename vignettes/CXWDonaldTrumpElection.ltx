@@ -80,6 +80,20 @@ methods for estimating the long-run variance, as described in the simulations.
 The trimming parameter for the R\'enyi-type statistics is $T^{\frac{1}{2}}$. We
 consider $p$-values less than 0.05 to be statistically significant.
 
+The test statistics displayed include the R\'enyi-type statistic with trimming
+parameter $t_T = T^{1/2}$ computed with the regression model coefficients
+directly (\tikz[baseline=-0.5ex] \draw[thick](0,0) -- (1,0);)
+the R\'enyi-type statistic with trimming parameter $t_T = T^{1/2}$ computed on
+the residuals
+(\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 4pt off 4pt](0,0) -- 
+(1,0);), the CUSUM statistic
+(\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 8pt off 4pt](0,0) --
+(1,0);), and the Hidalgo-Seo statistic
+(\tikz[baseline=-0.5ex]\draw[thick, dash dot](0,0) -- (1,0);). The R\'enyi-type
+statistic and CUSUM statistics are the univariate statistics computed on the
+estimated residuals of the regression model. The Hidalgo-Seo statistic was
+tailored to the regression context as described in their paper.
+
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\linewidth]{RealDataCXW.pdf}
@@ -87,20 +101,7 @@ consider $p$-values less than 0.05 to be statistically significant.
     change in the regression model described in \eqref{ff5f} computed on an
     expanding window of data, ranging from October 2 to December 30, 2016. The
     $y$-axis can be interpreted as tracking the number of zeros after the
-    decimal point before the first significant digit of the $p$-value. The test
-    statistics displayed include the R\'enyi-type statistic with trimming
-    parameter $t_T = T^{1/2}$ computed with the regression model
-    coefficients directly (\tikz[baseline=-0.5ex] \draw[thick](0,0) -- (1,0);)
-    the R\'enyi-type statistic with trimming parameter $t_T = T^{1/2}$ computed
-    on the residuals (\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 4pt
-    off 4pt](0,0) -- (1,0);), the CUSUM statistic
-    (\tikz[baseline=-0.5ex] \draw[thick, dash pattern=on 8pt off 4pt](0,0) --
-    (1,0);), and the Hidalgo-Seo statistic
-    (\tikz[baseline=-0.5ex]\draw[thick, dash dot](0,0) -- (1,0);). The
-    R\'enyi-type statistic and CUSUM statistics are the univariate statistics
-    computed on the estimated residuals of the regression model. The Hidalgo-Seo
-    statistic was tailored to the regression context as described in their
-    paper.}
+    decimal point before the first significant digit of the $p$-value.}
     \label{fig:cxwpvalplot}
 \end{figure}
 

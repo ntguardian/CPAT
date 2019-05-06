@@ -360,7 +360,7 @@ ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT)
 ################################################################################
 
 # Vignettes to be created
-VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf
+VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf doc/CXWDonaldTrumpElection.pdf
 
 ################################################################################
 # RECIPES
@@ -920,6 +920,8 @@ $(ALLEXAMPLEPLOTS:=.pdf) :
 # Vignette dependencies
 doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
 doc/ZnTable.pdf : vignettes/ZnTable.ltx
+doc/CXWDonaldTrumpElection.pdf : vignettes/CXWDonaldTrumpElection.ltx \
+                                 $(EXAMPLECXWPLOT).pdf
 
 # Vignette recipe
 $(VIGNETTES) :
