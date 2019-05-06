@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2018/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: CXWDonaldTrumpElection.aux
+The style file: ieeetr.bst
+Database file #1: ../inst/REFERENCES.bib
+You've used 6 entries,
+            1876 wiz_defined-function locations,
+            511 strings with 4183 characters,
+and the built_in function-call counts, 1097 in all, are:
+= -- 105
+> -- 35
+< -- 0
++ -- 15
+- -- 9
+* -- 70
+:= -- 172
+add.period$ -- 8
+call.type$ -- 6
+change.case$ -- 5
+chr.to.int$ -- 0
+cite$ -- 6
+duplicate$ -- 55
+empty$ -- 117
+format.name$ -- 9
+if$ -- 265
+int.to.chr$ -- 0
+int.to.str$ -- 6
+missing$ -- 4
+newline$ -- 24
+num.names$ -- 6
+pop$ -- 14
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 35
+stack$ -- 0
+substring$ -- 38
+swap$ -- 16
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 10
+width$ -- 7
+write$ -- 59
