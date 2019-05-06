@@ -1,11 +1,11 @@
 #!/usr/bin/Rscript
 ################################################################################
-# Context4D.R
+# Context6D.R
 ################################################################################
-# 2019-04-28
+# 2019-05-06
 # Curtis Miller
 ################################################################################
-# Context in which there are three variables being regressed on.
+# Context in which there are five variables being regressed on.
 ################################################################################
 
 # optparse: A package for handling command line arguments
@@ -46,13 +46,13 @@ gen_regime_mat <- function(base, delta = 0) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "Context4D.Rda", help = FALSE) {
+main <- function(output = "Context6D.Rda", help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   library(purrr)
 
-  grm_12 <- partial(gen_regime_mat, base = 1:4)
+  grm_12 <- partial(gen_regime_mat, base = 1:6)
   delta <- ((-20):20)/10
 
   ##############################################################################
@@ -80,7 +80,7 @@ if (sys.nframe() == 0) {
                             "change in regression models"),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "Context4D.Rda", help = "Output .Rda file")
+                      default = "Context6D.Rda", help = "Output .Rda file")
         )
       ))
 
