@@ -671,19 +671,19 @@ $(SIMSGARCHHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
                        data/$(SIMDATAPREFIX)GARCHXYHetero.Rda \
                        data/$(SIMSTATPREFIX)HS.Rda
 # EXAMPLE-LIKE
-$(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Main.R
+$(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Example.R \
                           data/$(SIMDATAPREFIX)Example.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
-$(SIMSEXAMPLELIKERENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSEXAMPLELIKERENYIRESID) : data/$(CONTEXTPREFIX)Example.Rda \
                                data/$(SIMDATAPREFIX)Example.Rda \
                                data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
-$(SIMSEXAMPLELIKERENYINOKERN) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSEXAMPLELIKERENYINOKERN) : data/$(CONTEXTPREFIX)Example.Rda \
                                 data/$(SIMDATAPREFIX)Example.Rda \
                                 data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
-$(SIMSEXAMPLELIKECUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSEXAMPLELIKECUSUM) : data/$(CONTEXTPREFIX)Example.Rda \
                           data/$(SIMDATAPREFIX)Example.Rda \
                           data/$(SIMSTATPREFIX)CUSUM.Rda
-$(SIMSEXAMPLELIKEHS) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSEXAMPLELIKEHS) : data/$(CONTEXTPREFIX)Example.Rda \
                        data/$(SIMDATAPREFIX)Example.Rda \
                        data/$(SIMSTATPREFIX)HS.Rda
 
@@ -895,18 +895,18 @@ $(SIMSGARCHHETEROHSDF) : $(SIMSGARCHHETEROHS) data/$(SIMSTATPREFIX)HS.Rda \
 # EXAMPLE-LIKE
 $(SIMSEXAMPLELIKERENYIDF) : $(SIMSEXAMPLELIKERENYI) \
                             data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
-                            data/$(CONTEXTPREFIX)Main.Rda
+                            data/$(CONTEXTPREFIX)Example.Rda
 $(SIMSEXAMPLELIKERENYIRESIDDF) : $(SIMSEXAMPLELIKERENYIRESID) \
                                  data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
-                                 data/$(CONTEXTPREFIX)Main.Rda
+                                 data/$(CONTEXTPREFIX)Example.Rda
 $(SIMSEXAMPLELIKERENYINOKERNDF) : $(SIMSEXAMPLELIKERENYINOKERN) \
                                   data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
-                                  data/$(CONTEXTPREFIX)Main.Rda
+                                  data/$(CONTEXTPREFIX)Example.Rda
 $(SIMSEXAMPLELIKECUSUMDF) : $(SIMSEXAMPLELIKECUSUM) \
                             data/$(SIMSTATPREFIX)CUSUM.Rda \
-                            data/$(CONTEXTPREFIX)Main.Rda
+                            data/$(CONTEXTPREFIX)Example.Rda
 $(SIMSEXAMPLELIKEHSDF) : $(SIMSEXAMPLELIKEHS) data/$(SIMSTATPREFIX)HS.Rda \
-                         data/$(CONTEXTPREFIX)Main.Rda
+                         data/$(CONTEXTPREFIX)Example.Rda
 
 $(ALLSIMSDATAFRAME) : exec/Aggregator.R R/Utils.R
 
