@@ -671,7 +671,7 @@ $(SIMSGARCHHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
                        data/$(SIMDATAPREFIX)GARCHXYHetero.Rda \
                        data/$(SIMSTATPREFIX)HS.Rda
 # EXAMPLE-LIKE
-$(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Example.R \
+$(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Example.Rda \
                           data/$(SIMDATAPREFIX)Example.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
 $(SIMSEXAMPLELIKERENYIRESID) : data/$(CONTEXTPREFIX)Example.Rda \
