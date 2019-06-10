@@ -39,7 +39,7 @@ base_file_name <- CPAT:::base_file_name
 gen_regime_mat <- function(base, delta = 0) {
   stopifnot(length(base) == 6)
   d <- 6
-  delta_vec <- (c( 0.111, 1.819, 1.314,  0.148, 0.302,  1.335) - 
+  delta_vec <- (c( 0.353, 3.599, 2.316, -1.067, 0.949,  6.962) - 
                 c(-0.307, 1.034, 0.002, -0.050, 2.469, -0.357)) * delta
   cbind(base, base + delta_vec)
 }
