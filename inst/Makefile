@@ -134,6 +134,12 @@ SIMSGARCHHETERORENYINOKERN=data-sim/GARCH/SimsGARCHHeteroRenyiRegNoKern.Rda
 SIMSGARCHHETERORENYIRESID=data-sim/GARCH/SimsGARCHHeteroRenyiResid.Rda
 SIMSGARCHHETEROCUSUM=data-sim/GARCH/SimsGARCHHeteroCUSUM.Rda
 SIMSGARCHHETEROHS=data-sim/GARCH/SimsGARCHHeteroHS.Rda
+# EXAMPLE-LIKE
+SIMSEXAMPLELIKERENYI=data-sim/EL/SimsELRenyiReg.Rda
+SIMSEXAMPLELIKERENYIRESID=data-sim/EL/SimsELRenyiResid.Rda
+SIMSEXAMPLELIKERENYINOKERN=data-sim/EL/SimsELRenyiRegNoKern.Rda
+SIMSEXAMPLELIKECUSUM=data-sim/EL/SimsELCUSUM.Rda
+SIMSEXAMPLELIKEHS=data-sim/EL/SimsELHS.Rda
 # All
 NOTHETEROSIMS=$(SIMSNORMALRENYI) $(SIMSNORMALRENYIRESID) \
               $(SIMSNORMALRENYINOKERN) $(SIMSNORMALCUSUM) $(SIMSNORMALHS) \
@@ -166,7 +172,10 @@ HETEROSIMS=$(SIMSNORMALHETERORENYI) $(SIMSNORMALHETERORENYINOKERN) \
            $(SIMSAR1HETEROHS) $(SIMSGARCHHETERORENYI) \
            $(SIMSGARCHHETERORENYINOKERN) $(SIMSGARCHHETERORENYIRESID) \
            $(SIMSGARCHHETEROCUSUM) $(SIMSGARCHHETEROHS)
-ALLSIMS=$(NOTHETEROSIMS) $(HETEROSIMS)
+EXAMPLESIMS=$(SIMSEXAMPLELIKERENYI) $(SIMSEXAMPLELIKERENYIRESID) \
+            $(SIMSEXAMPLELIKERENYINOKERN) $(SIMSEXAMPLELIKECUSUM) \
+            $(SIMSEXAMPLELIKEHS)
+ALLSIMS=$(NOTHETEROSIMS) $(HETEROSIMS) $(EXAMPLESIMS)
 
 ################################################################################
 # POWER-DF-VARS
@@ -270,6 +279,14 @@ SIMSGARCHHETERORENYIRESIDDF=$(subst .Rda,DataFrame.Rda, \
                                      $(SIMSGARCHHETERORENYIRESID))
 SIMSGARCHHETEROCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHETEROCUSUM))
 SIMSGARCHHETEROHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSGARCHHETEROHS))
+# EXAMPLE-LIKE
+SIMSEXAMPLELIKERENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSEXAMPLELIKERENYI))
+SIMSEXAMPLELIKERENYIRESIDDF=$(subst .Rda,DataFrame.Rda, \
+                                    $(SIMSEXAMPLELIKERENYIRESID))
+SIMSEXAMPLELIKERENYINOKERNDF=$(subst .Rda,DataFrame.Rda, \
+                                     $(SIMSEXAMPLELIKERENYINOKERN))
+SIMSEXAMPLELIKECUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSEXAMPLELIKECUSUM))
+SIMSEXAMPLELIKEHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSEXAMPLELIKEHS))
 # All
 ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
 
@@ -335,13 +352,18 @@ SIMSGARCHHETERODFPREREQ=$(SIMSGARCHHETERORENYIRESIDDF) \
                         $(SIMSGARCHHETERORENYINOKERNDF) \
                         $(SIMSGARCHHETEROCUSUMDF) $(SIMSGARCHHETEROHSDF)
 SIMSGARCHHETERODF=data-sim/GARCH/SimsGARCHHetero.Rda
+# EXAMPLE-LIKE
+SIMSEXAMPLELIKEDFPREREQ=$(SIMSEXAMPLELIKERENYIRESIDDF) \
+                        $(SIMSEXAMPLELIKERENYINOKERNDF) \
+                        $(SIMSEXAMPLELIKECUSUMDF) $(SIMSEXAMPLELIKEHSDF)
+SIMSEXAMPLELIKEDF=data-sim/EL/SimsEL.Rda
 
 # All DGP power collections in one location
 ALLDISTDF=$(SIMSNORMALDF) $(SIMSNORMALHETERODF) $(SIMSPROPNORMALDF) \
           $(SIMS4DNORMALDF) $(SIMS6DNORMALDF) $(SIMSPROPNORMALHETERODF) \
           $(SIMS4DNORMALHETERODF) $(SIMS6DNORMALHETERODF) $(SIMSARMADF) \
           $(SIMSARMAHETERODF) $(SIMSAR1DF) $(SIMSAR1HETERODF) $(SIMSGARCHDF) \
-          $(SIMSGARCHHETERODF)
+          $(SIMSGARCHHETERODF) $(SIMSEXAMPLELIKEDF)
 
 ################################################################################
 # POWER-PLOT-VARS
@@ -363,6 +385,7 @@ POWERPLOT6DNORMALHETEROPREFIX=$(POWERPLOTPREFIX)6D_norm_hetero_
 POWERPLOTARMAHETEROPREFIX=$(POWERPLOTPREFIX)ARMA_hetero_
 POWERPLOTAR1HETEROPREFIX=$(POWERPLOTPREFIX)AR1_hetero_
 POWERPLOTGARCHHETEROPREFIX=$(POWERPLOTPREFIX)GARCH_hetero_
+POWERPLOTEXAMPLELIKEPREFIX=$(POWERPLOTPREFIX)Example_
 POWERPLOTWIDTH=3
 POWERPLOTHEIGHT=2
 POWERPLOTLEVELLINE=dotted
@@ -379,7 +402,8 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTAR1PREFIX)*.pdf) \
            $(wildcard $(POWERPLOTAR1HETEROPREFIX)*.pdf) \
            $(wildcard $(POWERPLOTGARCHPREFIX)*.pdf) \
-           $(wildcard $(POWERPLOTGARCHHETEROPREFIX)*.pdf)
+           $(wildcard $(POWERPLOTGARCHHETEROPREFIX)*.pdf) \
+           $(wildcard $(POWERPLOTEXAMPLELIKEPREFIX)*.pdf)
 
 ################################################################################
 # EXAMPLE-VARS
@@ -646,6 +670,22 @@ $(SIMSGARCHHETEROCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
 $(SIMSGARCHHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
                        data/$(SIMDATAPREFIX)GARCHXYHetero.Rda \
                        data/$(SIMSTATPREFIX)HS.Rda
+# EXAMPLE-LIKE
+$(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Example.Rda \
+                          data/$(SIMDATAPREFIX)Example.Rda \
+                          data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+$(SIMSEXAMPLELIKERENYIRESID) : data/$(CONTEXTPREFIX)Example.Rda \
+                               data/$(SIMDATAPREFIX)Example.Rda \
+                               data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSEXAMPLELIKERENYINOKERN) : data/$(CONTEXTPREFIX)Example.Rda \
+                                data/$(SIMDATAPREFIX)Example.Rda \
+                                data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
+$(SIMSEXAMPLELIKECUSUM) : data/$(CONTEXTPREFIX)Example.Rda \
+                          data/$(SIMDATAPREFIX)Example.Rda \
+                          data/$(SIMSTATPREFIX)CUSUM.Rda
+$(SIMSEXAMPLELIKEHS) : data/$(CONTEXTPREFIX)Example.Rda \
+                       data/$(SIMDATAPREFIX)Example.Rda \
+                       data/$(SIMSTATPREFIX)HS.Rda
 
 $(ALLSIMS) : exec/PowerSimRegression.R R/Utils.R
 
@@ -852,6 +892,21 @@ $(SIMSGARCHHETEROCUSUMDF) : $(SIMSGARCHHETEROCUSUM) \
                             data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSGARCHHETEROHSDF) : $(SIMSGARCHHETEROHS) data/$(SIMSTATPREFIX)HS.Rda \
                          data/$(CONTEXTPREFIX)Main.Rda
+# EXAMPLE-LIKE
+$(SIMSEXAMPLELIKERENYIDF) : $(SIMSEXAMPLELIKERENYI) \
+                            data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                            data/$(CONTEXTPREFIX)Example.Rda
+$(SIMSEXAMPLELIKERENYIRESIDDF) : $(SIMSEXAMPLELIKERENYIRESID) \
+                                 data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                                 data/$(CONTEXTPREFIX)Example.Rda
+$(SIMSEXAMPLELIKERENYINOKERNDF) : $(SIMSEXAMPLELIKERENYINOKERN) \
+                                  data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
+                                  data/$(CONTEXTPREFIX)Example.Rda
+$(SIMSEXAMPLELIKECUSUMDF) : $(SIMSEXAMPLELIKECUSUM) \
+                            data/$(SIMSTATPREFIX)CUSUM.Rda \
+                            data/$(CONTEXTPREFIX)Example.Rda
+$(SIMSEXAMPLELIKEHSDF) : $(SIMSEXAMPLELIKEHS) data/$(SIMSTATPREFIX)HS.Rda \
+                         data/$(CONTEXTPREFIX)Example.Rda
 
 $(ALLSIMSDATAFRAME) : exec/Aggregator.R R/Utils.R
 
@@ -884,6 +939,7 @@ $(SIMSAR1DF) : $(SIMSAR1DFPREREQ)
 $(SIMSAR1HETERODF) : $(SIMSAR1HETERODFPREREQ)
 $(SIMSGARCHDF) : $(SIMSGARCHDFPREREQ)
 $(SIMSGARCHHETERODF) : $(SIMSGARCHHETERODFPREREQ)
+$(SIMSEXAMPLELIKEDF) : $(SIMSEXAMPLELIKEDFPREREQ)
 $(ALLDISTDF) : exec/Appender.R
 
 ################################################################################
@@ -1005,6 +1061,15 @@ $(POWERPLOTGARCHHETEROPREFIX)%.pdf : $(SIMSGARCHHETERODF) \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
 
+# EXAMPLE-LIKE
+$(POWERPLOTEXAMPLELIKEPREFIX)%.pdf : $(SIMSEXAMPLELIKEDF) \
+                                     exec/UnivariatePlotter.R \
+                                     R/Utils.R
+	make package
+	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTEXAMPLELIKEPREFIX) \
+		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
+		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
 ################################################################################
 # EXAMPLE-RECIPES
 ################################################################################
@@ -1107,6 +1172,7 @@ init :
 	touch $(POWERPLOTAR1HETEROPREFIX)n50.pdf
 	touch $(POWERPLOTGARCHPREFIX)n50.pdf
 	touch $(POWERPLOTGARCHHETEROPREFIX)n50.pdf
+	touch $(POWERPLOTEXAMPLELIKEPREFIX)n250.pdf
 	make simconfig
 
 # Get package dependencies
