@@ -1,0 +1,62 @@
+%\VignetteIndexEntry{Simulated Type I Error Rates for Late Change in Regression Models}
+%\VignetteEngine{R.rsp::tex}
+%\VignetteKeyword{Regression Type I Errors}
+
+\documentclass{article}
+\usepackage[margin=0.7in,landscape]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+
+\usepackage{multirow}
+
+\title{Simulated Type I Error Rates for Late Change in Regression Models}
+\date{\today}
+\author{Curtis Miller}
+
+\begin{document}
+\maketitle
+% latex table generated in R 3.6.0 by xtable 1.8-4 package
+% Sun Jun  9 23:16:43 2019
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{\extracolsep{4pt}}rrr|ccccccccc@{}}
+  \hline\hline
+                 &                              &  &
+    \multicolumn{3}{c}{\bfseries      2D} & \multicolumn{3}{c}{\bfseries
+    4D} & \multicolumn{3}{c}{\bfseries      6D} \\ 
+    \cline{4-6} \cline{7-9} \cline{10-12}
+                  &                              &  &
+    \multicolumn{1}{c}{\itshape      50} & \multicolumn{1}{c}{\itshape     250}
+                                         & \multicolumn{1}{c}{\itshape    1000}
+                                         & \multicolumn{1}{c}{\itshape      50}
+                                         & \multicolumn{1}{c}{\itshape     250}
+                                         & \multicolumn{1}{c}{\itshape    1000}
+                                         & \multicolumn{1}{c}{\itshape      50}
+                                         & \multicolumn{1}{c}{\itshape     250}
+                                         & \multicolumn{1}{c}{\itshape    1000} \\ 
+   \hline\hline
+    \multirow{4}{*}{\bfseries Homoskedastic}   & \textit{R\'enyi-Type for Regression} &  & 0.08240 & 0.02485 & 0.02540 & 0.20785 & 0.02270 & 0.01430 & 0.47745 & 0.02870 & 0.01145 \\ 
+                  & \textit{Univariate R\'enyi-Type}     &  & 0.14290 & 0.07725 & 0.05745 & 0.14245 & 0.07430 & 0.05385 & 0.14425 & 0.07775 & 0.05295 \\ 
+                  & \textit{CUSUM}                   &  & 0.06640 & 0.04640 & 0.05050 & 0.06620 & 0.05030 & 0.04575 & 0.06940 & 0.04745 & 0.04660 \\ 
+                  & \textit{Hidalgo-Seo}                  &  & 0.17775 & 0.13755 & 0.10205 & 0.74460 & 0.38425 & 0.23055 & 0.99980 & 0.89350 & 0.60635 \\ 
+                  \hline
+    \multirow{4}{*}{\bfseries Heteroskedastic} & \textit{R\'enyi-Type for Regression} &  & 0.29150 & 0.07210 & 0.03825 & 0.48610 & 0.05265 & 0.02255 & 0.74410 & 0.06080 & 0.01965 \\ 
+                  & \textit{Univariate R\'enyi-Type}     &  & 0.17625 & 0.12745 & 0.11550 & 0.16140 & 0.12670 & 0.11795 & 0.15915 & 0.12405 & 0.11650 \\ 
+                  & \textit{CUSUM}                   &  & 0.12755 & 0.09605 & 0.09690 & 0.12105 & 0.09135 & 0.09395 & 0.11780 & 0.09810 & 0.09525 \\ 
+                  & \textit{Hidalgo-Seo}                  &  & 0.39350 & 0.37820 & 0.34545 & 0.92555 & 0.78345 & 0.65020 & 1.00000 & 0.99480 & 0.94815 \\ 
+   \hline\hline
+\end{tabular}
+\caption{Simulated Type I error rates of test statistics depending on sample
+size, dimension, and whether the data is homoskedastic/heteroskedastic.
+Different statistics and variance regimes are tracked across rows, while the
+columns track the dimensionality of the regression model and the sample size.
+All tests were conducted at a significance level $\alpha$ of 0.05; that is, a
+listed rejection rate above 0.05 is overrejection while a rate below 0.05 is
+underrejection. Residuals follow independent Gaussian distributions and the
+R\'enyi-type statistic tailored for linear regression models does not use kernel
+methods for long-run variance estimation.} 
+\label{tbl:statsize}
+\end{table}
+\end{document}
