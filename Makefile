@@ -1108,7 +1108,7 @@ $(ALLEXAMPLEPLOTS:=.pdf) :
 # Vignette dependencies
 doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
 doc/ZnTable.pdf : vignettes/ZnTable.ltx
-doc/TypeIErrors.pdf : vignettes/TypeIErrors.pdf
+doc/TypeIErrors.pdf : vignettes/TypeIErrors.ltx
 doc/CXWDonaldTrumpElection.pdf : vignettes/CXWDonaldTrumpElection.ltx \
                                  $(EXAMPLECXWPLOT).pdf
 
