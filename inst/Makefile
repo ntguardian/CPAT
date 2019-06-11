@@ -354,7 +354,7 @@ SIMSGARCHHETERODFPREREQ=$(SIMSGARCHHETERORENYIRESIDDF) \
 SIMSGARCHHETERODF=data-sim/GARCH/SimsGARCHHetero.Rda
 # EXAMPLE-LIKE
 SIMSEXAMPLELIKEDFPREREQ=$(SIMSEXAMPLELIKERENYIRESIDDF) \
-                        $(SIMSEXAMPLELIKERENYINOKERNDF) \
+                        $(SIMSEXAMPLELIKERENYIDF) \
                         $(SIMSEXAMPLELIKECUSUMDF) $(SIMSEXAMPLELIKEHSDF)
 SIMSEXAMPLELIKEDF=data-sim/EL/SimsEL.Rda
 
@@ -430,7 +430,8 @@ ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT)
 ################################################################################
 
 # Vignettes to be created
-VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf doc/CXWDonaldTrumpElection.pdf
+VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf \
+          doc/CXWDonaldTrumpElection.pdf doc/TypeIErrors.pdf
 
 ################################################################################
 # RECIPES
@@ -1107,6 +1108,7 @@ $(ALLEXAMPLEPLOTS:=.pdf) :
 # Vignette dependencies
 doc/CollectedPlots.pdf : vignettes/CollectedPlots.ltx $(POWERPLOTS)
 doc/ZnTable.pdf : vignettes/ZnTable.ltx
+doc/TypeIErrors.pdf : vignettes/TypeIErrors.ltx
 doc/CXWDonaldTrumpElection.pdf : vignettes/CXWDonaldTrumpElection.ltx \
                                  $(EXAMPLECXWPLOT).pdf
 
