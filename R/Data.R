@@ -151,3 +151,19 @@
 #' }
 #' @source \href{https://www.quandl.com}{Quandl}
 "CXW"
+
+#' Daily Log Returns of GEO Group, Inc. Stock (CXW)
+#'
+#' Data set containing daily log returns (as a percentage) for the stock of GEO
+#' Group, Inc., a private prison company, from July 29, 1994 to March 27, 2018.
+#' Stock prices are adjusted for stock splits and dividends and was obtained
+#' from Quandl, via the command \code{Quandl::Quandl("WIKI/GEO")} (see
+#' \code{\link[Quandl]{Quandl}}).
+#'
+#' @format A \code{\link[zoo]{zoo}} time series object with 5958 rows and 1
+#'         variable:
+#' \describe{
+#'   \item{GEO}{The daily (natural) log return of GEO, as a percentage}
+#' }
+#' @source \href{https://www.quandl.com}{Quandl}
+"GEO"

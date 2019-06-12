@@ -27,23 +27,9 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    n1 <- min(n, 216)
-    n2 <- n - n1
-    x1 <- as.numeric(arima.sim(n = n1, n.start = 500, model = list(
-                                 order = c(1, 0, 2), ar = c(0.941),
-                                 ma = c(-1.160, 0.249)), sd = 3.438))
-    if (n2 > 0) {
-      x2 <- as.numeric(arima.sim(n = n2, n.start = n1, start.innov = x1,
-                                 model = list(order = c(2, 0, 1),
-                                              ar = c(-0.989, -0.370),
-                                              ma = c(0.776)), sd = 2.581))
-    } else {
-      x2 <- numeric()
-    }
-
-    x <- c(x1, x2)
-
-    return(x)
+    as.numeric(arima.sim(n = n, n.start = 500, model = list(
+                                order = c(3, 0, 1), ar = c(0.658, 0.034, 0.196),
+                                ma = c(-0.833)), sd = 3.893))
   }
 
   df_generator <- function(n, beta, eps) {
