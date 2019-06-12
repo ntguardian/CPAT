@@ -166,6 +166,13 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
   stop_with_message(case %in% names(struc_models), "case must identify" %s%
                     "one of the models in struc_models from" %s% CONTEXTINPUT)
 
+  # TODO: curtis: THIS IS A CRUDE SOLUTION TO THE PROBLEM OF COMMUNICATING WHAT
+  #               d IS TO THE P-VALUE FUNCTIONS; A MORE FLEXIBL, ROBUST, AND
+  #               GENERAL SOLUTION IS NEEDED IN MORE COMPLEX SIMULATIONS.
+  #               EFFECTIVELY ASSUMING THAT d IS CONSTANT, WHICH MAY NOT BE
+  #               ALWAYS THE CASE -- Mon 15 Apr 2019 05:11:35 PM MDT
+  d <- nrow(struc_models[[1]])
+
   # Collecting parameters, now that condition checking is done
   n_theta <- ceiling(n * heterobreak)
   kstar <- kstar_functions[[cpt]]
@@ -227,7 +234,7 @@ main <- function(SIMINPUT, CONTEXTINPUT, TESTINPUT, SIMINPUTPOST = "",
     
     stat(formula = f, data = df)
   }
-  pvals <- sapply(simulation, pval_functions[[stat_name]])
+  pvals <- sapply(simulation, function(z) pval_functions[[stat_name]](z, d = d))
   rejections <- pvals <= alpha
 
   # Reporting
