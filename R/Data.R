@@ -167,3 +167,41 @@
 #' }
 #' @source \href{https://www.quandl.com}{Quandl}
 "GEO"
+
+#' Daily Gold Price
+#'
+#' Data set containing daily gold prices (per troy ounce). More specifically,
+#' the morning London price fixing (from the London Bullion Market Association),
+#' ranging from 1968 to June 24, 2019. Data was obtained from Quandl, via the
+#' command \code{Quandl::Quandl("LBMA/GOLD")} (see
+#' \code{\link[Quandl]{Quandl}}).
+#'
+#' @format A \code{\link[zoo]{zoo}} time series object with 13010 observations
+#' @source \href{https://www.quandl.com}{Quandl}
+"gold"
+
+#' Daily Platinum Price
+#'
+#' Data set containing daily platinum prices (per troy ounce). More
+#' specifically, the morning London price fixing (from the London Platinum and
+#' Palladium Society), ranging from April 1990 to June 21, 2019. Data was
+#' obtained from Quandl, via the command \code{Quandl::Quandl("LPPM/PLAT")} (see
+#' \code{\link[Quandl]{Quandl}}).
+#'
+#' @format A \code{\link[zoo]{zoo}} time series object with 7382 observations
+#' @source \href{https://www.quandl.com}{Quandl}
+"platinum"
+
+#' Market Returns and the Gold/Platinum Ratio
+#'
+#' Data set containing excess market returns and the gold/platinum price
+#' ratio, starting from July 3, 1990 and ending October 31, 2017.
+#'
+#' @format A \code{\link[zoo]{zoo}} time series object with 6764 rows and 3
+#'         variables:
+#' \describe{
+#'   \item{Mkt.RF}{The column \code{Mkt.RF} from \code{\link{ff}}}
+#'   \item{GP}{The log ratio of \code{\link{gold}} and \code{\link{platinum}}}
+#'   \item{Mkt.RF.Smooth}{63-day moving average of \code{Mkt.RF}}
+#' }
+"MktGP"

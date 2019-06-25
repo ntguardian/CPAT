@@ -1,11 +1,13 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimDataExample.R
+# RealDataPrivatePrisons.R
 ################################################################################
-# 2019-03-01
+# 2019-06-12
 # Curtis Miller
 ################################################################################
-# Data simulation definition file; simulate data resembling that in example.
+# A file containing data for data example involving the behavior of a portfolio
+# of private prison stock around the time the DOJ declared discontinuation of
+# private prisons in 2016.
 ################################################################################
 
 # argparser: A package for handling command line arguments
@@ -14,46 +16,38 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
   require("argparser")
 }
 
+`%s%` <- CPAT:::`%s%`
+`%s0%` <- CPAT:::`%s0%`
+
 ################################################################################
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(output) {
+main <- function(output = "RealDataPrivatePrisons.Rda") {
   # This function will be executed when the script is called from the command
   # line
 
-  library(zoo)
+  suppressPackageStartupMessages(library(CPAT))
+  suppressPackageStartupMessages(library(xts))
 
-  ##############################################################################
-  # REQUIRED OBJECTS
-  ##############################################################################
+  data("ff")
+  data("CXW")
+  data("GEO")
 
-  eps_generator <- function(n) {
-    as.numeric(arima.sim(n = n, n.start = 500, model = list(
-                                order = c(3, 0, 0),
-                                ar = c(0.766, 0.040, 0.178),
-                                sd = sqrt(0.001)))
-  }
+  GEO <- GEO[index(GEO) <= as.Date("2017-10-31"), ]
 
-  df_generator <- function(n, beta, eps) {
-    d <- length(beta)
-    stopifnot(d == 2)
-    const <- rep(1, times = n)
-    interim_mat <- cbind(const,
-                         cumsum(rnorm(n, sd = 0.01)))
+  ff <- as.zoo(ff, order.by = as.Date(rownames(ff), format = "%Y%m%d"))
 
-    y <- as.vector(interim_mat %*% as.matrix(beta)) + eps
+  data_set <- merge(ff, CXW, GEO)
+  data_set$P.RF <- 0.6 * data_set$CXW + 0.4 * data_set$GEO - data_set$RF
 
-    if (d == 1) {
-      return(data.frame("y" = y))
-    }
-    interim_mat <- interim_mat[, 2:d, drop = FALSE]
-    colnames(interim_mat) <- paste0("X", 1:(d - 1))
+  events <- data.frame("Time" = as.Date("2016-08-18"),
+                       "Event" = "DOJ Announcement",
+                       stringsAsFactors = FALSE)
+  model <- P.RF ~ Mkt.RF + SMB + HML + RMW + CMA
+  is_ts <- TRUE
 
-    as.data.frame(cbind("y" = y, interim_mat))
-  }
-
-  save(eps_generator, df_generator, file = output, ascii = TRUE)
+  save(data_set, events, model, is_ts, file = output, ascii = TRUE)
 }
 
 ################################################################################
@@ -61,9 +55,11 @@ main <- function(output) {
 ################################################################################
 
 if (sys.nframe() == 0) {
-  p <- arg_parser("Defines data generation functions for simulations.")
-  p <- add_argument(p, "--output", type = "character", nargs = 1,
-                    default = "SimDataExample.R",
+  p <- arg_parser("Generate file for data example involving the behavior" %s%
+                  "of private prison stock around the time the DOJ declared" %s%
+                  "discontinuation of private prisons in 2016.")
+  p <- add_argument(p, "output", type = "character",
+                    default = "RealDataPrivatePrisons.Rda",
                     help = "Name of output .Rda file")
 
   cl_args <- parse_args(p)
