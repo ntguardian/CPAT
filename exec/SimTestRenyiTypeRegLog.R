@@ -1,13 +1,13 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimTestRenyiTypeReg.R
+# SimTestRenyiTypeRegLog.R
 ################################################################################
 # 2019-03-07
 # Curtis Miller
 ################################################################################
 # Define the Rényi-type test statistic for simulations that uses the full
 # regression model coefficients for the test and uses kernel methods for
-# long-run variance estimation.
+# long-run variance estimation. Here kn = log.
 ################################################################################
 
 # optparse: A package for handling command line arguments
@@ -26,7 +26,7 @@ main <- function(output = "SimTestRenyiTypeReg.Rda", linetype = "solid",
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   renyi_reg_st <- function(formula, data) {
-    CPAT:::stat_Zn_reg(formula = formula, data = data, kn = sqrt,
+    CPAT:::stat_Zn_reg(formula = formula, data = data, kn = log,
                        use_kernel_var = TRUE, kernel = "qs", bandwidth = "and")
   }
 
@@ -49,10 +49,10 @@ if (sys.nframe() == 0) {
   cl_args <- parse_args(OptionParser(
         description = paste("Define Rényi-type test statistic for simulations",
                             "that uses the regression model coefficients for",
-                            "the test."),
+                            "the test. Here kn = log."),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "SimTestRenyiTypeReg.Rda",
+                      default = "SimTestRenyiTypeRegLog.Rda",
                       help = "Name of output .Rda file"),
           make_option(c("--linetype", "-l"), type = "character",
                       default = "solid",

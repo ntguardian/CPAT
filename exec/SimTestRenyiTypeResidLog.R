@@ -1,12 +1,12 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimTestRenyiTypeResid.R
+# SimTestRenyiTypeResidLog.R
 ################################################################################
 # 2019-02-22
 # Curtis Miller
 ################################################################################
 # Define Rényi-type test statistic for simulations that uses the residuals of
-# the regression model for the test.
+# the regression model for the test. Here kn = log.
 ################################################################################
 
 # optparse: A package for handling command line arguments
@@ -27,7 +27,7 @@ main <- function(output = "SimTestRenyiTypeResid.Rda", linetype = "dashed",
   renyi_st <- function(formula, data) {
     res <- residuals(CPAT:::wrapped_dynlm(formula = formula, data = data))
     CPAT:::stat_Zn(res, use_kernel_var = TRUE, kernel = "qs", bandwidth = "and",
-                   kn = sqrt)
+                   kn = log)
   }
 
   ##############################################################################
@@ -49,10 +49,10 @@ if (sys.nframe() == 0) {
   cl_args <- parse_args(OptionParser(
         description = paste("Define Rényi-type test statistic for simulations",
                             "that uses the residuals of the regression model",
-                            "for the test."),
+                            "for the test. Here kn = log."),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "SimTestRenyiTypeResid.Rda",
+                      default = "SimTestRenyiTypeResidLog.Rda",
                       help = "Name of output .Rda file"),
           make_option(c("--linetype", "-l"), type = "character",
                       default = "dashed",
