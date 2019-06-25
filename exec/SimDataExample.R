@@ -29,11 +29,10 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    as.numeric(rnorm(n, sd = sqrt(0.001)))
-    # as.numeric(arima.sim(n = n, n.start = 500, model = list(
-    #                             order = c(3, 0, 0),
-    #                             ar = c(0.766, 0.040, 0.178),
-    #                             sd = sqrt(0.001))))
+    as.numeric(arima.sim(n = n, n.start = 500, model = list(
+          order = c(3, 0, 0),
+          ar = c(0.766, 0.040, 0.178)
+          ), sd = sqrt(0.001)))
   }
 
   df_generator <- function(n, beta, eps) {
@@ -41,7 +40,12 @@ main <- function(output) {
     stopifnot(d == 2)
     const <- rep(1, times = n)
     interim_mat <- cbind(const,
-                         cumsum(rnorm(n, sd = 0.01)))
+                         as.numeric(arima.sim(n = n, n.start = 500,
+                             model = list(
+                               order = c(2, 0, 2),
+                               ar = c(0.491, 0.483),
+                               ma = c(0.333, -0.247)
+                             ), sd = sqrt(0.0001))))
 
     y <- as.vector(interim_mat %*% as.matrix(beta)) + eps
 
