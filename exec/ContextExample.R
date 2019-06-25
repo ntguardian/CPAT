@@ -63,7 +63,7 @@ main <- function(output = "ContextExample.Rda", help = FALSE) {
   
   # n_values <- as.integer(c(216 + 9, 216 + 18, 216 + 36))
   n_values <- as.integer(c(750))
-  kstar_functions <- c("ElectionDay" = function(n) {min(n, 730)})
+  kstar_functions <- c("Recession" = function(n) {min(n, 730)})
   struc_models <- lapply(delta, grm_md)
   names(struc_models) <- "d" %s0% delta
   struc_name_conversion <- data.frame("d" = delta)

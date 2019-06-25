@@ -29,10 +29,11 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    as.numeric(arima.sim(n = n, n.start = 500, model = list(
-                                order = c(3, 0, 0),
-                                ar = c(0.766, 0.040, 0.178),
-                                sd = sqrt(0.001))))
+    as.numeric(rnorm(n, sd = sqrt(0.001)))
+    # as.numeric(arima.sim(n = n, n.start = 500, model = list(
+    #                             order = c(3, 0, 0),
+    #                             ar = c(0.766, 0.040, 0.178),
+    #                             sd = sqrt(0.001))))
   }
 
   df_generator <- function(n, beta, eps) {
