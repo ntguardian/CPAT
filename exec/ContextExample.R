@@ -37,10 +37,10 @@ base_file_name <- CPAT:::base_file_name
 #' @examples
 #' gen_regime_mat(1:2, 0.1)
 gen_regime_mat <- function(base, delta = 0) {
-  stopifnot(length(base) == 2)
-  d <- 2
-  delta_vec <- (c(-0.671, -0.722) - 
-                c( 0    , -0.098)) * delta
+  stopifnot(length(base) == 5)
+  d <- 5
+  delta_vec <- (c(-16.153, 0.185, 0, 0, 0) - 
+                c(-10.706, 0.172, 0.075, 0.080, -0.059)) * delta
   cbind(base, base + delta_vec)
 }
 
@@ -54,16 +54,16 @@ main <- function(output = "ContextExample.Rda", help = FALSE) {
 
   library(purrr)
 
-  grm_md <- partial(gen_regime_mat, base = c(0, -0.098))
+  grm_md <- partial(gen_regime_mat, base = c(-10.706, 0.172, 0.075, 0.080,
+                                             -0.059))
   delta <- ((0):20)/10
 
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
   
-  # n_values <- as.integer(c(216 + 9, 216 + 18, 216 + 36))
-  n_values <- as.integer(c(750))
-  kstar_functions <- c("Recession" = function(n) {min(n, 730)})
+  n_values <- as.integer(c(220))
+  kstar_functions <- c("Break" = function(n) {min(n, 208)})
   struc_models <- lapply(delta, grm_md)
   names(struc_models) <- "d" %s0% delta
   struc_name_conversion <- data.frame("d" = delta)

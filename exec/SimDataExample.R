@@ -23,26 +23,31 @@ main <- function(output) {
   # line
 
   library(zoo)
+  library(dynlm)
 
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
 
   eps_generator <- function(n) {
-    as.numeric(rollmean(rnorm(n + 62, sd = sqrt(0.0002)), k = 63))
+    as.numeric(arima.sim(n = n, n.start = 500, model = list(
+            order = c(0, 0, 3),
+            ma = c(0.674, 0.537, 0.552)
+          ), sd = sqrt(0.420)))
   }
 
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
-    stopifnot(d == 2)
+    stopifnot(d == 5)
     const <- rep(1, times = n)
-    interim_mat <- cbind(const,
-                         as.numeric(arima.sim(n = n, n.start = 500,
-                             model = list(
-                               order = c(2, 0, 2),
-                               ar = c(0.491, 0.483),
-                               ma = c(0.333, -0.247)
-                             ), sd = sqrt(0.0001))))
+    series <- arima.sim(n = n + 4, n.start = 500, model = list(
+          order = c(1, 0, 3),
+          ar = c(0.204),
+          ma = c(0.634, 0.594, 0.577)
+        ), sd = sqrt(21.376))
+    Xtemp <- model.frame(dynlm(series ~ L(series, 1:4)))[[2]]
+
+    interim_mat <- cbind(const, Xtemp)
 
     y <- as.vector(interim_mat %*% as.matrix(beta)) + eps
 
