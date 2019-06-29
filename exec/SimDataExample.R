@@ -56,6 +56,7 @@ main <- function(output) {
     }
     interim_mat <- interim_mat[, 2:d, drop = FALSE]
     colnames(interim_mat) <- paste0("X", 1:(d - 1))
+    interim_mat <- as.data.frame(interim_mat)
 
     as.data.frame(cbind("y" = y, interim_mat))
   }
