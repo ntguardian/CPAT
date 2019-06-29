@@ -30,10 +30,21 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    as.numeric(arima.sim(n = n, n.start = 500, model = list(
+    n1 <- min(n, 212)
+    n2 <- n - n1
+    vec1 <- as.numeric(arima.sim(n = n1, n.start = 500, model = list(
             order = c(0, 0, 3),
-            ma = c(0.674, 0.537, 0.552)
-          ), sd = sqrt(0.420)))
+            ma = c(0.772, 0.800, 0.690)
+          ), sd = sqrt(1.001)))
+    if (n2 == 0) {
+      vec2 <- numeric()
+    } else {
+      vec2 <- as.numeric(arima.sim(n = n2, start.innov = vec1, model = list(
+              order = c(0, 0, 3),
+              ma = c(0.674, 0.537, 0.522)
+            ), sd = sqrt(0.420)))
+    }
+    c(vec1, vec2)
   }
 
   df_generator <- function(n, beta, eps) {
