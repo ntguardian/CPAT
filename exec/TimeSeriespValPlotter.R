@@ -92,14 +92,18 @@ main <- function(input, output = "out", variable = "", level = 0.05,
        scale_linetype_manual(values = plot_desc) +
        xlab("") + ylab("") +
        geom_hline(yintercept = level, linetype = levellinetype) +
-       geom_vline(xintercept = events$Time, linetype = "solid") +
-       geom_text(label = events$Event, x = events$Time,
-                 y = median(c(pretty(stat_pvals_long$pval), level)),
-                 angle = 90, vjust = -0.5, size = rel(4)) +
        scale_y_continuous(breaks = c(pretty(stat_pvals_long$pval), level),
                           labels = c(pretty(stat_pvals_long$pval), leveltex)) +
        theme_bw() +
        theme(legend.position = "none")
+
+   if (nrow(events) > 0) {
+     q <- q +
+          geom_vline(xintercept = events$Time, linetype = "solid") +
+          geom_text(label = events$Event, x = events$Time,
+                    y = median(c(pretty(stat_pvals_long$pval), level)),
+                    angle = 90, vjust = -0.5, size = rel(4)) +
+   }
 
   filename_tex <- output %s0% ".tex"
   filename_pdf <- output %s0% ".pdf"
