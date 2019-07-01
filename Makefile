@@ -1105,7 +1105,7 @@ $(EXAMPLEGDPPMIPVALS) : $(EXAMPLEGDPPMI) \
                         exec/ExpandingWindowpValComputer.R
 	$(RSCRIPT) $(lastword $^) --output $@ \
 		 --statistics $(filter-out $< $(lastword $^), $^) \
-		 --firstright 200
+		 --firstright 200 $<
 
 $(EXAMPLEGERMANM1PLOT).pdf : $(EXAMPLEGERMANM1PVALS)
 $(EXAMPLECXWPLOT).pdf : $(EXAMPLECXWPVALS)
