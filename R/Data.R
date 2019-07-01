@@ -205,3 +205,18 @@
 #'   \item{Mkt.RF.Smooth}{63-day moving average of \code{Mkt.RF}}
 #' }
 "MktGP"
+
+#' GDP vs. PMI
+#'
+#' Year-over-year quarterly U.S. gross domestic product (GDP) and the purchasing
+#' managers' index (PMI) as computed by the Institute for Supply Management,
+#' spanning a period from Q1 1948 to Q1 2019.
+#'
+#' @format A \code{\link[zoo]{zoo}} time series object with 285 rows and 2
+#'         variables:
+#' \describe{
+#'   \item{PMI}{Purchasing Manager's Index}
+#'   \item{GDP}{Y.o.Y. GDP}
+#' }
+#' @source \href{https://www.bloomberg.com}{Bloomberg}
+"GDPPMI"
