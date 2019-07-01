@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 ################################################################################
-# RealDataPMIGDPPredict.R
+# RealDataGDPPMIPredict.R
 ################################################################################
 # 2019-06-30
 # Curtis Miller
@@ -21,22 +21,20 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(output = "RealDataPMIGDPPredict.Rda") {
+main <- function(output = "RealDataGDPPMIPredict.Rda") {
   # This function will be executed when the script is called from the command
   # line
 
   suppressPackageStartupMessages(library(CPAT))
 
-  data("ff")
-  data("CXW")
+  data("GDPPMI")
 
-  ff <- as.zoo(ff, order.by = as.Date(rownames(ff), format = "%Y%m%d"))
+  data_set <- GDPPMI[9:nrow(GDPPMI),]
 
-  data_set <- merge(ff, CXW)
-  events <- data.frame("Time" = as.Date("2016-11-08"),
-                       "Event" = "U.S. Election",
+  events <- data.frame("Time" = as.Date(character()),
+                       "Event" = character(),
                        stringsAsFactors = FALSE)
-  model <- I(CXW - RF) ~ Mkt.RF + SMB + HML + RMW + CMA
+  model <- GDP ~ L(PMI, 1) + L(PMI, 2) + L(PMI, 3) + L(PMI, 4)
   is_ts <- TRUE
 
   save(data_set, events, model, is_ts, file = output, ascii = TRUE)
@@ -47,10 +45,10 @@ main <- function(output = "RealDataPMIGDPPredict.Rda") {
 ################################################################################
 
 if (sys.nframe() == 0) {
-  p <- arg_parser("Generate file for data example involving the behavior" %s%
-                  "of stock CXW around the election of Donald Trump")
+  p <- arg_parser("Generate file for data example involving the prediction" %s%
+                  "of YoY GDP using PMI")
   p <- add_argument(p, "output", type = "character",
-                    default = "RealDataPMIGDPPredict.Rda",
+                    default = "RealDataGDPPMIPredict.Rda",
                     help = "Name of output .Rda file")
 
   cl_args <- parse_args(p)
