@@ -102,7 +102,7 @@ main <- function(input, output = "out", variable = "", level = 0.05,
           geom_vline(xintercept = events$Time, linetype = "solid") +
           geom_text(label = events$Event, x = events$Time,
                     y = median(c(pretty(stat_pvals_long$pval), level)),
-                    angle = 90, vjust = -0.5, size = rel(4)) +
+                    angle = 90, vjust = -0.5, size = rel(4))
    }
 
   filename_tex <- output %s0% ".tex"
