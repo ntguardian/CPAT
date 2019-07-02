@@ -413,17 +413,20 @@ POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
 EXAMPLEPREFIX=RealData
 EXAMPLEGERMANM1=data/$(EXAMPLEPREFIX)M1Germany.Rda
 EXAMPLECXW=data/$(EXAMPLEPREFIX)CXWDonaldTrump.Rda
-ALLEXAMPLES=$(EXAMPLEGERMANM1) $(EXAMPLECXW)
+EXAMPLEGDPPMI=data/$(EXAMPLEPREFIX)GDPPMIPredict.Rda
+ALLEXAMPLES=$(EXAMPLEGERMANM1) $(EXAMPLECXW) $(EXAMPLEGDPPMI)
 
 # Processed data examples
 EXAMPLEGERMANM1PVALS=data/$(EXAMPLEPREFIX)M1GermanypVals.Rda
 EXAMPLECXWPVALS=data/$(EXAMPLEPREFIX)CXWDonaldTrumppVals.Rda
-ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS) $(EXAMPLECXWPVALS)
+EXAMPLEGDPPMIPVALS=data/$(EXAMPLEPREFIX)GDPPMIPredictpVals.Rda
+ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS) $(EXAMPLECXWPVALS) $(EXAMPLEGDPPMIPVALS)
 
 # Data example plots
 EXAMPLEGERMANM1PLOT=vignettes/$(EXAMPLEPREFIX)M1Germany
 EXAMPLECXWPLOT=vignettes/$(EXAMPLEPREFIX)CXW
-ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT)
+EXAMPLEGDPPMIPLOT=vignettes/$(EXAMPLEPREFIX)GDPPMI
+ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT) $(EXAMPLEGDPPMIPLOT)
 
 ################################################################################
 # VIGNETTE-VARS
@@ -431,7 +434,8 @@ ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT)
 
 # Vignettes to be created
 VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf \
-          doc/CXWDonaldTrumpElection.pdf doc/TypeIErrors.pdf
+          doc/CXWDonaldTrumpElection.pdf doc/TypeIErrors.pdf \
+          doc/GDPPMIStructuralChange.pdf
 
 ################################################################################
 # RECIPES
@@ -674,10 +678,10 @@ $(SIMSGARCHHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
 # EXAMPLE-LIKE
 $(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Example.Rda \
                           data/$(SIMDATAPREFIX)Example.Rda \
-                          data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+                          data/$(SIMSTATPREFIX)RenyiTypeRegLog.Rda
 $(SIMSEXAMPLELIKERENYIRESID) : data/$(CONTEXTPREFIX)Example.Rda \
                                data/$(SIMDATAPREFIX)Example.Rda \
-                               data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+                               data/$(SIMSTATPREFIX)RenyiTypeResidLog.Rda
 $(SIMSEXAMPLELIKERENYINOKERN) : data/$(CONTEXTPREFIX)Example.Rda \
                                 data/$(SIMDATAPREFIX)Example.Rda \
                                 data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
@@ -1094,8 +1098,19 @@ $(EXAMPLECXWPVALS) : $(EXAMPLECXW) data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
 		 --statistics $(filter-out $< $(lastword $^), $^) --left 13218 \
 		 --firstright 13407 --lastright 13469 $<
 
+$(EXAMPLEGDPPMIPVALS) : $(EXAMPLEGDPPMI) \
+                        data/$(SIMSTATPREFIX)RenyiTypeResidLog.Rda \
+                        data/$(SIMSTATPREFIX)CUSUM.Rda \
+                        data/$(SIMSTATPREFIX)RenyiTypeRegLog.Rda \
+                        data/$(SIMSTATPREFIX)HS.Rda \
+                        exec/ExpandingWindowpValComputer.R
+	$(RSCRIPT) $(lastword $^) --output $@ \
+		 --statistics $(filter-out $< $(lastword $^), $^) \
+		 --firstright 200 $<
+
 $(EXAMPLEGERMANM1PLOT).pdf : $(EXAMPLEGERMANM1PVALS)
 $(EXAMPLECXWPLOT).pdf : $(EXAMPLECXWPVALS)
+$(EXAMPLEGDPPMIPLOT).pdf : $(EXAMPLEGDPPMIPVALS)
 $(ALLEXAMPLEPLOTS:=.pdf) : exec/TimeSeriespValPlotter.R
 
 $(ALLEXAMPLEPLOTS:=.pdf) :
@@ -1111,6 +1126,9 @@ doc/ZnTable.pdf : vignettes/ZnTable.ltx
 doc/TypeIErrors.pdf : vignettes/TypeIErrors.ltx
 doc/CXWDonaldTrumpElection.pdf : vignettes/CXWDonaldTrumpElection.ltx \
                                  $(EXAMPLECXWPLOT).pdf
+doc/GDPPMIStructuralChange.pdf: vignettes/GDPPMIStructuralChange.ltx \
+                                $(EXAMPLEGDPPMIPLOT).pdf \
+                                $(POWERPLOTEXAMPLELIKEPREFIX)n225.pdf
 
 # Vignette recipe
 $(VIGNETTES) :

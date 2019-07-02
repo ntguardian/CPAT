@@ -55,7 +55,7 @@ main <- function(output) {
           order = c(1, 0, 3),
           ar = c(0.204),
           ma = c(0.634, 0.594, 0.577)
-        ), sd = sqrt(21.376))
+        ), sd = sqrt(21.376)) + 53.210
     Xtemp <- model.frame(dynlm(series ~ L(series, 1:4)))[[2]]
 
     interim_mat <- cbind(const, Xtemp)
