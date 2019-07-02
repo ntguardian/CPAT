@@ -434,7 +434,8 @@ ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT) $(EXAMPLEGDPPMIPLOT)
 
 # Vignettes to be created
 VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf \
-          doc/CXWDonaldTrumpElection.pdf doc/TypeIErrors.pdf
+          doc/CXWDonaldTrumpElection.pdf doc/TypeIErrors.pdf \
+          doc/GDPPMIStructuralChange.pdf
 
 ################################################################################
 # RECIPES
@@ -1125,6 +1126,9 @@ doc/ZnTable.pdf : vignettes/ZnTable.ltx
 doc/TypeIErrors.pdf : vignettes/TypeIErrors.ltx
 doc/CXWDonaldTrumpElection.pdf : vignettes/CXWDonaldTrumpElection.ltx \
                                  $(EXAMPLECXWPLOT).pdf
+doc/GDPPMIStructuralChange.pdf: vignettes/GDPPMIStructuralChange.ltx \
+                                $(EXAMPLEGDPPMIPLOT).pdf \
+                                $(POWERPLOTEXAMPLELIKEPREFIX)n225.pdf
 
 # Vignette recipe
 $(VIGNETTES) :

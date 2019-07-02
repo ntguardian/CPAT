@@ -1,0 +1,177 @@
+%\VignetteIndexEntry{Structural Change in a Predictive Model for GDP based on PMI; Power Demonstration}
+%\VignetteEngine{R.rsp::tex}
+%\VignetteKeyword{GDP PMI}
+
+\documentclass{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\title{Structural Change in a Predictive Model for GDP based on PMI; Power
+Demonstration}
+\date{\today}
+\author{Curtis Miller}
+
+\begin{document}
+
+\maketitle
+
+In our example we will explore linear forecasting models for U.S. gross domestic
+product (GDP) based on the purchasing managers index (PMI) as computed by the
+Institute for Supply Management. We look at a quarterly data set starting in Q1
+1950 and ending in Q1 2019. All data was obtained from Bloomberg.
+
+Let $\text{GDP}_t$ be the year-over-year value of GDP in quarter $t$ and
+$\text{PMI}_t$ be the value of the PMI index in quarter $t$. Here we investigate
+change points in the model:
+
+\begin{align}
+    \label{eqn:mainmodel}
+    \text{GDP}_t =
+    \beta_0+\beta_1\text{PMI}_{t-1}+\beta_2\text{PMI}_{t-2}+\beta_3\text{PMI}_{
+    t - 3}+\beta_4\text{PMI}_{t-4}+\epsilon_{t}
+.\end{align}
+
+This model forecasts GDP growth using only the value of the PMI of the four
+previous quarters, and is the model with the lowest AIC value amongst models
+that use only lags of the PMI. We present estimates and other relevant
+statistics for the model in Table \ref{tbl:regressions}. While the model does
+not have necessarily bad characteristics, notice that according to the CUSUM
+test for structural change, there is a structural break in the model. According
+to the argmax estimator for the change point location, the change occurs around
+Q1 2003, near the end of the recession of the early 2000s.
+
+Why does this change occur? One could argue that it was a result of the initial
+recession in the 2000s. However, there is another competing model for
+forecasting GDP change:
+
+\begin{align}
+    \label{eqn:altmodel}
+    \text{GDP}_{t}=\beta_0+\beta_1\text{GDP}_{t-1}+\beta_2\text{PMI}_{t-1} +
+    \beta_3\text{PMI}_{t-4}+\epsilon_{t}
+.\end{align}
+
+This model has the lowest AIC among models that allow for lags of GDP to be
+included in the model. We report parameter estimates and other relevant
+statistics of the model in Table \ref{tbl:regressions}. Notice that if one
+judges model quality by either AIC, $\text{R}^2$, or F test results, model
+\eqref{eqn:altmodel} is superior to model \eqref{eqn:mainmodel}. Additionally,
+according to the CUSUM test, there is no structural change in model
+\eqref{eqn:altmodel}. This suggests another possible explanation for why we see
+structural change in model \eqref{eqn:mainmodel}; it is not specified well, and
+the specification breaks down around 2003.
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Mon, Jul 01, 2019 - 11:41:04 PM
+\begin{table}[!htbp] \centering 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-3} 
+\\[-1.8ex] & \multicolumn{2}{c}{$\text{GDP}_{t}$} \\ 
+\\[-1.8ex] & \eqref{eqn:mainmodel} & \eqref{eqn:altmodel} \\ 
+\hline \\[-1.8ex] 
+$\text{GDP}_{t-1}$ &  & 0.787$^{***}$ (0.040) \\ 
+$\text{PMI}_{t-1}$& 0.170$^{***}$ (0.019) & 0.101$^{***}$ (0.016) \\ 
+$\text{PMI}_{t-2}$& 0.072$^{***}$ (0.019) &  \\ 
+$\text{PMI}_{t-3}$& 0.077$^{***}$ (0.017) &  \\ 
+$\text{PMI}_{t-4}$& $-$0.050$^{*}$ (0.029) & $-$0.083$^{***}$ (0.013) \\ 
+  Constant & $-$11.137$^{***}$ (2.064) & $-$0.314 (1.097) \\ 
+ \hline \\[-1.8ex] 
+Observations & 273 & 273 \\ 
+R$^{2}$ & 0.552 & 0.843 \\ 
+Adjusted R$^{2}$ & 0.545 & 0.841 \\ 
+F Statistic & 42.316$^{***}$ (df = 4; 268) & 373.878$^{***}$ (df = 3; 269) \\ 
+AIC & 1058.285 & 770.872 \\ 
+CUSUM Statistic & 1.628$^{**}$ & 1.052 \\ 
+Residual Std. Error & 1.660 (df = 268) & 0.982 (df = 269) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\caption{Regression model estimates for predictive models \eqref{eqn:mainmodel}
+and \eqref{eqn:altmodel}. We estimated the covariance matrix used for standard
+error estimates and the F test using the procedure described in
+\cite{andrews91b}; this was also the basis for computing the CUSUM statistic, as
+described in \cite{horvathricemiller19}. Coefficient standard errors are
+reported in parentheses.}
+  \label{tbl:regressions} 
+\end{table}
+
+We investigated how well the statistics considered in this paper can detect the
+structural change in model \eqref{eqn:mainmodel}. Throughout this section, the
+trimming function for R\'{e}nyi-type statistics will be $\log(T)$ (usually the
+trimming parameter was $\sqrt{T}$ in the simulation studies). Otherwise, the
+statistics considered here were treated the same way as they were in previous
+simulations.
+
+We first wanted to establish that the relevant test statistics had good size and
+power properties in the neighborhood of the pre- and post-change values of the
+parameters of model \eqref{eqn:mainmodel}. Let $\gamma_0=(-10.706, 0.172, 0.075,
+0.080, -0.059)^\top$ and $\gamma_1=(-16.153, 0.185, 0, 0, 0)^\top$. Prior to the
+change, the model generating the data is $\gamma_0$, and after the change, the
+model generating the data is $\delta(\gamma_1-\gamma_0)$, with $\delta \in
+[0,2]$. The only sample size considered in these simulations was $T=225$, with
+the change occuring at  $t^{*}=213$. The residuals followed a $\text{MA}(3)$
+process that changed around $t=212$; the parameter values prior to the change
+were  $(0.772, 0.800, 0.690)$ with the noise process being \textit{i.i.d.} $N(0,
+1.001)$ (that is, the variance is 1.001) random variables, and after the change
+were  $(0.674, 0.537, 0.522)$ with the noise process being similar but with
+variance 0.42. The data matrix was randomly generated using independent
+$\text{ARMA}(1,3)$ processes for before and after the change, with the
+autoregressive coefficient being 0.204, the moving average coefficients being
+$(0.674, 0.537, 0.522)$, and the variance being 21.376. These conditions do not
+exactly match those seen in the data, but they are similar. Otherwise the
+simulations were done similarly as before.
+
+We present the results of these simulations in Figure \ref{fig:examplepower}.
+The new statistic has weak but existent power in this context. The Hidalgo-Seo
+statistic shows significant size inflation and cannot be trusted. The CUSUM
+statistic has power but also size inflation. The univariate R\'{e}nyi-type
+statistic however seems to have the best properties, including good power and
+size.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{power_plot_Example_n225.pdf}
+    \caption{Estimated power of test statistics under conditions resembling the
+    example.}
+    \label{fig:examplepower}
+\end{figure}
+
+We computed each test statistic on an expanding window of data, where each
+window has a left end point of Q1 1951 and a right end point that varies,
+starting with 1999 Q4 in the first window and adding an additional quarter until
+eventually reaching Q1 2019. The results are presented in Figure
+\ref{fig:realdatagdppmi}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{RealDataGDPPMI.pdf}
+    \caption{$-\log_{10}(p)$-values for statistics computed on an expanding
+    window of data. Here $\alpha=0.05$, and crossing above $-\log_{10}(\alpha)$
+    indicates rejection of the null hypothesis of no structural change.}
+    \label{fig:realdatagdppmi}
+\end{figure}
+
+While the univariate R\'{e}nyi-type statistic appears to do well (it always
+rejects the null hypothesis), we note that outside of the window presented, we
+have yet to find a window where this statistic does \textit{not} reject the null
+hypothesis. While in the simulations the statistic appears to do well, in the
+real data it acts like a statistic that is overpowered. A similar observation
+holds for the Hidalgo-Seo statistic. The CUSUM statistic behaves more
+conservatively than the aforementioned statistics, rejecting near the end of the
+period but not rejecting before. The new version of the R\'{e}nyi-type statistic
+however rejects the null hypothesis sooner than the CUSUM statistic and seems to
+have more moderate behavior than the univariate version.
+
+\bibliography{../inst/REFERENCES.bib}
+\bibliographystyle{ieeetr}
+
+\end{document}
