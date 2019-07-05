@@ -39,8 +39,8 @@ base_file_name <- CPAT:::base_file_name
 gen_regime_mat <- function(base, delta = 0) {
   stopifnot(length(base) == 2)
   d <- 2
-  delta_vec <- (c(-0.266, 0.880) - 
-                c(0.203, 1.012)) * delta
+  delta_vec <- (c(0, 0) - 
+                c(0, 1.012)) * delta
   cbind(base, base + delta_vec)
 }
 
@@ -54,7 +54,7 @@ main <- function(output = "ContextExample.Rda", help = FALSE) {
 
   library(purrr)
 
-  grm_md <- partial(gen_regime_mat, base = c(0.203, 1.012))
+  grm_md <- partial(gen_regime_mat, base = c(0, 1.012))
   delta <- ((0):20)/10
 
   ##############################################################################
