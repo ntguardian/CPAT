@@ -51,7 +51,7 @@ main <- function(output) {
 
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
-    stopifnot(d == 3)
+    stopifnot(d == 2)
     const <- rep(1, times = n)
     if (d > 1) {
       # Simulate RealEnergyPrice
