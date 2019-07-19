@@ -30,14 +30,21 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    n1 <- min(n, 62)
+    n1 <- min(n, 156)
     n2 <- n - n1
-    vec1 <- as.numeric(arima.sim(list(order = c(0, 0, 1), ma = c(0.287)),
-                                 sd = sqrt(0.001), n = n1, n.start = 500))
+    vec1_innov <- rnorm(n1, sd = sqrt(2.230))
+    vec1 <- as.numeric(arima.sim(n = n1, model = list(
+                        order = c(2, 0, 0),
+                        ar = c(1.323, -0.341)
+                      ), innov = vec1_innov))
     if (n2 == 0) {
       vec2 <- numeric()
     } else {
-      vec2 <- as.numeric(rnorm(n2, sd = sqrt(0.001)))
+      vec2 <- as.numeric(arima.sim(n = n2, model = list(
+                          order = c(2, 0, 0),
+                          ar = c(1.323, -0.341)
+                        ), sd = sqrt(21.941), n.start = length(vec1_innov),
+                        start.innov = vec1_innov))
     }
     c(vec1, vec2)
   }
@@ -49,16 +56,15 @@ main <- function(output) {
     if (d > 1) {
       # Simulate RealEnergyPrice
       v1 <- as.numeric(arima.sim(n = n, model = list(
-              order = c(1, 0, 12),
-              ar = c(0.637),
-              ma = c(0.667, 0.073, 0.434, 1.148, 0.586, 0.308, 0.265, 0.941,
-                    0.797, 0.370, 0.333, 0.679)), sd = sqrt(0.0001))) + 0.650
+              order = c(1, 0, 2),
+              ar = c(0.976),
+              ma = c(0.373, 0.207)), sd = sqrt(15.609))) + 43.991
       # Simulate IndPro
       v2 <- as.numeric(arima.sim(n = n, model = list(
-              order = c(2, 0, 1),
-              ar = c(0.575, 0.373),
-              ma = c(0.706)
-            ), sd = sqrt(0.00002)))
+              order = c(1, 0, 1),
+              ar = c(0.985),
+              ma = c(0.367)
+            ), sd = sqrt(1.323))) + 100
       interim_mat <- cbind(const, v1, v2)
     } else {
       interim_mat <- as.matrix(const)
