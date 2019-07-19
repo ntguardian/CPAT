@@ -54,18 +54,13 @@ main <- function(output) {
     stopifnot(d == 2)
     const <- rep(1, times = n)
     if (d > 1) {
-      # Simulate RealEnergyPrice
+      # Simulate DollarExchange
       v1 <- as.numeric(arima.sim(n = n, model = list(
-              order = c(1, 0, 2),
-              ar = c(0.976),
-              ma = c(0.373, 0.207)), sd = sqrt(15.609))) + 43.991
-      # Simulate IndPro
-      v2 <- as.numeric(arima.sim(n = n, model = list(
               order = c(1, 0, 1),
               ar = c(0.985),
               ma = c(0.367)
             ), sd = sqrt(1.323))) + 100
-      interim_mat <- cbind(const, v1, v2)
+      interim_mat <- cbind(const, v1)
     } else {
       interim_mat <- as.matrix(const)
     }
