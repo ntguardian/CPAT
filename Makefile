@@ -1148,7 +1148,8 @@ doc/GDPPMIStructuralChange.pdf: vignettes/GDPPMIStructuralChange.ltx \
                                 $(EXAMPLEGDPPMIPLOT).pdf \
                                 vignettes/GDPPMIPowerPlot.pdf
 doc/OilDollarStructuralChange.pdf : vignettes/OilDollarStructuralChange.ltx \
-                                    OilDollar.pdf $(EXAMPLEOILDOLLARPLOT).pdf \
+                                    vignettes/OilDollar.pdf \
+                                    $(EXAMPLEOILDOLLARPLOT).pdf \
                                     $(POWERPLOTEXAMPLELIKEPREFIX)n130.pdf
 # Vignette recipe
 $(VIGNETTES) :
