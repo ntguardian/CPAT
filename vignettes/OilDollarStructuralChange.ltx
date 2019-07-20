@@ -1,0 +1,210 @@
+%\VignetteIndexEntry{Structural Change in Oil Prices' Relationship to Dollar Strength; Power Demonstration}
+%\VignetteEngine{R.rsp::tex}
+%\VignetteKeyword{Oil Dollar}
+
+\documentclass{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{bm}
+
+\title{Structural Change in Oil Prices' Relationship to Dollar Strength; Power
+       Demonstration}
+\date{\today}
+\author{Curtis Miller}
+
+\begin{document}
+
+\maketitle
+
+In this example we demonstrate structural change detection in the context of oil
+prices' relationship with the U.S. Dollar. Commodities in general are priced in
+dollars, and thus their prices tend to have an inverse relationship with the
+overall strength of the dollar relative to other currencies; as the dollar
+strengthens, commodity prices tend to fall. We see that pattern in oil prices as
+well. In Figure \ref{fig:oildollar} we observe the inverse relationship between
+dollar strength and oil price. Additionally, we observe that at least one of the
+series (specifically, oil prices) appears to be heteroskedastic, with volatility
+appearing to increase after the 1990s.
+
+\begin{figure}[!th]
+    \centering
+    \includegraphics[width=0.8\linewidth]{OilDollar.pdf}
+    \caption{Here the price of crude oil (solid line) is compared to the
+    strength of the dollar (dotted line). Data was obtained from the Federal
+Reserved Economic Database (FRED), the oil price series has FRED code MCOILWTICO
+and the dollar strength index has FRED code TWEXBPA.}
+    \label{fig:oildollar}
+\end{figure}
+
+Consider the regression model
+
+\begin{align}
+    \label{eqn:oildollarmodel}
+    \text{Oil}_{t}= \beta_0 + \beta_1 \text{Dollar}_{t}+\epsilon_{t}
+,\end{align}
+
+\noindent where $\text{Oil}_{t}$ is the price of oil in month $t$ and
+$\text{Dollar}_{t}$ is the strength of the dollar as measured by a trade
+weighted index. We present estimates for the coefficients of this model in Table
+\ref{tab:oildollarfit}. We tested for structural breaks in the full sample and
+rejected the null hypothesis of no change, with the best estimate (according to
+the CUSUM test) of the location of the change being February, 2000. When we
+split the data into two sub-samples around that date, we detected no further
+structural changes.
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jul 20, 2019 - 12:45:59 AM
+\begin{table}[!t] \centering 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{3}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-4} 
+\\[-1.8ex] & \multicolumn{3}{c}{$\text{Oil}_{t}$} \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ $\text{Dollar}_{t}$ & $-$0.245$^{*}$ & $-$2.832$^{***}$ & $-$1.711 \\ 
+  & (0.132) & (0.194) & (1.108) \\ 
+  & & & \\ 
+ Constant & 42.278$^{***}$ & 331.921$^{***}$ & 208.582$^{*}$ \\ 
+  & (12.733) & (18.590) & (117.541) \\ 
+  & & & \\ 
+\hline \\[-1.8ex] 
+Observations & 121 & 233 & 354 \\ 
+Start Date & Jan. 1990 & Feb. 2000 & Jan. 1990 \\
+End Date & Jan. 2000 & Jun. 2019 & Jun. 2019 \\
+% R$^{2}$ & 0.105 & 0.817 & 0.199 \\ 
+Adjusted R$^{2}$ & 0.098 & 0.817 & 0.196 \\ 
+% Residual Std. Error & 3.740 (df = 119) & 11.313 (df = 231) & 26.397 (df = 352) \\ 
+F Statistic & 3.463$^{*}$ (df = 1; 119) & 212.890$^{***}$ (df = 1; 231) & 2.386 (df = 1; 352) \\ 
+CUSUM Statistic & 0.915 & 0.536 & 4.638$^{***}$ \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+    \caption{Estimated coefficients for model \eqref{eqn:oildollarmodel}. In the
+    case of the model estimated on the full sample, the CUSUM statistic's
+maximal value occurred around observation 122 (this is an estimate for the
+location of the change point). Standard errors and the F statistic are robust to
+heteroskedasticity and autocorrelation correlation, using the covariance matrix
+estimation procedure suggested by \cite{andrews91b}. The CUSUM test was
+performed with a covariance matrix estimated using kernel methods; see
+\cite{horvathricemiller19}. The selected kernel was the Bartlett kernel and the
+bandwidth was selected using the procedure described in \cite{lazarusetal18}.}
+  \label{tab:oildollarfit} 
+\end{table}
+
+We also estimated $\text{MA}(1)$ models for the residuals $\epsilon_{t}$ of the
+model; in unreported results, we also rejected the null hypothesis of no
+structural change in the $\text{MA}(1)$ model for the residuals. Additionally,
+it seems that, if $\epsilon_{t}=\theta \eta_{t-1}+ \eta_t$ with
+$\text{Var}(\eta_t^2) = \sigma^2$, then $\sigma$ changes in the sample, increasing around the
+time of the structural change in the full sample. This suggests that the
+statistic developed here could prove useful, since we may have not only
+structural change in the parameters of \eqref{eqn:oildollarmodel} but also
+heteroskedasticity.
+
+In our example we will accept the CUSUM test's conclusion that a change point
+occurred in the sample around February 2000 and intend to demonstrate that our
+procedure would detect this change not long after it occurred.
+
+\begin{figure}[bh]
+    \centering
+    \includegraphics[width=0.8\linewidth]{power_plot_Example_n130.pdf}
+    \caption{Empirical power of statistics on simulated data resembling the data
+    from the example. The solid line is the R\'{e}nyi-type statistic using
+regression model coefficients, the long-dash line is the CUSUM statistic
+computed on the residuals of the regression model, the shorter dashed line is
+the R\'{e}nyi-type statistic computed on the residuals, and the dot-dashed line
+is the Hidalgo-Seo statistic derived for regression models. The dotted line
+corresponds to $\alpha=0.05$, the significance level of the test.}
+    \label{fig:powerplotexample}
+\end{figure}
+
+We attempted simulations to observe the behavior of the statistics studied in
+this paper in contexts similar to what we saw in the data (although not
+identical). To simulate the data for model \eqref{eqn:oildollarmodel}, we let
+$\text{Dollar}_{t} - 100 \sim \operatorname{ARMA}(1, 1)$ with autocorrelation
+parameter $\phi=0.985$ and moving average parameter $\theta=0.367$, with the
+residuals being i.i.d. Gaussian with mean zero and variance $\sigma^2=1.323$. We
+modelled the residuals with $\epsilon_{t} \sim \operatorname{MA}(1)$, with
+$\theta=0.8$. The noise process for $\epsilon_t$, while always independent and
+Gaussian distributed, is heteroskedastic; for $t\le 108$, the variance of the
+white noise was 2, but for $t>108$ the variance was 50. We let the break point
+in the simulations occur at  $t^*=122$, let  $T=130$, let the parameter vector
+$\bm{\beta}=(\beta_0,\beta_1)^\top $ before the change point be
+$\bm{\beta}_{0}=(41.308, -0.238)^\top $, and after the change be
+$\bm{\beta}_1 = \bm{\gamma} \delta$, where $\bm{\gamma}=(329.925,
+-2.809)^\top  - (41.308, -0.238)^\top $ and $\delta\in [0,2]$. Note that
+$\delta=0$ corresponds to the null hypothesis of no change being true.
+
+We should mention that while in our previous simulations we estimated long-run
+variance matrices using techniques recommended in \cite{andrews91b} (using
+Andrews' procedure and the quadratic spectral kernel), in this section the
+statistics use the Bartlett kernel and pick the bandwidth using the procedure
+recommended by \cite{lazarusetal18}. The trimming parameter for the
+R\'{e}nyi-type statistics, though, is still the square root function.
+
+We present our results in Figure \ref{fig:powerplotexample}. All statistics
+exhibit size inflation when computed on the simulated data. Also, in the
+simulations, it seems that the new statistic doesn't get better power than the
+CUSUM statistic until $\delta>1.5$. However, the new statistic and the CUSUM
+statistic both seem to suffer the least from size inflation. The R\'{e}nyi-type
+statistic recommended by \cite{horvathricemiller19} sees considerable size
+inflation in this context, and the Hidalgo-Seo statistic is the most inflated of
+them all. We do note that the new procedure exhibits power, though, along with
+the other procedures. Additionally, we observed similar size inflation for $T$
+closer to $t^{*}$.
+
+As stated above, our goal is to demonstrate that the new procedure could detect
+a structural change soon after it occurred in the sample. To do so, we employed
+a procedure like that used in \cite{horvathricemiller19}. We considered an
+expanding window of data, where the left end point of the window was fixed at
+January 1990 and the right end point moved forward in time, adding additional
+months to the sample. We wish to see when each statistic would start rejecting
+the null hypothesis of no change.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{RealDataOilDollar.pdf}
+    \caption{$-\log_{10}(p)$-values for the statistics featured in Figure
+    \ref{fig:powerplotexample} when computed on an expanding window of the data
+from Figure \ref{fig:oildollar} for regression model \eqref{eqn:oildollarmodel}.
+The $y$-axis can be interpreted as the number of zeros before the first
+significant digit of the  $p$-value of the test done with the respective
+statistic. Crossing above the dotted line implies rejection of the null
+hypothesis of no change at significance level  $\alpha=0.05$.}
+    \label{fig:oildollarexpandingwindow}
+\end{figure}
+
+We present our results in Figure \ref{fig:oildollarexpandingwindow}. While the
+simulations suggested that size inflation could be a problem, this does not
+appear to be the case in the actual data except for the two statistics that
+experienced the most size inflation. The CUSUM statistic does not reject the
+null hypothesis in the observed region, the Hidalgo-Seo statistic always does,
+the original R\'{e}nyi-type statistic sometimes does not and sometimes does, and
+the new version of the R\'{e}nyi-type statistic gradually goes from not
+rejecting the null hypothesis to rejecting at the end of the window in a
+visually linear manner, and thus seems the most well-behaved of the statistics
+considered here.
+
+We admit that the simulation results presented in Figure
+\ref{fig:powerplotexample} cast doubt on the validity of our conclusions made in
+the above paragraph. We could have been lucky in observing a reasonable pattern
+in the data. However, it is possible that some of the features that appeared in
+simulated data were not as big an issue as they were in the real data; the
+statistical features we simulated may have been a rough approximation of the
+real data's features. In any case, the size inflation seen in the simulations
+may have been overstated in absolute terms, but the relative size inflation may
+be meaningful.
+
+\bibliography{../inst/REFERENCES.bib}
+\bibliographystyle{ieeetr}
+
+\end{document}
