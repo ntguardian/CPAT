@@ -1104,6 +1104,16 @@ $(EXAMPLECXWPVALS) : $(EXAMPLECXW) data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
 		 --statistics $(filter-out $< $(lastword $^), $^) --left 13218 \
 		 --firstright 13407 --lastright 13469 $<
 
+$(EXAMPLEOILDOLLARPVALS) : $(EXAMPLEOILDOLLAR) \
+                           data/$(SIMSTATPREFIX)RenyiTypeResidAlt.Rda \
+                           data/$(SIMSTATPREFIX)CUSUMAlt.Rda \
+                           data/$(SIMSTATPREFIX)RenyiTypeRegAlt.Rda \
+                           data/$(SIMSTATPREFIX)HS.Rda \
+                           exec/ExpandingWindowpValComputer.R
+	$(RSCRIPT) $(lastword $^) --output $@ \
+		 --statistics $(filter-out $< $(lastword $^), $^) \
+		 --firstright 120 -- lastright 138 $<
+
 $(EXAMPLEGDPPMIPVALS) : $(EXAMPLEGDPPMI) \
                         data/$(SIMSTATPREFIX)RenyiTypeResidAlt.Rda \
                         data/$(SIMSTATPREFIX)CUSUM.Rda \
