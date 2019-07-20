@@ -441,7 +441,8 @@ ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT) $(EXAMPLEGDPPMIPLOT) \
 # Vignettes to be created
 VIGNETTES=doc/CollectedPlots.pdf doc/ZnTable.pdf \
           doc/CXWDonaldTrumpElection.pdf doc/TypeIErrors.pdf \
-          doc/GDPPMIStructuralChange.pdf
+          doc/GDPPMIStructuralChange.pdf \
+          doc/OilDollarStructuralChange.pdf
 
 ################################################################################
 # RECIPES
@@ -1145,8 +1146,10 @@ doc/CXWDonaldTrumpElection.pdf : vignettes/CXWDonaldTrumpElection.ltx \
                                  $(EXAMPLECXWPLOT).pdf
 doc/GDPPMIStructuralChange.pdf: vignettes/GDPPMIStructuralChange.ltx \
                                 $(EXAMPLEGDPPMIPLOT).pdf \
-                                $(POWERPLOTEXAMPLELIKEPREFIX)n225.pdf
-
+                                vignettes/GDPPMIPowerPlot.pdf
+doc/OilDollarStructuralChange.pdf : vignettes/OilDollarStructuralChange.ltx \
+                                    OilDollar.pdf $(EXAMPLEOILDOLLARPLOT).pdf \
+                                    $(POWERPLOTEXAMPLELIKEPREFIX)n130.pdf
 # Vignette recipe
 $(VIGNETTES) :
 	$(RSCRIPT) -e "devtools::build_vignettes()"
