@@ -1,12 +1,12 @@
 #!/usr/bin/Rscript
 ################################################################################
-# RealDataGDPPMIPredict.R
+# RealDataOilDollar.R
 ################################################################################
-# 2019-06-30
+# 2019-07-19
 # Curtis Miller
 ################################################################################
-# A file containing data for data example involving the prediction of YoY GDP
-# using PMI.
+# A file containing data for data example involving the price of oil and the
+# strength of the U.S. dollar.
 ################################################################################
 
 # argparser: A package for handling command line arguments
@@ -15,26 +15,24 @@ if (!suppressPackageStartupMessages(require("argparser"))) {
   require("argparser")
 }
 
-`%s%` <- CPAT:::`%s%`
-
 ################################################################################
 # EXECUTABLE SCRIPT MAIN FUNCTIONALITY
 ################################################################################
 
-main <- function(output = "RealDataGDPPMIPredict.Rda") {
+main <- function(output = "RealDataOilDollar.Rda") {
   # This function will be executed when the script is called from the command
   # line
 
   suppressPackageStartupMessages(library(CPAT))
 
-  data("GDPPMI")
+  data("OilDollar")
 
-  data_set <- GDPPMI[9:nrow(GDPPMI),]
+  data_set <- OilDollar[49:nrow(OilDollar),]
 
   events <- data.frame("Time" = as.Date(character()),
                        "Event" = character(),
                        stringsAsFactors = FALSE)
-  model <- GDP ~ L(PMI, 1) + L(PMI, 2) + L(PMI, 3) + L(PMI, 4)
+  model <- Oil ~ DollarExchange
   is_ts <- TRUE
 
   save(data_set, events, model, is_ts, file = output, ascii = TRUE)
@@ -45,10 +43,9 @@ main <- function(output = "RealDataGDPPMIPredict.Rda") {
 ################################################################################
 
 if (sys.nframe() == 0) {
-  p <- arg_parser("Generate file for data example involving the prediction" %s%
-                  "of YoY GDP using PMI")
+  p <- arg_parser("Creates data for example of price of oil vs. U.S. dollar")
   p <- add_argument(p, "output", type = "character",
-                    default = "RealDataGDPPMIPredict.Rda",
+                    default = "RealDataOilDollar.Rda",
                     help = "Name of output .Rda file")
 
   cl_args <- parse_args(p)

@@ -30,20 +30,20 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    n1 <- min(n, 156)
+    n1 <- min(n, 108)
     n2 <- n - n1
-    vec1_innov <- rnorm(n1, sd = sqrt(2.230))
+    vec1_innov <- rnorm(n1, sd = sqrt(2))
     vec1 <- as.numeric(arima.sim(n = n1, model = list(
-                        order = c(2, 0, 0),
-                        ar = c(1.323, -0.341)
+                        order = c(0, 0, 1),
+                        ma = c(0.8)
                       ), innov = vec1_innov))
     if (n2 == 0) {
       vec2 <- numeric()
     } else {
       vec2 <- as.numeric(arima.sim(n = n2, model = list(
-                          order = c(2, 0, 0),
-                          ar = c(1.323, -0.341)
-                        ), sd = sqrt(21.941), n.start = length(vec1_innov),
+                          order = c(0, 0, 1),
+                          ma = c(0.8)
+                        ), sd = sqrt(50), n.start = length(vec1_innov),
                         start.innov = vec1_innov))
     }
     c(vec1, vec2)

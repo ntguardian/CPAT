@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimTestRenyiTypeRegLog.R
+# SimTestRenyiTypeRegAlt.R
 ################################################################################
 # 2019-03-07
 # Curtis Miller
@@ -20,14 +20,14 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "SimTestRenyiTypeReg.Rda", linetype = "solid",
+main <- function(output = "SimTestRenyiTypeRegAlt.Rda", linetype = "solid",
                  help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   renyi_reg_st <- function(formula, data) {
-    CPAT:::stat_Zn_reg(formula = formula, data = data, kn = log,
-                       use_kernel_var = TRUE, kernel = "qs", bandwidth = "and")
+    CPAT:::stat_Zn_reg(formula = formula, data = data, kn = sqrt,
+                       use_kernel_var = TRUE, kernel = "ba", bandwidth = 1.3)
   }
 
   ##############################################################################
@@ -52,7 +52,7 @@ if (sys.nframe() == 0) {
                             "the test. Here kn = log."),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "SimTestRenyiTypeRegLog.Rda",
+                      default = "SimTestRenyiTypeRegAlt.Rda",
                       help = "Name of output .Rda file"),
           make_option(c("--linetype", "-l"), type = "character",
                       default = "solid",

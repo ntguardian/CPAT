@@ -414,19 +414,25 @@ EXAMPLEPREFIX=RealData
 EXAMPLEGERMANM1=data/$(EXAMPLEPREFIX)M1Germany.Rda
 EXAMPLECXW=data/$(EXAMPLEPREFIX)CXWDonaldTrump.Rda
 EXAMPLEGDPPMI=data/$(EXAMPLEPREFIX)GDPPMIPredict.Rda
-ALLEXAMPLES=$(EXAMPLEGERMANM1) $(EXAMPLECXW) $(EXAMPLEGDPPMI)
+EXAMPLEOILDOLLAR=data/$(EXAMPLEPREFIX)OilDollar.Rda
+ALLEXAMPLES=$(EXAMPLEGERMANM1) $(EXAMPLECXW) $(EXAMPLEGDPPMI) \
+            $(EXAMPLEOILDOLLAR)
 
 # Processed data examples
 EXAMPLEGERMANM1PVALS=data/$(EXAMPLEPREFIX)M1GermanypVals.Rda
 EXAMPLECXWPVALS=data/$(EXAMPLEPREFIX)CXWDonaldTrumppVals.Rda
 EXAMPLEGDPPMIPVALS=data/$(EXAMPLEPREFIX)GDPPMIPredictpVals.Rda
-ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS) $(EXAMPLECXWPVALS) $(EXAMPLEGDPPMIPVALS)
+EXAMPLEOILDOLLARPVALS=data/$(EXAMPLEPREFIX)OilDollarpVals.Rda
+ALLEXAMPLESPVALS=$(EXAMPLEGERMAN1PVALS) $(EXAMPLECXWPVALS) \
+                 $(EXAMPLEGDPPMIPVALS) $(EXAMPLEOILDOLLARPVALS)
 
 # Data example plots
 EXAMPLEGERMANM1PLOT=vignettes/$(EXAMPLEPREFIX)M1Germany
 EXAMPLECXWPLOT=vignettes/$(EXAMPLEPREFIX)CXW
 EXAMPLEGDPPMIPLOT=vignettes/$(EXAMPLEPREFIX)GDPPMI
-ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT) $(EXAMPLEGDPPMIPLOT)
+EXAMPLEOILDOLLARPLOT=vignettes/$(EXAMPLEPREFIX)OilDollar
+ALLEXAMPLEPLOTS=$(EXAMPLEGERMANM1PLOT) $(EXAMPLECXWPLOT) $(EXAMPLEGDPPMIPLOT) \
+                $(EXAMPLEOILDOLLARPLOT)
 
 ################################################################################
 # VIGNETTE-VARS
@@ -678,10 +684,10 @@ $(SIMSGARCHHETEROHS) : data/$(CONTEXTPREFIX)Main.Rda \
 # EXAMPLE-LIKE
 $(SIMSEXAMPLELIKERENYI) : data/$(CONTEXTPREFIX)Example.Rda \
                           data/$(SIMDATAPREFIX)Example.Rda \
-                          data/$(SIMSTATPREFIX)RenyiTypeRegLog.Rda
+                          data/$(SIMSTATPREFIX)RenyiTypeRegAlt.Rda
 $(SIMSEXAMPLELIKERENYIRESID) : data/$(CONTEXTPREFIX)Example.Rda \
                                data/$(SIMDATAPREFIX)Example.Rda \
-                               data/$(SIMSTATPREFIX)RenyiTypeResidLog.Rda
+                               data/$(SIMSTATPREFIX)RenyiTypeResidAlt.Rda
 $(SIMSEXAMPLELIKERENYINOKERN) : data/$(CONTEXTPREFIX)Example.Rda \
                                 data/$(SIMDATAPREFIX)Example.Rda \
                                 data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
@@ -1099,9 +1105,9 @@ $(EXAMPLECXWPVALS) : $(EXAMPLECXW) data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
 		 --firstright 13407 --lastright 13469 $<
 
 $(EXAMPLEGDPPMIPVALS) : $(EXAMPLEGDPPMI) \
-                        data/$(SIMSTATPREFIX)RenyiTypeResidLog.Rda \
+                        data/$(SIMSTATPREFIX)RenyiTypeResidAlt.Rda \
                         data/$(SIMSTATPREFIX)CUSUM.Rda \
-                        data/$(SIMSTATPREFIX)RenyiTypeRegLog.Rda \
+                        data/$(SIMSTATPREFIX)RenyiTypeRegAlt.Rda \
                         data/$(SIMSTATPREFIX)HS.Rda \
                         exec/ExpandingWindowpValComputer.R
 	$(RSCRIPT) $(lastword $^) --output $@ \

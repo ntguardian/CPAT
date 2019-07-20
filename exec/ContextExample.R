@@ -61,8 +61,8 @@ main <- function(output = "ContextExample.Rda", help = FALSE) {
   # REQUIRED OBJECTS
   ##############################################################################
   
-  n_values <- as.integer(c(173))
-  kstar_functions <- c("Break" = function(n) {min(n, 170)})
+  n_values <- as.integer(c(130))
+  kstar_functions <- c("Break" = function(n) {min(n, 122)})
   struc_models <- lapply(delta, grm_md)
   names(struc_models) <- "d" %s0% delta
   struc_name_conversion <- data.frame("d" = delta)

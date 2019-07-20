@@ -220,3 +220,23 @@
 #' }
 #' @source \href{https://www.bloomberg.com}{Bloomberg}
 "GDPPMI"
+
+#' Oil Price versus Strength of the Dollar
+#'
+#' Data set containing crude oil prices and an index for the strength of the
+#' U.S. dollar.
+#'
+#' Raw data was obtained from the Federal Reserve Economic Database. The data
+#' spans 1986 to June 2019 with monthly frequency.
+#'
+#' @format A time series object with 402 rows and 2 variables:
+#' \describe{
+#'   \item{Oil}{Crude oil prices: West Texas intermediate}
+#'   \item{DollarExchange}{Real trade weighted U.S. dollar index for broad
+#'                         goods}
+#' }
+#'
+#' @source \href{https://fred.stlouisfed.org/series/MCOILWTICO}{FRED: Oil price}
+#'         \href{https://fred.stlouisfed.org/series/TWEXBPA}{FRED: Dollar index}
+"OilDollar"
+

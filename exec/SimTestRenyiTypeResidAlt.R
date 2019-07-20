@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 ################################################################################
-# SimTestRenyiTypeResidLog.R
+# SimTestRenyiTypeResidAlt.R
 ################################################################################
 # 2019-02-22
 # Curtis Miller
@@ -19,15 +19,15 @@ if (!suppressPackageStartupMessages(require("optparse"))) {
 # MAIN FUNCTION DEFINITION
 ################################################################################
 
-main <- function(output = "SimTestRenyiTypeResid.Rda", linetype = "dashed",
+main <- function(output = "SimTestRenyiTypeResidAlt.Rda", linetype = "dashed",
                  help = FALSE) {
   # This function will be executed when the script is called from the command
   # line; the help parameter does nothing, but is needed for do.call() to work
 
   renyi_st <- function(formula, data) {
     res <- residuals(CPAT:::wrapped_dynlm(formula = formula, data = data))
-    CPAT:::stat_Zn(res, use_kernel_var = TRUE, kernel = "qs", bandwidth = "and",
-                   kn = log)
+    CPAT:::stat_Zn(res, use_kernel_var = TRUE, kernel = "ba", bandwidth = function(n) {sqrt(n) * 1.3},
+                   kn = sqrt)
   }
 
   ##############################################################################
@@ -52,7 +52,7 @@ if (sys.nframe() == 0) {
                             "for the test. Here kn = log."),
         option_list = list(
           make_option(c("--output", "-o"), type = "character",
-                      default = "SimTestRenyiTypeResidLog.Rda",
+                      default = "SimTestRenyiTypeResidAlt.Rda",
                       help = "Name of output .Rda file"),
           make_option(c("--linetype", "-l"), type = "character",
                       default = "dashed",
