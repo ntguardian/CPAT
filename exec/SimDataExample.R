@@ -22,48 +22,45 @@ main <- function(output) {
   # This function will be executed when the script is called from the command
   # line
 
-  library(zoo)
-  library(dynlm)
-
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
 
   eps_generator <- function(n) {
-    n1 <- min(n, 108)
+    n1 <- min(n, 216)
     n2 <- n - n1
-    vec1_innov <- rnorm(n1, sd = sqrt(2))
-    vec1 <- as.numeric(arima.sim(n = n1, model = list(
-                        order = c(0, 0, 1),
-                        ma = c(0.8)
-                      ), innov = vec1_innov))
-    if (n2 == 0) {
-      vec2 <- numeric()
+    x1 <- as.numeric(arima.sim(n = n1, n.start = 500, model = list(
+                                 order = c(1, 0, 2), ar = c(0.941),
+                                 ma = c(-1.160, 0.249)), sd = 3.438))
+    if (n2 > 0) {
+      x2 <- as.numeric(arima.sim(n = n2, n.start = n1, start.innov = x1,
+                                 model = list(order = c(2, 0, 1),
+                                              ar = c(-0.989, -0.370),
+                                              ma = c(0.776)), sd = 2.581))
     } else {
-      vec2 <- as.numeric(arima.sim(n = n2, model = list(
-                          order = c(0, 0, 1),
-                          ma = c(0.8)
-                        ), sd = sqrt(50), n.start = length(vec1_innov),
-                        start.innov = vec1_innov))
+      x2 <- numeric()
     }
-    c(vec1, vec2)
+
+    x <- c(x1, x2)
+
+    return(x)
   }
 
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
-    stopifnot(d == 2)
+    stopifnot(d == 6)
     const <- rep(1, times = n)
-    if (d > 1) {
-      # Simulate DollarExchange
-      v1 <- as.numeric(arima.sim(n = n, model = list(
-              order = c(1, 0, 1),
-              ar = c(0.985),
-              ma = c(0.367)
-            ), sd = sqrt(1.323))) + 100
-      interim_mat <- cbind(const, v1)
-    } else {
-      interim_mat <- as.matrix(const)
-    }
+    interim_mat <- cbind(const,
+                         as.numeric(arima.sim(model = list(
+                               ar = c(0.893, 0.059),
+                               ma = c(-1.000)),
+                             sd = 0.699, n = n)) + 0.0627,       # Mkt.RF
+                         rnorm(n, mean =  0.0120, sd = 0.5163),  # SMB
+                         as.numeric(arima.sim(model = list(
+                               ar = c(0.136)
+                               ), n = n)) + 0.0173,              # HML
+                         rnorm(n, mean =  0.0121, sd = 0.3350),  # RMW
+                         rnorm(n, mean = -0.0068, sd = 0.3594))  # CMA
 
     y <- as.vector(interim_mat %*% as.matrix(beta)) + eps
 

@@ -37,10 +37,10 @@ base_file_name <- CPAT:::base_file_name
 #' @examples
 #' gen_regime_mat(1:2, 0.1)
 gen_regime_mat <- function(base, delta = 0) {
-  stopifnot(length(base) == 2)
-  d <- 2
-  delta_vec <- (c(329.925, -2.809) - 
-                c(41.308, -0.238)) * delta
+  stopifnot(length(base) == 6)
+  d <- 6
+  delta_vec <- (c( 0.111, 1.819, 1.314,  0.148, 0.302,  1.335) - 
+                c(-0.307, 1.034, 0.002, -0.050, 2.469, -0.357)) * delta
   cbind(base, base + delta_vec)
 }
 
@@ -54,15 +54,17 @@ main <- function(output = "ContextExample.Rda", help = FALSE) {
 
   library(purrr)
 
-  grm_md <- partial(gen_regime_mat, base = c(41.308, -0.238))
+  grm_md <- partial(gen_regime_mat, base = c(-0.307, 1.034, 0.002, -0.050,
+                                              2.469, -0.357))
   delta <- ((0):20)/10
 
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
   
-  n_values <- as.integer(c(130))
-  kstar_functions <- c("Break" = function(n) {min(n, 122)})
+  # n_values <- as.integer(c(216 + 9, 216 + 18, 216 + 36))
+  n_values <- as.integer(c(250))
+  kstar_functions <- c("ElectionDay" = function(n) {min(n, 216)})
   struc_models <- lapply(delta, grm_md)
   names(struc_models) <- "d" %s0% delta
   struc_name_conversion <- data.frame("d" = delta)
