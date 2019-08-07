@@ -22,45 +22,43 @@ main <- function(output) {
   # This function will be executed when the script is called from the command
   # line
 
+  library(zoo)
+  library(dynlm)
+
   ##############################################################################
   # REQUIRED OBJECTS
   ##############################################################################
 
   eps_generator <- function(n) {
-    n1 <- min(n, 216)
+    n1 <- min(n, 212)
     n2 <- n - n1
-    x1 <- as.numeric(arima.sim(n = n1, n.start = 500, model = list(
-                                 order = c(1, 0, 2), ar = c(0.941),
-                                 ma = c(-1.160, 0.249)), sd = 3.438))
-    if (n2 > 0) {
-      x2 <- as.numeric(arima.sim(n = n2, n.start = n1, start.innov = x1,
-                                 model = list(order = c(2, 0, 1),
-                                              ar = c(-0.989, -0.370),
-                                              ma = c(0.776)), sd = 2.581))
+    vec1 <- as.numeric(arima.sim(n = n1, n.start = 500, model = list(
+            order = c(0, 0, 3),
+            ma = c(0.772, 0.800, 0.690)
+          ), sd = sqrt(1.001)))
+    if (n2 == 0) {
+      vec2 <- numeric()
     } else {
-      x2 <- numeric()
+      vec2 <- as.numeric(arima.sim(n = n2, start.innov = vec1, model = list(
+              order = c(0, 0, 3),
+              ma = c(0.674, 0.537, 0.522)
+            ), sd = sqrt(0.420)))
     }
-
-    x <- c(x1, x2)
-
-    return(x)
+    c(vec1, vec2)
   }
 
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
-    stopifnot(d == 6)
+    stopifnot(d == 5)
     const <- rep(1, times = n)
-    interim_mat <- cbind(const,
-                         as.numeric(arima.sim(model = list(
-                               ar = c(0.893, 0.059),
-                               ma = c(-1.000)),
-                             sd = 0.699, n = n)) + 0.0627,       # Mkt.RF
-                         rnorm(n, mean =  0.0120, sd = 0.5163),  # SMB
-                         as.numeric(arima.sim(model = list(
-                               ar = c(0.136)
-                               ), n = n)) + 0.0173,              # HML
-                         rnorm(n, mean =  0.0121, sd = 0.3350),  # RMW
-                         rnorm(n, mean = -0.0068, sd = 0.3594))  # CMA
+    series <- arima.sim(n = n + 4, n.start = 500, model = list(
+          order = c(1, 0, 3),
+          ar = c(0.204),
+          ma = c(0.634, 0.594, 0.577)
+        ), sd = sqrt(21.376)) + 53.210
+    Xtemp <- model.frame(dynlm(series ~ L(series, 1:4)))[[2]]
+
+    interim_mat <- cbind(const, Xtemp)
 
     y <- as.vector(interim_mat %*% as.matrix(beta)) + eps
 
@@ -69,6 +67,7 @@ main <- function(output) {
     }
     interim_mat <- interim_mat[, 2:d, drop = FALSE]
     colnames(interim_mat) <- paste0("X", 1:(d - 1))
+    interim_mat <- as.data.frame(interim_mat)
 
     as.data.frame(cbind("y" = y, interim_mat))
   }

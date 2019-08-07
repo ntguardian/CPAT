@@ -1102,8 +1102,8 @@ $(EXAMPLECXWPVALS) : $(EXAMPLECXW) data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
                      data/$(SIMSTATPREFIX)HS.Rda \
                      exec/ExpandingWindowpValComputer.R
 	$(RSCRIPT) $(lastword $^) --output $@ \
-		 --statistics $(filter-out $< $(lastword $^), $^) --left 13218 \
-		 --firstright 13407 --lastright 13469 $<
+		 --statistics $(filter-out $< $(lastword $^), $^) --left 12965 \
+		 --firstright 13362 --lastright 13385 $<
 
 $(EXAMPLEOILDOLLARPVALS) : $(EXAMPLEOILDOLLAR) \
                            data/$(SIMSTATPREFIX)RenyiTypeResidAlt.Rda \
