@@ -30,35 +30,39 @@ main <- function(output) {
   ##############################################################################
 
   eps_generator <- function(n) {
-    n1 <- min(n, 212)
+    n1 <- min(n, 62)
     n2 <- n - n1
-    vec1 <- as.numeric(arima.sim(n = n1, n.start = 500, model = list(
-            order = c(0, 0, 3),
-            ma = c(0.772, 0.800, 0.690)
-          ), sd = sqrt(1.001)))
+    vec1 <- as.numeric(arima.sim(list(order = c(0, 0, 1), ma = c(0.287)),
+                                 sd = sqrt(0.001), n = n1, n.start = 500))
     if (n2 == 0) {
       vec2 <- numeric()
     } else {
-      vec2 <- as.numeric(arima.sim(n = n2, start.innov = vec1, model = list(
-              order = c(0, 0, 3),
-              ma = c(0.674, 0.537, 0.522)
-            ), sd = sqrt(0.420)))
+      vec2 <- as.numeric(rnorm(n2, sd = sqrt(0.001)))
     }
     c(vec1, vec2)
   }
 
   df_generator <- function(n, beta, eps) {
     d <- length(beta)
-    stopifnot(d == 5)
+    stopifnot(d == 3)
     const <- rep(1, times = n)
-    series <- arima.sim(n = n + 4, n.start = 500, model = list(
-          order = c(1, 0, 3),
-          ar = c(0.204),
-          ma = c(0.634, 0.594, 0.577)
-        ), sd = sqrt(21.376)) + 53.210
-    Xtemp <- model.frame(dynlm(series ~ L(series, 1:4)))[[2]]
-
-    interim_mat <- cbind(const, Xtemp)
+    if (d > 1) {
+      # Simulate RealEnergyPrice
+      v1 <- as.numeric(arima.sim(n = n, model = list(
+              order = c(1, 0, 12),
+              ar = c(0.637),
+              ma = c(0.667, 0.073, 0.434, 1.148, 0.586, 0.308, 0.265, 0.941,
+                    0.797, 0.370, 0.333, 0.679)), sd = sqrt(0.0001))) + 0.650
+      # Simulate IndPro
+      v2 <- as.numeric(arima.sim(n = n, model = list(
+              order = c(2, 0, 1),
+              ar = c(0.575, 0.373),
+              ma = c(0.706)
+            ), sd = sqrt(0.00002)))
+      interim_mat <- cbind(const, v1, v2)
+    } else {
+      interim_mat <- as.matrix(const)
+    }
 
     y <- as.vector(interim_mat %*% as.matrix(beta)) + eps
 
@@ -67,7 +71,6 @@ main <- function(output) {
     }
     interim_mat <- interim_mat[, 2:d, drop = FALSE]
     colnames(interim_mat) <- paste0("X", 1:(d - 1))
-    interim_mat <- as.data.frame(interim_mat)
 
     as.data.frame(cbind("y" = y, interim_mat))
   }
