@@ -32,7 +32,7 @@ main <- function(output = "SimDataNormalXY2.Rda", help = FALSE) {
     d <- length(beta)
     const <- rep(1, times = n)
     if (d > 1) {
-      interim_mat <- matrix(rnorm(n * (d - 1), mean = 0, sd = 1/10),
+      interim_mat <- matrix(rnorm(n * (d - 1), mean = 0, sd = 1/100),
                             ncol = d - 1)
       interim_mat <- cbind(const, interim_mat)
     } else {
