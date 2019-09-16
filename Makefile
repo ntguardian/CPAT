@@ -70,6 +70,11 @@ SIMSNORMALRENYIRESID=data-sim/Normal/SimsNormalRenyiResid.Rda
 SIMSNORMALRENYINOKERN=data-sim/Normal/SimsNormalRenyiRegNoKern.Rda
 SIMSNORMALCUSUM=data-sim/Normal/SimsNormalCUSUM.Rda
 SIMSNORMALHS=data-sim/Normal/SimsNormalHS.Rda
+SIMSNORMALRENYI=data-sim/Normal2/SimsNormal2RenyiReg.Rda
+SIMSNORMALRENYIRESID=data-sim/Normal2/SimsNormal2RenyiResid.Rda
+SIMSNORMALRENYINOKERN=data-sim/Normal2/SimsNormal2RenyiRegNoKern.Rda
+SIMSNORMALCUSUM=data-sim/Normal2/SimsNormal2CUSUM.Rda
+SIMSNORMALHS=data-sim/Normal2/SimsNormal2HS.Rda
 SIMSNORMALHETERORENYI=data-sim/Normal/SimsNormalHeteroRenyiReg.Rda
 SIMSNORMALHETERORENYINOKERN=data-sim/Normal/SimsNormalHeteroRenyiRegNoKern.Rda
 SIMSNORMALHETERORENYIRESID=data-sim/Normal/SimsNormalHeteroRenyiResid.Rda
@@ -143,6 +148,8 @@ SIMSEXAMPLELIKEHS=data-sim/EL/SimsELHS.Rda
 # All
 NOTHETEROSIMS=$(SIMSNORMALRENYI) $(SIMSNORMALRENYIRESID) \
               $(SIMSNORMALRENYINOKERN) $(SIMSNORMALCUSUM) $(SIMSNORMALHS) \
+              $(SIMSNORMAL2RENYI) $(SIMSNORMAL2RENYIRESID) \
+              $(SIMSNORMAL2RENYINOKERN) $(SIMSNORMAL2CUSUM) $(SIMSNORMAL2HS) \
               $(SIMSPROPNORMALRENYI) $(SIMSPROPNORMALRENYIRESID) \
               $(SIMSPROPNORMALRENYINOKERN) $(SIMSPROPNORMALCUSUM) \
               $(SIMSPROPNORMALHS) $(SIMS4DMORNALRENYI) \
@@ -188,6 +195,11 @@ SIMSNORMALRENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYI))
 SIMSNORMALRENYINOKERNDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALRENYINOKERN))
 SIMSNORMALCUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALCUSUM))
 SIMSNORMALHSDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHS))
+SIMSNORMAL2RENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMAL2RENYI))
+1IMSNORMAL2RENYIRESIDDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMAL2RENYIRESID))
+SIMSNORMAL2RENYINOKERNDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMAL2RENYINOKERN))
+SIMSNORMAL2CUSUMDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMAL2CUSUM))
+SIMSNORMAL2HSDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMAL2HS))
 SIMSNORMALHETERORENYIDF=$(subst .Rda,DataFrame.Rda,$(SIMSNORMALHETERORENYI))
 SIMSNORMALHETERORENYINOKERNDF=$(subst .Rda,DataFrame.Rda, \
                                       $(SIMSNORMALHETERORENYINOKERN))
@@ -299,6 +311,9 @@ ALLSIMSDATAFRAME=$(subst .Rda,DataFrame.Rda,$(ALLSIMS))
 SIMSNORMALDFPREREQ=$(SIMSNORMALRENYIRESIDDF) $(SIMSNORMALRENYINOKERNDF) \
                    $(SIMSNORMALCUSUMDF) $(SIMSNORMALHSDF)
 SIMSNORMALDF=data-sim/Normal/SimsNormal.Rda
+SIMSNORMAL2DFPREREQ=$(SIMSNORMAL2RENYIRESIDDF) $(SIMSNORMAL2RENYINOKERNDF) \
+                    $(SIMSNORMAL2CUSUMDF) $(SIMSNORMAL2HSDF)
+SIMSNORMAL2DF=data-sim/Normal2/SimsNormal2.Rda
 SIMSNORMALHETERODFPREREQ=$(SIMSNORMALHETERORENYINOKERNDF) \
                          $(SIMSNORMALHETERORENYIRESIDDF) \
                          $(SIMSNORMALHETEROCUSUMDF) $(SIMSNORMALHETEROHSDF)
@@ -359,11 +374,12 @@ SIMSEXAMPLELIKEDFPREREQ=$(SIMSEXAMPLELIKERENYIRESIDDF) \
 SIMSEXAMPLELIKEDF=data-sim/EL/SimsEL.Rda
 
 # All DGP power collections in one location
-ALLDISTDF=$(SIMSNORMALDF) $(SIMSNORMALHETERODF) $(SIMSPROPNORMALDF) \
-          $(SIMS4DNORMALDF) $(SIMS6DNORMALDF) $(SIMSPROPNORMALHETERODF) \
-          $(SIMS4DNORMALHETERODF) $(SIMS6DNORMALHETERODF) $(SIMSARMADF) \
-          $(SIMSARMAHETERODF) $(SIMSAR1DF) $(SIMSAR1HETERODF) $(SIMSGARCHDF) \
-          $(SIMSGARCHHETERODF) $(SIMSEXAMPLELIKEDF)
+ALLDISTDF=$(SIMSNORMALDF) $(SIMSNORMAL2DF) $(SIMSNORMALHETERODF) \
+          $(SIMSPROPNORMALDF) $(SIMS4DNORMALDF) $(SIMS6DNORMALDF) \
+          $(SIMSPROPNORMALHETERODF) $(SIMS4DNORMALHETERODF) \
+          $(SIMS6DNORMALHETERODF) $(SIMSARMADF) $(SIMSARMAHETERODF) \
+          $(SIMSAR1DF) $(SIMSAR1HETERODF) $(SIMSGARCHDF) $(SIMSGARCHHETERODF) \
+          $(SIMSEXAMPLELIKEDF)
 
 ################################################################################
 # POWER-PLOT-VARS
@@ -372,6 +388,7 @@ ALLDISTDF=$(SIMSNORMALDF) $(SIMSNORMALHETERODF) $(SIMSPROPNORMALDF) \
 # Power plot variables, giving plots names and defining plot dimensions
 POWERPLOTPREFIX=vignettes/power_plot_
 POWERPLOTNORMALPREFIX=$(POWERPLOTPREFIX)norm_
+POWERPLOTNORMAL2PREFIX=$(POWERPLOTPREFIX)norm2_
 POWERPLOTPROPNORMALPREFIX=$(POWERPLOTPREFIX)prop_norm_
 POWERPLOT4DNORMALPREFIX=$(POWERPLOTPREFIX)4D_norm_
 POWERPLOT6DNORMALPREFIX=$(POWERPLOTPREFIX)6D_norm_
@@ -390,6 +407,7 @@ POWERPLOTWIDTH=3
 POWERPLOTHEIGHT=2
 POWERPLOTLEVELLINE=dotted
 POWERPLOTS=$(wildcard $(POWERPLOTNORMALPREFIX)*.pdf) \
+           $(wildcard $(POWERPLOTNORMAL2PREFIX)*.pdf) \
            $(wildcard $(POWERPLOTPROPNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOT4DNORMALPREFIX)*.pdf) \
            $(wildcard $(POWERPLOT6DNORMALPREFIX)*.pdf) \
@@ -495,6 +513,21 @@ $(SIMSNORMALCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
                      data/$(SIMSTATPREFIX)CUSUM.Rda
 $(SIMSNORMALHS) : data/$(CONTEXTPREFIX)Main.Rda \
                   data/$(SIMDATAPREFIX)NormalXY.Rda \
+                  data/$(SIMSTATPREFIX)HS.Rda
+$(SIMSNORMAL2RENYI) : data/$(CONTEXTPREFIX)Main.Rda \
+                     data/$(SIMDATAPREFIX)NormalXY2.Rda \
+                     data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
+$(SIMSNORMAL2RENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
+                          data/$(SIMDATAPREFIX)NormalXY2.Rda \
+                          data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
+$(SIMSNORMAL2RENYINOKERN) : data/$(CONTEXTPREFIX)Main.Rda \
+                           data/$(SIMDATAPREFIX)NormalXY2.Rda \
+                           data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
+$(SIMSNORMAL2CUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
+                     data/$(SIMDATAPREFIX)NormalXY2.Rda \
+                     data/$(SIMSTATPREFIX)CUSUM.Rda
+$(SIMSNORMAL2HS) : data/$(CONTEXTPREFIX)Main.Rda \
+                  data/$(SIMDATAPREFIX)NormalXY2.Rda \
                   data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSPROPNORMALRENYI) : data/$(CONTEXTPREFIX)PropChange.Rda \
                          data/$(SIMDATAPREFIX)NormalXY.Rda \
@@ -731,6 +764,19 @@ $(SIMSNORMALCUSUMDF) : $(SIMSNORMALCUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
                        data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMALHSDF) : $(SIMSNORMALHS) data/$(SIMSTATPREFIX)HS.Rda \
                     data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMAL2RENYIDF) : $(SIMSNORMAL2RENYI) \
+                        data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
+                        data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMAL2RENYIRESIDDF) : $(SIMSNORMAL2RENYIRESID) \
+                             data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
+                             data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMAL2RENYINOKERNDF) : $(SIMSNORMAL2RENYINOKERN) \
+                              data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
+                              data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMAL2CUSUMDF) : $(SIMSNORMAL2CUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
+                        data/$(CONTEXTPREFIX)Main.Rda
+$(SIMSNORMAL2HSDF) : $(SIMSNORMAL2HS) data/$(SIMSTATPREFIX)HS.Rda \
+                     data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSPROPNORMALRENYIDF) : $(SIMSPROPNORMALRENYI) \
                            data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
                            data/$(CONTEXTPREFIX)PropChange.Rda
@@ -973,6 +1019,13 @@ $(POWERPLOTNORMALPREFIX)%.pdf : $(SIMSNORMALDF) exec/UnivariatePlotter.R \
                                 R/Utils.R
 	make package
 	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTNORMALPREFIX) \
+		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
+		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
+
+$(POWERPLOTNORMAL2PREFIX)%.pdf : $(SIMSNORMAL2DF) exec/UnivariatePlotter.R \
+                                 R/Utils.R
+	make package
+	$(RSCRIPT) exec/UnivariatePlotter.R $< -p $(POWERPLOTNORMAL2PREFIX) \
 		 --width $(POWERPLOTWIDTH) --height $(POWERPLOTHEIGHT) \
 		 -l $(LEVEL) --levellinetype $(POWERPLOTLEVELLINE)
 
