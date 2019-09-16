@@ -514,19 +514,19 @@ $(SIMSNORMALCUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
 $(SIMSNORMALHS) : data/$(CONTEXTPREFIX)Main.Rda \
                   data/$(SIMDATAPREFIX)NormalXY.Rda \
                   data/$(SIMSTATPREFIX)HS.Rda
-$(SIMSNORMAL2RENYI) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSNORMAL2RENYI) : data/$(CONTEXTPREFIX)Secondary.Rda \
                      data/$(SIMDATAPREFIX)NormalXY2.Rda \
                      data/$(SIMSTATPREFIX)RenyiTypeReg.Rda
-$(SIMSNORMAL2RENYIRESID) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSNORMAL2RENYIRESID) : data/$(CONTEXTPREFIX)Secondary.Rda \
                           data/$(SIMDATAPREFIX)NormalXY2.Rda \
                           data/$(SIMSTATPREFIX)RenyiTypeResid.Rda
-$(SIMSNORMAL2RENYINOKERN) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSNORMAL2RENYINOKERN) : data/$(CONTEXTPREFIX)Secondary.Rda \
                            data/$(SIMDATAPREFIX)NormalXY2.Rda \
                            data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda
-$(SIMSNORMAL2CUSUM) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSNORMAL2CUSUM) : data/$(CONTEXTPREFIX)Secondary.Rda \
                      data/$(SIMDATAPREFIX)NormalXY2.Rda \
                      data/$(SIMSTATPREFIX)CUSUM.Rda
-$(SIMSNORMAL2HS) : data/$(CONTEXTPREFIX)Main.Rda \
+$(SIMSNORMAL2HS) : data/$(CONTEXTPREFIX)Secondary.Rda \
                   data/$(SIMDATAPREFIX)NormalXY2.Rda \
                   data/$(SIMSTATPREFIX)HS.Rda
 $(SIMSPROPNORMALRENYI) : data/$(CONTEXTPREFIX)PropChange.Rda \
@@ -766,17 +766,17 @@ $(SIMSNORMALHSDF) : $(SIMSNORMALHS) data/$(SIMSTATPREFIX)HS.Rda \
                     data/$(CONTEXTPREFIX)Main.Rda
 $(SIMSNORMAL2RENYIDF) : $(SIMSNORMAL2RENYI) \
                         data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
-                        data/$(CONTEXTPREFIX)Main.Rda
+                        data/$(CONTEXTPREFIX)Secondary.Rda
 $(SIMSNORMAL2RENYIRESIDDF) : $(SIMSNORMAL2RENYIRESID) \
                              data/$(SIMSTATPREFIX)RenyiTypeResid.Rda \
-                             data/$(CONTEXTPREFIX)Main.Rda
+                             data/$(CONTEXTPREFIX)Secondary.Rda
 $(SIMSNORMAL2RENYINOKERNDF) : $(SIMSNORMAL2RENYINOKERN) \
                               data/$(SIMSTATPREFIX)RenyiTypeRegNoKern.Rda \
-                              data/$(CONTEXTPREFIX)Main.Rda
+                              data/$(CONTEXTPREFIX)Secondary.Rda
 $(SIMSNORMAL2CUSUMDF) : $(SIMSNORMAL2CUSUM) data/$(SIMSTATPREFIX)CUSUM.Rda \
-                        data/$(CONTEXTPREFIX)Main.Rda
+                        data/$(CONTEXTPREFIX)Secondary.Rda
 $(SIMSNORMAL2HSDF) : $(SIMSNORMAL2HS) data/$(SIMSTATPREFIX)HS.Rda \
-                     data/$(CONTEXTPREFIX)Main.Rda
+                     data/$(CONTEXTPREFIX)Secondary.Rda
 $(SIMSPROPNORMALRENYIDF) : $(SIMSPROPNORMALRENYI) \
                            data/$(SIMSTATPREFIX)RenyiTypeReg.Rda \
                            data/$(CONTEXTPREFIX)PropChange.Rda
@@ -984,6 +984,7 @@ $(ALLSIMSDATAFRAME) :
 
 # Dependencies for variable collection data frames
 $(SIMSNORMALDF) : $(SIMSNORMALDFPREREQ)
+$(SIMSNORMAL2DF) : $(SIMSNORMAL2DFPREREQ)
 $(SIMSPROPNORMALDF) : $(SIMSPROPNORMALDFPREREQ)
 $(SIMS4DNORMALDF) : $(SIMS4DNORMALDFPREREQ)
 $(SIMS6DNORMALDF) : $(SIMS6DNORMALDFPREREQ)
@@ -1253,6 +1254,7 @@ clean :
 .PHONY : init
 init :
 	touch $(POWERPLOTNORMALPREFIX)n50.pdf
+	touch $(POWERPLOTNORMAL2PREFIX)n50.pdf
 	touch $(POWERPLOTPROPNORMALPREFIX)n50.pdf
 	touch $(POWERPLOT4DNORMALPREFIX)n50.pdf
 	touch $(POWERPLOT6DNORMALPREFIX)n50.pdf
