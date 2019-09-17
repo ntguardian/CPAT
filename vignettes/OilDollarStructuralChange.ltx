@@ -27,10 +27,11 @@ prices' relationship with the U.S. Dollar. Commodities in general are priced in
 dollars, and thus their prices tend to have an inverse relationship with the
 overall strength of the dollar relative to other currencies; as the dollar
 strengthens, commodity prices tend to fall. We see that pattern in oil prices as
-well. In Figure \ref{fig:oildollar} we observe the inverse relationship between
-dollar strength and oil price. Additionally, we observe that at least one of the
-series (specifically, oil prices) appears to be heteroskedastic, with volatility
-appearing to increase after the 1990s.
+well. In Figures \ref{fig:oildollar} and \ref{fig:oildollarscatter} we observe
+the inverse relationship between dollar strength and oil price. Additionally, we
+observe that at least one of the series (specifically, oil prices) appears to be
+heteroskedastic, with volatility appearing to increase after the 1990s; also,
+there appears to be a change in the relationship between the series.
 
 \begin{figure}[!th]
     \centering
@@ -40,6 +41,15 @@ appearing to increase after the 1990s.
 Reserved Economic Database (FRED), the oil price series has FRED code MCOILWTICO
 and the dollar strength index has FRED code TWEXBPA.}
     \label{fig:oildollar}
+\end{figure}
+
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=0.8\linewidth]{DollarOilScatter.pdf}
+    \caption{Monthly oil prices (in USD) are plotted against a trade-weighted
+    index measuring the strength of the US dollar. Months before February 2000
+    are plotted as dots and all other months are plotted as crosses.}
+    \label{fig:oildollarscatter}
 \end{figure}
 
 Consider the regression model

@@ -26,6 +26,16 @@
     compensation indices from 1947 to 2016.
 - Added data set `energy_demand` containing U.S. GDP, energy consumption, and
     energy pricing from 1973 to 2018.
+- Added data set `GDPPMI` containing U.S. GDP and U.S. PMI.
+- Added data set `MktGP` containing U.S. stock market returns and the
+    gold/platinum price ratio.
+- Added data set `GEO` containing stock price data for GEO.
+- Added data set `CXW` containing stock price data for CXW.
+- Added data set `gold` containing daily gold prices.
+- Added data set `platinum` containing daily platinum prices
+- Added data set `OilDollar` comparing oil prices to the strength of the U.S.
+    dollar.
+- Documentation updates and fixes.
 
 ## Version 0.1.0
 ---
