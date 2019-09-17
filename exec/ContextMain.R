@@ -59,7 +59,7 @@ main <- function(output = "ContextMain.Rda", help = FALSE) {
   # REQUIRED OBJECTS
   ##############################################################################
   
-  n_values <- as.integer(c(50, 250, 1000))
+  n_values <- as.integer(c(50, 250, 500, 750, 1000))
   kstar_functions <- c("c35rd" = function(n) {n^{3/5}})
   struc_models <- lapply(delta, grm_12)
   names(struc_models) <- "d" %s0% delta
